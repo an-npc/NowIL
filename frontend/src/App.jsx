@@ -2,119 +2,134 @@ import { useState } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from './assets/vite.svg'
 import heroImg from './assets/hero.png'
+import NowILLogo from './assets/Logo.svg'
+import Volleyball from './assets/volleyball.svg'
+import Soccer from './assets/soccer.svg'
+import Baseball from './assets/baseball.svg'
+import Swimming from './assets/swimming.svg'
 import './App.css'
+// slack, edit, person, home 
+import { Home, User, Slack, Dribbble, Heart, Edit, Search } from 'react-feather';
+
+let data = [
+  {
+    id: 1,
+    rank: 1,
+    athlete: 'John Doe',
+    college: 'University of Nowhere',
+    sport: 'Basketball',
+    position: 'Guard',
+    nilValue: '$1M',
+    nilChange: '+$500K',
+    following: true
+  },
+  {
+    id: 2,
+    rank: 2,
+    athlete: 'Jane Smith',
+    college: 'College of Somewhere',
+    sport: 'Football',
+    position: 'Quarterback',
+    nilValue: '$800K',
+    nilChange: '+$300K',
+    following: false
+  },
+  {
+    id: 3,
+    rank: 3,
+    athlete: 'Mike Johnson',
+    college: 'State University',
+    sport: 'Baseball',
+    position: 'Pitcher',
+    nilValue: '$600K',
+    nilChange: '+$200K',
+    following: true
+  }
+];
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
-        </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.jsx</code> and save to test <code>HMR</code>
-          </p>
-        </div>
-        <button
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
-      </section>
-
-      <div className="ticks"></div>
-
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
+    <main className='grid-container'>
+      <section className='menu-bar'>
+        <div className='column'>
+          <div className='center'><img src={NowILLogo} alt='NowIL_Logo' className='logo' /></div>
+          <div className='row'><Home /> <p>home</p></div>
+          <div className='row'><User /> <p>players</p></div>
+          <div className='row'><Slack /> <p>teams</p></div>
+          <div className='row'><Dribbble /> <p>sports</p></div>
+          <div className='row'><Heart /> <p>following</p></div>
+          <div className='row'><Edit /> <p>predict</p></div>
         </div>
       </section>
+      <header className='page-title center-vertical'><h1>homepage</h1></header>
+      <form className='search-bar center-vertical'>
+        <div className='row'>
+          <input type='search' value='search for your team' />
+          <input type='submit' />
+        </div>
+      </form>
+      <section className='chart'>
+        <div id='header' className='table-row-header'>
+          <p>#</p>
+          <p>ATHLETE</p>
+          <p>COLLEGE</p>
+          <p>SPORT</p>
+          <p>POS</p>
+          <p>NIL VALUE</p>
+          <p>NIL CHANGE</p>
+          <p>FOLLOW</p>
+        </div>
+        <div className=''>
+          {data.map((item) => (
+            <div key={item.id} className='table-row'>
+              <p>{item.rank}</p>
+              <p>{item.athlete}</p>
+              <p>{item.college}</p>
+              <p>{item.sport}</p>
+              <p>{item.position}</p>
+              <p>{item.nilValue}</p>
+              <p>{item.nilChange}</p>
+              <p>{item.following ? 'Following' : 'Not Following'}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+      <section className='trending'>
+        <div className='sub-trending'>
+          <div className='sports-card'>
+            <img
+              src={Volleyball}
+              alt='volleyball-img'
+              className='change-color' />
+            <p className='sports-title'>VOLLEYBALL</p>
+          </div>
+          <div className='sports-card'>
+            <img
+              src={Baseball}
+              alt='volleyball-img'
+              className='change-color' />
+            <p className='sports-title'>BASEBALL</p>
+          </div>
+          <div className='sports-card'>
+            <img
+              src={Swimming}
+              alt='volleyball-img'
+              className='change-color' />
+            <p className='sports-title'>SWIMMING</p>
+          </div>
+          <div className='sports-card'>
+            <img
+              src={Soccer}
+              alt='volleyball-img'
+              className='change-color' />
+            <p className='sports-title'>SOCCER</p>
+          </div>
+        </div>
+      </section>
+      <section className='news-section2'>
 
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
+      </section>
+    </main>
   )
 }
 

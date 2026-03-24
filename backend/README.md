@@ -23,6 +23,12 @@ This command depends on your operating system and CLI
 
 Then install dependencies: `pip install -r requirements.txt`
 
+if using vscode the you may have to manually select the correct python interpreter
+use `CTRL + SHIFT + P`  
+then select `Python: Select Interpreter`  
+you may have to manually select the interpreter path
+it should be `.venv(3.12.9) .\backend\.venv\Scripts\python.exe`
+
 ### 2. Create a .env file
 Next you need to create a .env file that holds all of the secrets that should remain hidden and CANNOT be commited to GitHub for security
 

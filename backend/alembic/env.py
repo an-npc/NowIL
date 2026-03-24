@@ -17,7 +17,6 @@ load_dotenv()
 db_url = getenv("DATABASE_URL")
 assert db_url, "DATABASE_URL environment variable not set"
 config.set_main_option("sqlalchemy.url", db_url)
-
 # Interpret the config file for Python logging.
 # This line sets up loggers basically.
 if config.config_file_name is not None:

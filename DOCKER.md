@@ -57,6 +57,18 @@ In a second terminal:
 docker compose exec backend alembic upgrade head
 ```
 
+**5. Setup back venv (Backend DEV only)**
+
+If you plan on working in the backend, you will still need to create a python virtual environment outside of the Docker container so that VSCode IntelliSense and suggestions work.
+
+```
+cd backend
+python -m venv .venv
+.venv/Scripts/Activate.ps1        
+pip install -r requirements.txt
+```
+Note: `.venv/Scripts/Activate.ps1 `  is Windows specific, if on Mac or Linux use `source venv/bin/activate`
+
 That's it! The backend is running at `http://localhost:8000` and the API docs are at `http://localhost:8000/docs`. The frontend is running at `http:localhost:5173` .
 
 ### Useful Docker Commands

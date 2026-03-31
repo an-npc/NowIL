@@ -1,6 +1,8 @@
 # NowIL - Backend
 Written by Joshua Walther, msg me with any questions!
 
+****
+
 This README will get you started with setting up the backend aswell explaining the strucutre of the backend and how FastAPI works. 
 
 To get started running the backend all you NEED to read is the Quickstart section, however I reccomend reading the other sections as well if you would like to work on the backend. If you just need to setup the backend server on your computer to test it or connect it to the frontend, the Quickstart section is sufficent 
@@ -52,8 +54,10 @@ The *backend* directory contains all of the backend files and directorys:
 - .env: contains all secret variables that cannot be commited to git, DB password, secret key
 
 # Quickstart and Setup **REQUIRED**
-This section will instruct you on how to setup the backend so that you can run it on your machine.  
-Eventually Docker will automate alot of this process.  
+This section will instruct you on how to setup the backend manually so that you can run it on your machine if Docker is not working.  
+
+**I RECOMMEND TRYING TO SETUP WITH DOCKER FIRST, IT ONLY TAKES ONE COMMAND, IF IT DOESNT WORK RETURN HERE. CONSULT /nowil/DOCKER.MD**
+
 If your not already make sure you are in the backend directory.  
 `...\NowIL\ cd backend`.  
 `...\NowIL\backend`.

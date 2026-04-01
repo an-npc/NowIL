@@ -3,7 +3,7 @@ from sqlmodel import Session
 from models.player import PlayerTest
 from database import get_session
 
-router = APIRouter(prefix="/player", tags=["Player"])
+router = APIRouter(prefix="/player", tags=["Test Player"])
 
 @router.get("/{player_id}", response_model=PlayerTest)
 def get_player(player_id:int, session:Session = Depends(get_session)):
@@ -36,3 +36,16 @@ def delete_player(player_id:int,session:Session = Depends(get_session)):
     session.commit()
     
     return player   
+
+
+# SQL COMMAND for Player Table
+'''
+SELECT FirstName,LastName,School,Team,Position,NIL,DeltaNIL 
+FROME Player NATURAL JOIN (
+	SELECT NIL, DeltaNIL
+	FROM Performance
+	ORDER BY Date ASC
+	LIMIT 1
+)
+ORDER BY NIL ASC;
+'''

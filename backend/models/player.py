@@ -3,7 +3,7 @@ from typing import Optional
 from sqlmodel import SQLModel, Field, Relationship 
 
 
-class Player(SQLModel,table=True):
+class PlayerTest(SQLModel,table=True):
     player_id: int = Field(primary_key=True)
     name: str
     nil: Optional[int]

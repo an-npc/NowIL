@@ -11,6 +11,7 @@ If any new tables added/removed, make sure to update alembic/env.py imports
 Database Schema: 
 https://docs.google.com/spreadsheets/d/15IPL0w0pzPMONMbBcK4yUYHJ0Yc0lmZaoS0uEOIzv_c/edit?usp=sharing
 '''
+
 #Enums defining value domains
 class CollegeYear(Enum):
     Freshman = 0

@@ -1,9 +1,9 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlmodel import Session
-from models.player import PlayerTest
+from models.player_test import PlayerTest
 from database import get_session
 
-router = APIRouter(prefix="/player", tags=["Test Player"])
+router = APIRouter(prefix="/playertest", tags=["Test Player"])
 
 @router.get("/{player_id}", response_model=PlayerTest)
 def get_player(player_id:int, session:Session = Depends(get_session)):

@@ -26,7 +26,7 @@ if config.config_file_name is not None:
 # for 'autogenerate' support
 # from myapp import mymodel
 # target_metadata = mymodel.Base.metadata
-from models.player import PlayerTest
+from models.player_test import PlayerTest
 from models.database_tables import Player,Game,Injury,Performance,School,Sport,Team,Position
 from sqlmodel import SQLModel
 target_metadata = SQLModel.metadata

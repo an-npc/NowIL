@@ -3,7 +3,9 @@ Written by Joshua Walther, msg me with any questions!
 
 ****
 
-This README will get you started with setting up the backend aswell explaining the strucutre of the backend and how FastAPI works. 
+This README will get you started with setting up the backend as well as explaining the strucutre of the backend and how FastAPI works. 
+
+To setup the project as a whole consult [DOCKER.md](/DOCKER.md)
 
 To get started running the backend all you NEED to read is the Quickstart section, however I reccomend reading the other sections as well if you would like to work on the backend. If you just need to setup the backend server on your computer to test it or connect it to the frontend, the Quickstart section is sufficent 
 
@@ -13,7 +15,7 @@ To get started running the backend all you NEED to read is the Quickstart sectio
 - [Table Contents](#table-contents)
 - [Backend Tech Stack](#backend-tech-stack)
 - [Backend file structure](#backend-file-structure)
-- [Quickstart and Setup **REQUIRED**](#quickstart-and-setup-required)
+- [Manul Backend Setup](#manul-backend-setup)
   - [Prequisites](#prequisites)
   - [1. Create a python virtual environment and install dependencies](#1-create-a-python-virtual-environment-and-install-dependencies)
   - [2. Setup your local PostgreSQL database](#2-setup-your-local-postgresql-database)
@@ -53,7 +55,8 @@ The *backend* directory contains all of the backend files and directorys:
 - requirements.txt: all python dependecies and packages
 - .env: contains all secret variables that cannot be commited to git, DB password, secret key
 
-# Quickstart and Setup **REQUIRED**
+
+# Manul Backend Setup 
 This section will instruct you on how to setup the backend manually so that you can run it on your machine if Docker is not working.  
 
 **I RECOMMEND TRYING TO SETUP WITH DOCKER FIRST, IT ONLY TAKES ONE COMMAND, IF IT DOESNT WORK RETURN HERE. CONSULT /nowil/DOCKER.MD**
@@ -173,6 +176,8 @@ The endpoints are organized into differnet catagorizes based on their routers, e
 
 Try using POST, GET, and DELETE methods to add, get, and delete records from your local database. Verify that these are correctly updating the database by using the psql terminal and viewing the records in the tables after each method call.
 
+
+
 # APIs and FastAPI
 At this point the backend should be setup and running. This section will explain the structure of the backend and how to make changes. The [FastAPI Documentation](https://fastapi.tiangolo.com/tutorial/) is a very helpful, but lengthy resource, consult it for a more in depth explaination.
 
@@ -221,7 +226,7 @@ You can see how the HTTP methods from above map to our four API operations.
 ## API Functions
 Known as path operator functions in FastAPI, we write our API functions to create endpoints for API that can be called by the frontend. Each function has a URL its accessible by and an HTTP method:
 
-```
+```python
 @router.get("/players", response_model=List[Player])
 def get_players():
     ...
@@ -230,7 +235,7 @@ The `@router.get()` says this function uses the GET method, and `"/players"` say
 
 Each function can also take in paremeters, either path paremeters in the URL path like `/{name}`, query parameters at the end of the url like `%?postion=qb?school=lsu`, or request body parmeters from the HTTP Body.
 
-```
+```python
 @router.get("/{player_id}", response_model=Player)
 def get_player(player_id:int, session:Session = Depends(get_session)):
     ...
@@ -238,7 +243,7 @@ def get_player(player_id:int, session:Session = Depends(get_session)):
 
 The above function gets a single player from our datbase. It also uses the GET method, but it has a path parameter in the URL `/{player_id}` telling us what player_id we want to get. With `def get_player` we define the actual function and in the paremeters we have `player_id:int` the path parameter and `session:Session` which creates a connection to our database.
 
-```
+```python
 @router.post("/player", response_model=Player,status_code=201)
 def create_player(data:Player,session:Session = Depends(get_session)):
     player = Player(player_id=data.player_id,name=data.name,nil=data.nil,delta_nil=data.delta_nil)
@@ -255,7 +260,7 @@ Our API functions are organized into what FastAPI calls routers. They are a coll
 
 `router = APIRouter(prefix="/player")`   
 this creates a router with the prefix `/player`
-```
+```python
 @router.get("/{player_id}", response_model=Player)
 def retrieve_player(player_id:int,session:Session=Depends(get_session)):
     .........
@@ -272,7 +277,7 @@ We use the SQLModel library to create SQLModel classes that define the structure
 
 SQLModel serves two functions, first it is a Object Relational Mapping (ORM), it allows us to manipulate a database using object classes in another language(python) instead of writting raw SQL statements in our database. It talks to our database by establising connections to the database, performs operations, and commits changes made in that session before closing. 
 
-```
+```python
 #Table model
 class User(SQLModel,table=True):
     user_id:int = Field(primary_key=True)
@@ -283,7 +288,7 @@ This defines a table in our database with `user_id` as a primary key, and additi
 
 We can write SQLModel classes not only to represent tables for our database, but also it define the strucute of any JSON data the API will send or recieve. This is SQLModel's second function. Each model defines its variables and their types, as well as any restrictions like length, or optionality. These models will try to fit any incoming and outgoing data to the correct types if possible, but if the data cannot be put in the correct format it throws an error.
 
-```
+```python
 #JSON models
 class UserRegister(SQLModel):
     email:str

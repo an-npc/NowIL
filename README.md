@@ -1,72 +1,90 @@
 # NowIL
+
 # Members
-Project Manager: [Name] ([GitHub Name])\
-Communications Lead: [Name] ([GitHub Name])\
-Git Master: Melanie J. Steiner (an-npc)\
-Design Lead: [Name] ([GitHub Name])\
-Quality Assurance Tester: [Name] ([GitHub Name])
+
+Joshua Walther(walthe219) 		- Project Manager, Backend Lead\
+Melanie J. Steiner(an-npc) 		- Git Master, Frontend Lead\
+Alexis Harvey(alexisharveyyy) 	- Machine Learning & Data Lead, Backend\
+Vanik Makaryan(vmakaa) 			- Design Lead, Frontend\
+Kaden Casey (GITHUB) 			- Backend
 
 # About Our Software
 
-## React + Vite
+NowIL
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Tech Stack
 
-Currently, two official plugins are available:
+**Frontend**:
+- **React.js** - Frontend Framework in JavaScript/HTML
+- **Tailwind.css**- CSS Framework
+- **Vite** - Build manager
+- **Rechart** - React chart library
+- **React Routing** - React routing library to make multipage app
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+**Backend**:
+- **FastAPI** - Backend Framework in Python
+- **SQLModel** - ORM, Interface with Database using Python only 
+- **PostgreSQL** - Relational Database Management System
+- **Alembic** - Database migrations, like git for database structure, prevents data loss
+- **PyTorch** - machine learning library
 
-### React Compiler
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-### Expanding the ESLint configuration
-
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
-
-Describe a little about what the project is about here.
-## Platforms Tested on
-- MacOS
-- Android
-- iOS
-- Linux
-- Windows
 # Important Links
-Kanban Board: [link]\
-Designs: [link]\
-Styles Guide(s): [link]
 
-# How to Run Dev and Test Environment
+Product Specification Document: [PDF](NowIL_PSD.pdf)
 
-## Dependencies
-- List all dependencies here
-- Don't forget to include versions
-### Downloading Dependencies
-Describe where to download the dependencies here. Some will likely require a web download. Provide links here. For IDE extensions, make sure your project works with the free version of them, and detail which IDE(s) these are available in. 
+Product Design Document: [PDF](NowIL_UIUX.pdf)
+
+High Fidelity Wireframe: [Figma](https://www.figma.com/design/hzr285in43N14pHKeMljPY/NowIL?node-id=1669-162202&t=ZPnLkDJtEfXeQfWw-1)
+
+Database Schema: [Google Sheet](https://docs.google.com/spreadsheets/d/15IPL0w0pzPMONMbBcK4yUYHJ0Yc0lmZaoS0uEOIzv_c/edit?usp=sharing)
+
+
+# How to Run Dev Environment
+
+## Setup
+
+Follow instructions in [DOCKER.md](DOCKER.md) file to setup using Docker
+
+Requires [Docker Desktop](https://www.docker.com/products/docker-desktop/)
+
+Make sure you have all parts of the project setup and running
+
+Both of these links should work if project is running correctly
+
+Frontend: `http://localhost:5173/`
+
+Backend: `http://localhost:8000/docs`
+
 
 ## Commands
-Describe how the commands and process to launch the project on the main branch in such a way that anyone working on the project knows how to check the affects of any code they add.
+
+### Docker Commands
 
 ```sh
-Example terminal command syntax
+docker compose up --build 	//inital build, after every pull or new branch
 ```
 
-It is very common in these sections to see code in peculiar boxes to help them stand out. Check the markdown section of the Project Specifications to see how to add more / customize these.
-
-```python
-def code_highlight_example(m: int, m: float, s: str) -> str:
-	return s + str(n*m)
+```sh
+docker compose up 			//start docker containers 
 ```
 
-```java
-public static void main(String[] args){
-	System.out.println("Hello, World!");
-}
+```sh
+docker compose down			// close docker containers
 ```
 
-```c#
-static void Main(){
-	Console.WriteLine("Hello, World!");
-}
+```sh
+
+docker compose exec frontend COMMAND	// execute a terminal command on frontend container	
 ```
+
+```sh
+
+docker compose exec backend COMMAND		// execute a terminal command on backend container	
+```
+
+```sh
+
+docker compose exec db COMMAND			// execute a terminal command on database container
+```
+

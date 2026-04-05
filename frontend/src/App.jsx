@@ -1,15 +1,11 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import heroImg from './assets/hero.png'
-import NowILLogo from './assets/Logo.svg'
-import Volleyball from './assets/volleyball.svg'
-import Soccer from './assets/soccer.svg'
-import Baseball from './assets/baseball.svg'
-import Swimming from './assets/swimming.svg'
-import './App.css'
-// slack, edit, person, home 
+import { useState } from 'react';
+import NowILLogo from './assets/Logo.svg';
+import './App.css';
 import { Home, User, Slack, Dribbble, Heart, Edit, Search } from 'react-feather';
+import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
+import Homepage from './pages/homepage';
+import Index from './pages/Index';
+import Guest from './pages/myguest';
 
 let data = [
   {
@@ -47,90 +43,138 @@ let data = [
   }
 ];
 
+// acts as Map in my dev-port-iii
+
 function App() {
   return (
-    <main className='grid-container'>
-      <section className='menu-bar'>
-        <div className='column'>
-          <div className='center'><img src={NowILLogo} alt='NowIL_Logo' className='logo' /></div>
-          <div className='row'><Home /> <p>home</p></div>
-          <div className='row'><User /> <p>players</p></div>
-          <div className='row'><Slack /> <p>teams</p></div>
-          <div className='row'><Dribbble /> <p>sports</p></div>
-          <div className='row'><Heart /> <p>following</p></div>
-          <div className='row'><Edit /> <p>predict</p></div>
-        </div>
-      </section>
-      <header className='page-title center-vertical'><h1>homepage</h1></header>
-      <form className='search-bar center-vertical'>
-        <div className='row'>
-          <input type='search' value='search for your team' />
-          <input type='submit' />
-        </div>
-      </form>
-      <section className='chart'>
-        <div id='header' className='table-row-header'>
-          <p>#</p>
-          <p>ATHLETE</p>
-          <p>COLLEGE</p>
-          <p>SPORT</p>
-          <p>POS</p>
-          <p>NIL VALUE</p>
-          <p>NIL CHANGE</p>
-          <p>FOLLOW</p>
-        </div>
-        <div className=''>
-          {data.map((item) => (
-            <div key={item.id} className='table-row'>
-              <p>{item.rank}</p>
-              <p>{item.athlete}</p>
-              <p>{item.college}</p>
-              <p>{item.sport}</p>
-              <p>{item.position}</p>
-              <p>{item.nilValue}</p>
-              <p>{item.nilChange}</p>
-              <p>{item.following ? 'Following' : 'Not Following'}</p>
-            </div>
-          ))}
-        </div>
-      </section>
-      <section className='trending'>
-        <div className='sub-trending'>
-          <div className='sports-card'>
-            <img
-              src={Volleyball}
-              alt='volleyball-img'
-              className='change-color' />
-            <p className='sports-title'>VOLLEYBALL</p>
-          </div>
-          <div className='sports-card'>
-            <img
-              src={Baseball}
-              alt='volleyball-img'
-              className='change-color' />
-            <p className='sports-title'>BASEBALL</p>
-          </div>
-          <div className='sports-card'>
-            <img
-              src={Swimming}
-              alt='volleyball-img'
-              className='change-color' />
-            <p className='sports-title'>SWIMMING</p>
-          </div>
-          <div className='sports-card'>
-            <img
-              src={Soccer}
-              alt='volleyball-img'
-              className='change-color' />
-            <p className='sports-title'>SOCCER</p>
-          </div>
-        </div>
-      </section>
-      <section className='news-section2'>
 
-      </section>
-    </main>
+
+    <Router>
+      <main className='app-row'>
+        <section className='menu-bar'>
+          <div className='column'>
+            <div className='center'><img src={NowILLogo} alt='NowIL_Logo' className='logo' /></div>
+            <Link to="/homepage">
+              <div className='row'><Home /><p>home</p>
+              </div>
+            </Link>
+            <Link to="/guest">
+              <div className='row'>
+                <User /> <p>players</p>
+              </div>
+            </Link>
+            <div className='row'><Slack /> <p>teams</p></div>
+            <div className='row'><Dribbble /> <p>sports</p></div>
+            <div className='row'><Heart /> <p>following</p></div>
+            <div className='row'><Edit /> <p>predict</p></div>
+          </div>
+        </section>
+        <Routes>
+          <Route path="/homepage" element={<Homepage />} />
+          <Route path="/guest" element={<Guest />} />
+        </Routes>
+      </main>
+    </Router>
   )
 }
 
 export default App
+
+
+/*
+function App() {
+  return (
+    <section>
+      <Router>
+        <section className='menu-bar'>
+          <div className='column'>
+            <div className='center'><img src={NowILLogo} alt='NowIL_Logo' className='logo' /></div>
+            <button><div className='row'><Home /> <p>home</p></div></button>
+            <button><div className='row'><User /> <p>players</p></div></button>
+            <button><div className='row'><Slack /> <p>teams</p></div></button>
+            <button><div className='row'><Dribbble /> <p>sports</p></div></button>
+            <button><div className='row'><Heart /> <p>following</p></div></button>
+            <button><div className='row'><Edit /> <p>predict</p></div></button>
+          </div>
+        </section>
+        <Routes>
+          <Route path="/onboarding" element={<Index />} />
+          <Route path="/guest" element={<Guest />} />
+          <Route path="/" element={<Homepage />} />
+        </Routes>
+      </Router>
+    </section>
+  )
+}
+
+export default App
+*/
+
+
+
+
+{/* <div id="page">
+        <Router>
+          <nav id="row">
+            <div className="menu">
+              <button id="btn" data-toggle="dropdown" type="button">
+                <Menu color="#ffffff" class="icon" />
+              </button>
+
+              <div class="dropdown-menu">
+                <Link to="/">
+                  <button id="opt" class="dropdown-item">
+                    // about me
+                  </button>
+                </Link>
+
+                <Link to="/skill-level">
+                  <button id="opt" class="dropdown-item">
+                    // skill level
+                  </button>
+                </Link>
+                <Link id="opt" to="/exp-points">
+                  <button class="dropdown-item">// exp points</button>
+                </Link>
+                <Link id="opt" to="/projects">
+                  <button class="dropdown-item">// projects</button>
+                </Link>
+              </div>
+            </div>
+
+            <div>
+              <a href="https://www.linkedin.com/in/melanie-steiner-811782227/">
+                <button id="btn-front">
+                  <Linkedin color="#ffffff" class="icon" />
+                </button>
+              </a>
+              <a href="https://codesandbox.io/dashboard/drafts?workspace=ws_HPCGq37933jTz96LhNc3YF">
+                <button id="btn-mid">
+                  <GitHub color="#ffffff" class="icon" />
+                </button>
+              </a>
+              <button id="btn-mid">
+                <Codesandbox color="#ffffff" class="icon" />
+              </button>
+              <button id="btn-end">
+                <Mail color="#ffffff" class="icon" />
+              </button>
+            </div>
+          </nav>
+          <Routes>
+            <Route path="/" element={<AboutMe class="padding-btm" />} />
+            <Route
+              path="/skill-level"
+              element={<Skills class="padding-btm" />}
+            />
+            <Route path="/exp-points" element={<Exp class="padding-btm" />} />
+            <Route
+              path="/projects"
+              element={<Projects class="padding-btm" />}
+            />
+          </Routes>
+        </Router>
+      </div>
+      <div id="footer">
+        <Footer />
+      </div> */}

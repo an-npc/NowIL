@@ -9,15 +9,39 @@
   margin-right: 16px;
 }
 
+.grid-container-guest {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  grid-template-rows: auto auto;
+  /* grid-template-rows: auto 25px; */
+  min-height: 100vh;
+  column-gap: 24px;
+  row-gap: 16px;
+  margin-right: 16px;
+  /* background-color: azure; */
+}
+
+.grid-container-main {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  grid-template-rows: auto auto;
+  /* grid-template-rows: auto 25px; */
+  min-height: 100vh;
+  column-gap: 24px;
+  row-gap: 16px;
+  margin-left: 16px;
+  /* background-color: chartreuse; */
+}
+
 /* START FOLLOWING PAGE */
 .search-bar {
-  grid-column: 9/-1;
+  grid-column: 9/13;
   grid-row: 1;
   background: orange;
 }
 
 .hero-stats {
-  grid-column: 3/13;
+  grid-column: 3/-1;
   grid-row: 2/4;
   color: #ee8cda;
   background: #ee8cda;
@@ -77,6 +101,12 @@ h1 {
   padding: 0 10px;
 }
 
+.app-row {
+  display: flex;
+  /* justify-content: space-between; */
+  color: white;
+}
+
 .row {
   display: flex;
   justify-content: space-between;
@@ -86,20 +116,19 @@ h1 {
 }
 
 .menu-bar {
-  grid-column: 1 / 3;
-  grid-row: 1/16;
-  align-self: stretch;
+  width: 15vw;
+
   background: #0f5a2b;
 }
 
 .page-title {
-  grid-column: 3/9;
+  grid-column: 1/9;
   grid-row: 1;
   background: aquamarine;
 }
 
 .chart {
-  grid-column: 3/13;
+  grid-column: 1/13;
   grid-row: 2/10;
   background: #15803d;
   border-radius: 30px;
@@ -107,7 +136,7 @@ h1 {
 }
 
 .trending {
-  grid-column: 3/10;
+  grid-column: 1/10;
   grid-row: 10/16;
   background: palegreen;
   border-radius: 30px;
@@ -136,16 +165,18 @@ h1 {
   background: azure;
 }
 
-.table-row-header{
+.table-row-header {
   display: grid;
-  grid-template-columns: 30px repeat(7,1fr);
+  grid-template-columns: 30px repeat(7, 1fr);
   margin-bottom: 10px;
   font-weight: bold;
 }
-.table-row{
+
+.table-row {
   display: grid;
-  grid-template-columns: 30px repeat(7,1fr);
+  grid-template-columns: 30px repeat(7, 1fr);
   margin-bottom: 10px;
   border-bottom: ghostwhite 1px solid;
 }
+
 /* END HOMEPAGE PAGE */

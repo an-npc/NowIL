@@ -43,10 +43,10 @@ let data = [
     }
 ];
 
-function Homepage() {
+function Guest() {
     return (
         <main className='grid-container-main' >
-            <header className='page-title center-vertical'><h1>homepage</h1></header>
+            <header className='page-title center-vertical'><h1>guest</h1></header>
             <form className='search-bar center-vertical'>
                 <div className='row'>
                     <input type='search' value='search for your team' />
@@ -115,7 +115,7 @@ function Homepage() {
 
             </section>
         </main>
-    )
+    );
 }
 
-export default Homepage;
+export default Guest;

@@ -6,6 +6,7 @@ import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import Homepage from './pages/homepage';
 import Index from './pages/Index';
 import Guest from './pages/myguest';
+import Predict from './pages/predict';
 
 let data = [
   {
@@ -54,7 +55,7 @@ function App() {
         <section className='menu-bar'>
           <div className='column'>
             <div className='center'><img src={NowILLogo} alt='NowIL_Logo' className='logo' /></div>
-            <Link to="/homepage">
+            <Link to="/">
               <div className='row'><Home /><p>home</p>
               </div>
             </Link>
@@ -66,115 +67,19 @@ function App() {
             <div className='row'><Slack /> <p>teams</p></div>
             <div className='row'><Dribbble /> <p>sports</p></div>
             <div className='row'><Heart /> <p>following</p></div>
-            <div className='row'><Edit /> <p>predict</p></div>
+            <Link to="/predict">
+              <div className='row'><Edit /> <p>predict</p></div>
+            </Link>
           </div>
         </section>
         <Routes>
-          <Route path="/homepage" element={<Homepage />} />
+          <Route path="/" element={<Homepage />} />
           <Route path="/guest" element={<Guest />} />
+          <Route path="/predict" element={<Predict />} />
         </Routes>
       </main>
     </Router>
   )
 }
 
-export default App
-
-
-/*
-function App() {
-  return (
-    <section>
-      <Router>
-        <section className='menu-bar'>
-          <div className='column'>
-            <div className='center'><img src={NowILLogo} alt='NowIL_Logo' className='logo' /></div>
-            <button><div className='row'><Home /> <p>home</p></div></button>
-            <button><div className='row'><User /> <p>players</p></div></button>
-            <button><div className='row'><Slack /> <p>teams</p></div></button>
-            <button><div className='row'><Dribbble /> <p>sports</p></div></button>
-            <button><div className='row'><Heart /> <p>following</p></div></button>
-            <button><div className='row'><Edit /> <p>predict</p></div></button>
-          </div>
-        </section>
-        <Routes>
-          <Route path="/onboarding" element={<Index />} />
-          <Route path="/guest" element={<Guest />} />
-          <Route path="/" element={<Homepage />} />
-        </Routes>
-      </Router>
-    </section>
-  )
-}
-
-export default App
-*/
-
-
-
-
-{/* <div id="page">
-        <Router>
-          <nav id="row">
-            <div className="menu">
-              <button id="btn" data-toggle="dropdown" type="button">
-                <Menu color="#ffffff" class="icon" />
-              </button>
-
-              <div class="dropdown-menu">
-                <Link to="/">
-                  <button id="opt" class="dropdown-item">
-                    // about me
-                  </button>
-                </Link>
-
-                <Link to="/skill-level">
-                  <button id="opt" class="dropdown-item">
-                    // skill level
-                  </button>
-                </Link>
-                <Link id="opt" to="/exp-points">
-                  <button class="dropdown-item">// exp points</button>
-                </Link>
-                <Link id="opt" to="/projects">
-                  <button class="dropdown-item">// projects</button>
-                </Link>
-              </div>
-            </div>
-
-            <div>
-              <a href="https://www.linkedin.com/in/melanie-steiner-811782227/">
-                <button id="btn-front">
-                  <Linkedin color="#ffffff" class="icon" />
-                </button>
-              </a>
-              <a href="https://codesandbox.io/dashboard/drafts?workspace=ws_HPCGq37933jTz96LhNc3YF">
-                <button id="btn-mid">
-                  <GitHub color="#ffffff" class="icon" />
-                </button>
-              </a>
-              <button id="btn-mid">
-                <Codesandbox color="#ffffff" class="icon" />
-              </button>
-              <button id="btn-end">
-                <Mail color="#ffffff" class="icon" />
-              </button>
-            </div>
-          </nav>
-          <Routes>
-            <Route path="/" element={<AboutMe class="padding-btm" />} />
-            <Route
-              path="/skill-level"
-              element={<Skills class="padding-btm" />}
-            />
-            <Route path="/exp-points" element={<Exp class="padding-btm" />} />
-            <Route
-              path="/projects"
-              element={<Projects class="padding-btm" />}
-            />
-          </Routes>
-        </Router>
-      </div>
-      <div id="footer">
-        <Footer />
-      </div> */}
+export default App;

@@ -60,7 +60,8 @@ Backend: http://localhost:8000/docs
 ## Commands
 
 ### Docker Commands
-Use these commands to build, start, and close down docker containers, required to use project   
+Use these commands to build, start, and close down docker containers, required to use project  
+**DOCKER DESKTOP MUST BE OPEN TO RUN COMMANDS ON WINDOWS** 
 
 ```sh
 docker compose up --build 	//inital build, after every pull, new branch, or package

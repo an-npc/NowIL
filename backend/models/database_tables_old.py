@@ -38,37 +38,66 @@ class Player(SQLModel,table=True):
     player_id: int = Field(primary_key=True)
     first_name:str
     last_name:str
-    college_year:CollegeYear|None
-    height:float|None
-    weight:float|None
-    hometown:str|None
-    homestate:str|None
-    
-    position:PositionType
-    number:int|None
-    
-    team_id:int = Field(foreign_key="team.team_id")
+    college_year:CollegeYear
+    height:float
+    weight:float
+    age:int
+    hometown:str
+    homestate:str
+    high_school:str
     
     # Relationships
+    positions:List[Position] = Relationship(back_populates="player")
     performances:List[Performance] = Relationship(back_populates="player")
-    team:Team = Relationship(back_populates="players")
+    injuries:List[Injury] = Relationship(back_populates="player")
     
+    
+#School(SchoolID, SchoolName, City, State, PrimaryColor, SecondaryColor, Logo)
+class School(SQLModel,table=True):
+    school_id:int = Field(primary_key=True)
+    name:str
+    city:str
+    state:str
+    color_hex_value:str|None = Field(default=None)
+    logo_url:str|None = Field(default=None)
+
+    # Relationships
+    teams:List[Team] = Relationship(back_populates="school")
+
+# Sport(SportID, SportName, PlayersOnField/Team)	
+class Sport(SQLModel,table=True):
+    sport_id:int = Field(primary_key=True)
+    name:str
+
+    # Relationships
+    teams:List[Team] = Relationship(back_populates="sport")
     
 
 #Team(TeamID, (FK)SportID,  (FK)SchoolID) 		
 class Team(SQLModel,table=True):
     team_id:int = Field(primary_key=True)
-    sport:str 
-    school:str
-    city:str|None
-    state:str|None
-    color_hex_value:str|None = Field(default=None)
-    logo_url:str|None = Field(default=None)
+    sport_id:int = Field(foreign_key="sport.sport_id")
+    school_id:int = Field(foreign_key="school.school_id")
     
     # Relationships
-    players:List[Player] = Relationship(back_populates="team")
+    sport:Sport = Relationship(back_populates="teams")
+    school:School = Relationship(back_populates="teams")
+    players:List[Position] = Relationship(back_populates="team")
     away_games:List[Game] = Relationship(back_populates="away_team")
     home_games:List[Game] = Relationship(back_populates="home_team")
+
+
+# Position( (FK)PlayerID, (FK)TeamID, Season, Position, Number)	
+class Position(SQLModel,table=True):
+    player_id:int = Field(primary_key=True, foreign_key="player.player_id")
+    team_id:int = Field(primary_key=True, foreign_key="team.team_id")
+    season:int = Field(primary_key=True) 
+    type:PositionType
+    number:int
+    
+    # Relationships
+    player:Player = Relationship(back_populates="positions")
+    team:Team = Relationship(back_populates="players")
 
 
 # Game(GameID, Date, (FK)AwayTID,  (FK)HomeTID, Location, AwayScore, HomeScore, Outcome)						
@@ -99,4 +128,14 @@ class Performance(SQLModel,table=True):
     player:Player = Relationship(back_populates="performances")
     game:Game = Relationship(back_populates="performances")
 
+
+# Injury( (FK)PlayerID, Type, StartDate, EndDate)	
+class Injury(SQLModel,table=True):
+    player_id:int = Field(primary_key=True, foreign_key="player.player_id")
+    type:str = Field(primary_key=True)
+    start_date:date = Field(primary_key=True)
+    end_date:date
+
+    # Relationships
+    player:Player = Relationship(back_populates="injuries")
 

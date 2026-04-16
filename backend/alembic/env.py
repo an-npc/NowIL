@@ -27,7 +27,7 @@ if config.config_file_name is not None:
 # from myapp import mymodel
 # target_metadata = mymodel.Base.metadata
 from models.player_test import PlayerTest
-from models.database_tables import Player,Game,Injury,Performance,School,Sport,Team,Position
+from models.database_tables import Player,Game,Performance,Team
 from sqlmodel import SQLModel
 target_metadata = SQLModel.metadata
 

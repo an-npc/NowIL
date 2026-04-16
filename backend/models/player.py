@@ -7,9 +7,14 @@ from models.database_tables import CollegeYear
 class PlayerTableData(SQLModel):
     first_name:str
     last_name:str
+    school_name:str
+    sport:str
+    pos:str
     college_year:CollegeYear
     nil:int
-    delta_nil:int
+    delta_nil:float
+    
+    #FirstName,LastName,SchoolName,Sport,Pos,NIL,DeltaNIL 
     
     
 class PlayerInfo(SQLModel):

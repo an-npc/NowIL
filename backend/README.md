@@ -1,13 +1,12 @@
 # NowIL - Backend
 Written by Joshua Walther, msg me with any questions!
 
-****
 
 This README will get you started with setting up the backend as well as explaining the strucutre of the backend and how FastAPI works. 
 
 To setup the project as a whole consult [DOCKER.md](/DOCKER.md)
 
-To get started running the backend all you NEED to read is the Quickstart section, however I reccomend reading the other sections as well if you would like to work on the backend. If you just need to setup the backend server on your computer to test it or connect it to the frontend, the Quickstart section is sufficent 
+If the docker setup does not work and you need to setup the backend manually read the Quickstart section, however I recommend reading the other sections as well if you would like to work on the backend. If you just need to setup the backend server on your computer to test it or connect it to the frontend, the Quickstart section is sufficent 
 
 
 # Table Contents
@@ -26,9 +25,6 @@ To get started running the backend all you NEED to read is the Quickstart sectio
   - [FastAPI Automatic Docs](#fastapi-automatic-docs)
 - [APIs and FastAPI](#apis-and-fastapi)
     - [Why use FastAPI?](#why-use-fastapi)
-  - [API Basics](#api-basics)
-    - [HTTP](#http)
-    - [REST API](#rest-api)
   - [API Functions](#api-functions)
   - [Routers](#routers)
   - [Models](#models)
@@ -42,7 +38,6 @@ To get started running the backend all you NEED to read is the Quickstart sectio
 - PyTorch for machine learning
 - Docker for project setup and managment
 - Supabase for database hosting
-
 
 # Backend file structure
 The *backend* directory contains all of the backend files and directorys:
@@ -187,41 +182,6 @@ Its in the name, FastAPI is a fast, modern, and clean python backend framework.
 - uses type annotations
 - reduces reduant code writting using SQLModel
 - automatically generates documentation, can be used to test without a frontend
-
-## API Basics
-This explains the basics of backend APIs, if you already understand what an API is you can skip this.
-
-A web application is composed of three parts, a client application, a server, and a database. The frotend controls the client application, the backend is what runs on the server managing the behind the scenes logic and data for our website. Our API allows our frontend to talk to the backend, and our backend server to connect to the database. The frontend makes HTTP requests to the backend API for data, the backend fetches that data from the database, and returns and HTTP response in JSON with the data. 
-
-### HTTP
-HTTP requests are used to send and recieve data on the web. In our case the frontend sends HTTP requests to the backend, the backend sends HTTP responses back. 
-
-HTTP requests have a few parts, URL, Method, Header, and Body: 
-- URL: where the message is going.
-- Method: what HTTP method is being performed (GET, POST, DELETE, PUT, etc.)
-- Header: holds meta data like what format the data is in (JSON or form) and cookies
-- Body: holds the data being sent (usually in JSON format), used only for POST, PUT, and PATCH methods.
-  
-HTTP is stateless, meaning there is no memory between requests, each request is like a unique unknown user. We use tokens and cookies, aswell as our database, to store information needed between requests, like a token saying a user is still signed in.
-
-There are a few key HTTP Methods:
-- POST: used to send lots of data, to create something or to carry user credentials
-- GET: used to retrieve/read data
-- PUT/PATCH: used to update data, PUT replaces the data completly, PATCH updates only parts of the data
-- DELETE: used to delete data
-
-HTTP response have a status code like 200,201,404,500 to indicate the result of a request, a Header with metadata, and a body to send back data in JSON usually
-
-### REST API
-We are creating what is called a REST API, it uses HTTP requests to communicate between the frontend and backend. There are four key CRUD operations used by a REST API
-
-CRUD:
-- Create: use HTTP POST method to create new data in our database 
-- Read: use HTTP Get method to fetch data from database and return it 
-- Update: use HTTP PUT/PATCH to update existing data in the our database
-- Delete: use HTTP DELETE to delete existing data in our database
- 
-You can see how the HTTP methods from above map to our four API operations.
 
 ## API Functions
 Known as path operator functions in FastAPI, we write our API functions to create endpoints for API that can be called by the frontend. Each function has a URL its accessible by and an HTTP method:

@@ -5,6 +5,7 @@ from models.database_tables import CollegeYear
 
   
 class PlayerTableData(SQLModel):
+    id:int
     first_name:str
     last_name:str
     school_name:str

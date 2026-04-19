@@ -44,6 +44,7 @@ The env file will not get commited to github, and it holds all the variables tha
 ```bash
 docker compose up --build
 ```
+**DOCKER DESKTOP MUST BE OPEN TO RUN DOCKER COMMANDS ON WINDOWS** 
 
 This will automatically:
 - Start a PostgreSQL database
@@ -57,7 +58,7 @@ In a second terminal:
 docker compose exec backend alembic upgrade head
 ```
 
-**5. Setup back venv (Backend DEV only)**
+**5. Setup backend venv (Backend DEV only)**
 
 If you plan on working in the backend, you will still need to create a python virtual environment outside of the Docker container so that VSCode IntelliSense and suggestions work.
 
@@ -69,6 +70,7 @@ pip install -r requirements.txt
 ```
 Note: `.venv/Scripts/Activate.ps1 `  is Windows specific, if on Mac or Linux use `source venv/bin/activate`
 
+**6. Verify servers are running**
 That's it! The backend is running at `http://localhost:8000` and the API docs are at `http://localhost:8000/docs`. The frontend is running at `http:localhost:5173` .
 
 ### Useful Docker Commands

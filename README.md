@@ -52,17 +52,19 @@ Make sure you have all parts of the project setup and running
 
 Both of these links should work if project is running correctly
 
-Frontend: `http://localhost:5173/`
+Frontend: http://localhost:5173/
 
-Backend: `http://localhost:8000/docs`
+Backend: http://localhost:8000/docs
 
 
 ## Commands
 
 ### Docker Commands
+Use these commands to build, start, and close down docker containers, required to use project  
+**DOCKER DESKTOP MUST BE OPEN TO RUN COMMANDS ON WINDOWS** 
 
 ```sh
-docker compose up --build 	//inital build, after every pull or new branch
+docker compose up --build 	//inital build, after every pull, new branch, or package
 ```
 
 ```sh
@@ -75,16 +77,93 @@ docker compose down			// close docker containers
 
 ```sh
 
-docker compose exec frontend COMMAND	// execute a terminal command on frontend container	
+docker compose down -v	    / / close docker containers and delete your db data	
 ```
+
+### Frontend Commands
+
+Run these in the frontend container specifically 
+
+```sh
+
+docker compose exec frontend COMMAND		// execute a terminal command on frontend container	
+```
+
+or
+
+```sh
+docker compose exec frontend bash		// open fronted terminal to execute commands directly
+```
+
+Commands:
+```sh
+npm run dev             //restart or start frontend server
+```
+
+```sh
+npm install PACKAGENAME     //install a Node.js package
+```
+
+
+### Backend Commands
+
+Run these in the backend container specifically
 
 ```sh
 
 docker compose exec backend COMMAND		// execute a terminal command on backend container	
 ```
 
+or
+
+```sh
+docker compose exec backend bash		// open backedn terminal to execute commands directly
+```
+
+
+Commands:
+
+```sh
+fastapi dev             //restart or start backend server
+```
+
+```sh
+alembic revision --autogenerate -m "Revision description"     //save changes to database schema
+```
+
+```sh
+alembic upgrade head        //apply changes to database schema to your database
+```
+
+```sh
+pip install PACKAGENAME     //install new python package, rebuild docker after
+```
+
+
+### Datbase Commands
+Run these in the database container specifically
+
 ```sh
 
 docker compose exec db COMMAND			// execute a terminal command on database container
 ```
 
+or
+
+```sh
+docker compose exec db bash		// open database terminal to execute commands directly
+```
+
+Commands:
+
+```sh
+psql -U postgres nowil          //open psql, the postgres command line interface
+```
+
+```sh
+\dt                             //in psql, show all tables in database
+```
+
+```sh
+select * from TABLENAME;         //in psql, see all records in TABLENAME
+```

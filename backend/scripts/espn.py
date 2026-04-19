@@ -1,165 +1,115 @@
-import requests, json
+import requests
+import json
+from typing import Callable
+from models.database_tables import PositionType
 
 #https://github.com/pseudo-r/Public-ESPN-API
-# https://github.com/pseudo-r/Public-ESPN-API/blob/main/docs/sports/football.md
+#https://github.com/pseudo-r/Public-ESPN-API/blob/main/docs/sports/football.md
+
+'''
+A collection of methods used to fetch data from ESPN API,
+extract relevat data needed for table records,
+and write to or read JSON files containing these records
+
+Stores JSON files in data/tables/ 
+'''
 
 
-#https://sports.core.api.espn.com/v2/sports/football/leagues/college-football
-#https://sports.core.api.espn.com/v2/sports/football/leagues/college-football/seasons/2025/athletes?group=8&limit=100
-#https://sports.core.api.espn.com/v2/sports/football/leagues/college-football/teams?group=8&season=2026
-
-#Beau Allen
-#http://sports.core.api.espn.com/v2/sports/football/leagues/college-football/seasons/2025/athletes/4429209?lang=en&region=us
-#https://a.espncdn.com/i/headshots/college-football/players/full/4429209.png
-
-
-teamID = {
-    "Auburn Tigers": 0,
-    "Arkansas Razorbacks": 1,
-    "Florida Gators": 2,
-    "Georgia Bulldogs": 3,
-    "Kentucky Wildcats": 4,
-    "LSU Tigers": 5,
-    "Missouri Tigers": 6,
-    "Ole Miss Rebels": 7,
-    "Oklahoma Sooners": 8,
-    "Vanderbilt Commodores": 9,
-    "Texas A&M Aggies": 10,
-    "Texas Longhorns": 11,
-    "Alabama Crimson Tide": 12,
-    "Mississippi State Bulldogs": 13,
-    "South Carolina Gamecocks": 14,
-    "Tennessee Volunteers": 15
-}
+'''
+Team Methods
+'''
+# fetch list of all teams from espn api
+# returns dict[espn_id, team_data]
+def fetch_teams_data() -> dict:
     
-
-def get_teams():
-    response = requests.get('https://sports.core.api.espn.com/v2/sports/football/leagues/college-football/teams?group=8&season=2025&limit=1000')
-    teams = response.json()["items"]
-
-    team_names = {}
-    for team_url in teams:
-        team = requests.get(team_url["$ref"]).json()
-        team_names[team["displayName"]] = team
+    url = "https://sports.core.api.espn.com/v2/sports/football/leagues/college-football/teams"
+    parameters = {"group": 8,"season": 2025, "limit": 100} # SEC is group 8
+    
+    response = requests.get(url,parameters)
+    team_urls = response.json()["items"]
+    
+    teams = {}
+    for team_url in team_urls:
+        team_data = requests.get(team_url["$ref"]).json()
+        teams[team_data["id"]] = team_data
         
-        
-    return team_names 
+    return teams 
 
-def team_dict():
-    response = requests.get('https://sports.core.api.espn.com/v2/sports/football/leagues/college-football/teams?group=8&season=2025&limit=1000')
-    teams = response.json()["items"]
 
-    team_names = {}
-    for team_url in teams:
-        team = requests.get(team_url["$ref"]).json()
-        team_names[team["displayName"]] = team
-        
-        
-    return team_names 
+# takes espn data and extracts data needed for Team table records
+# returns dict[espn_id,team_record]
+def create_team_records() -> dict:
+    teams = fetch_teams_data().values()
     
-    
-def get_atheletes(team_name):
-    teams = get_teams()
-    if teams is None:
-        return
-    team = teams[team_name]
-   
-    athlete_urls = requests.get(team["athletes"]["$ref"]+"&limit=200").json()["items"]
-    
-    athletes = {}
-    for athlete_url in athlete_urls:
-        athlete = requests.get(athlete_url["$ref"]).json()
-        athletes[athlete["fullName"]] = athlete
-        
-    return athletes
-
-def get_games(startdate:int,enddate:int):
-    url = "https://site.api.espn.com/apis/site/v2/sports/football/college-football/scoreboard"
-    parameters = f"?groups=8&limit=100&dates={startdate}-{enddate}"
-    events = requests.get(url+parameters).json()["events"]
-    
-    id = 0
-    games = {}
-    for event in events:
-        try:
-            if event["competitions"][0]["competitors"][0]["winner"] == "true":
-                winner = event["competitions"][0]["competitors"][0]["team"]["location"]
-            else :
-                winner = event["competitions"][0]["competitors"][1]["team"]["location"]
-                
-                
-            game = {
-                "game_id"   :   id,
-                "away_id"   :   teamID[event["competitions"][0]["competitors"][1]["team"]["displayName"]],
-                "home_id"   :   teamID[event["competitions"][0]["competitors"][0]["team"]["displayName"]],
-                "date"      :   event["date"],
-                "location"  :   event["competitions"][0]["venue"]["fullName"],
-                "away_score":   event["competitions"][0]["competitors"][0]["score"],
-                "home_score":   event["competitions"][0]["competitors"][1]["score"],
-                "outcome"   :   winner
-            }
-            games[event["name"]] = game
-            id+=1
-        except KeyError as e:
-                print(f"Game: {event["name"]}   Date: {event["date"]}")
-                print(e)
-    return games
-
-
-def write_rosters():
-    teams = get_teams().keys()
-    for team in teams:
-        athletes = get_atheletes(team)
-        if athletes is not None:
-            filename = f"data/rosters/Team {team}.json"
-            with open(filename, "w") as file:
-                json.dump(athletes,file, indent=4, sort_keys=True)   
-
-
-def write_teams():
-    teams = get_teams().values()
-    for team in teams:
-        filename = f"data/teams/{team["displayName"]}.json"
-        with open(filename,"w") as file:
-            json.dump(team,file, indent=4, sort_keys=True)
-            
-
-def get_teams_table():
-    teams = get_teams().values()
-    
-    id=0
-    schools = {}
-    for team in teams:
-        school = {
-            "school_id": id,
+    school_id=0
+    team_records = {}
+    for team_data in teams:
+        team = {
+            "espn_id": team_data["id"],
+            "team_id": school_id,
             "sport":"football",
-            "school": team["location"],
-            "city": team["venue"]["address"]["city"],
-            "state": team["venue"]["address"]["state"],
-            "color_hex_value": team["color"],
-            "logo_url": team["logos"][0]["href"]
+            "school": team_data["location"],
+            "city": team_data["venue"]["address"]["city"],
+            "state": team_data["venue"]["address"]["state"],
+            "color_hex_value": team_data["color"],
+            "logo_url": team_data["logos"][0]["href"]
             }   
         
-        schools[team["location"]] = school
-        id+=1
-        
-    return schools
+        team_records[team_data["id"]] = team
+        school_id += 1
+    return team_records
 
-def get_players_table():
+
+'''
+Player Methods
+'''
+# fetches the players on each teams roster from espn api
+# returns a dict[team_table_id, dict[player_espn_id, player_data ]]
+def fetch_rosters_data() -> dict:
+    teams = read_or_fetch("teams",create_team_records).values()
     
-    teams = get_teams()
-    id = 0
+    rosters = {}
+    for team in teams:
+        
+        espn_id = team["espn_id"]
+        url = (
+            f"http://sports.core.api.espn.com/v2/sports/football/leagues/college-football/"
+            f"seasons/{2025}/teams/{espn_id}/athletes"
+        )
+        parameters = {"lang": "en", "region": "us", "limit":200} #?lang=en&region=us
+        athlete_urls = requests.get(url,parameters).json()["items"]
+    
+        print(f"fetching team {team["team_id"]}'s roster...")
+        athletes = {}
+        for athlete_url in athlete_urls:
+            
+            athlete = requests.get(athlete_url["$ref"]).json()
+            athletes[athlete["id"]] = athlete
+            
+        rosters[team["team_id"]] = athletes
+        
+    return rosters
+
+
+def create_player_records() -> dict:
+    
+    rosters = fetch_rosters_data()
+    
+    player_id = 0
     player_table = {}
-    for team_name,team in teams.items(): 
-        
-        if team["displayName"] not in teamID:
-            continue
-        
-        players = get_atheletes(team_name).values()
+    for team_id,roster in rosters.items(): 
+            
+        players = roster.values()
         for player in players:
             try:
+                # Test to see if the position is supported in the database
+                # will throw error if not
+                pos = player["position"]["abbreviation"]
+                PositionType(pos)
+                    
                 player_data = {
-                    "player_id":  id,
+                    "espn_id": player["id"],
+                    "player_id":  player_id,
                     "first_name": player["firstName"],
                     "last_name": player["lastName"],
                     "college_year":player["experience"]["displayValue"],
@@ -169,41 +119,183 @@ def get_players_table():
                     "homestate":player["birthPlace"]["state"],
                     "position":player["position"]["abbreviation"],
                     "number":player["jersey"],  
-                    "team_id": teamID[team["displayName"]]
+                    "team_id": team_id
                 } 
-                player_table[player["fullName"]] = player_data
-                id+=1  
+                player_table[player["id"]] = player_data
+                player_id+=1  
             except KeyError as e:
-                print(f"Team: {team_name}   Player: {player["fullName"]}")
+                print(f"Team table id: {team_id}   Player: {player["fullName"]}")
+                print(e)
+            except ValueError as e:
+                print(f"Team table id: {team_id}   Player: {player["fullName"]}")
                 print(e)
 
-    return player_table            
-        
+    return player_table  
+
+
+'''
+Game Methods
+'''
+def fetch_game_data(startdate:int,enddate:int) -> dict:
+    url = "https://site.api.espn.com/apis/site/v2/sports/football/college-football/scoreboard"
+    parameters = f"?groups=8&limit=100&dates={startdate}-{enddate}"
+    events = requests.get(url+parameters).json()["events"]
+    
+    games = {}
+    for event in events:
+        games[event["id"]] = event
+    return games
+
+def create_game_records() -> dict:
+    events = fetch_game_data(20250723,20260120).values()
+    teams = read_or_fetch("teams",create_team_records)
+    
+    game_id = 0
+    games = {}
+    for event in events:
+        try:
+            if event["competitions"][0]["competitors"][0]["winner"] == "true":
+                winner = event["competitions"][0]["competitors"][0]["team"]["location"]
+            else :
+                winner = event["competitions"][0]["competitors"][1]["team"]["location"]
             
-if __name__ == "__main__":        
+            team0_espn_id = event["competitions"][0]["competitors"][0]["team"]["id"]
+            team1_espn_id = event["competitions"][0]["competitors"][1]["team"]["id"]
+                
+            game = {
+                "espn_id"   :   event["competitions"][0]["id"],
+                "game_id"   :   game_id,
+                "away_id"   :   teams[team0_espn_id]["team_id"],
+                "home_id"   :   teams[team1_espn_id]["team_id"],
+                "date"      :   event["date"],
+                "location"  :   event["competitions"][0]["venue"]["fullName"],
+                "away_score":   event["competitions"][0]["competitors"][0]["score"],
+                "home_score":   event["competitions"][0]["competitors"][1]["score"],
+                "outcome"   :   winner
+            }
+            games[game["espn_id"]] = game
+            game_id+=1
+        except KeyError as e:
+                print(f"Game: {event["name"]}   Date: {event["date"]}")
+                print(e)
+    return games
+
+
+'''
+Performance Methods
+'''
+def fetch_performances_data(game_id) -> dict:
+    url = "https://site.api.espn.com/apis/site/v2/sports/football/college-football/summary"
+    parameters = f"?groups=8&limit=1&event={game_id}"
+    game = requests.get(url+parameters).json()["boxscore"]
     
-    schools = get_teams_table()
-    filename = f"data/tables/schools.json"
-    with open (filename, "w") as file:
-        json.dump(schools,file,indent=4)
+    performances = {}
+    teams = game["players"]
+    for team in teams:
+        statistics = team["statistics"]
+        for stat_group in statistics:
+            athletes = stat_group["athletes"]
+            for athlete in athletes:
+                performances[athlete["athlete"]["id"]]=athlete   
+    return performances
+
+def create_performance_records() -> dict:
+    games = read_or_fetch("games",create_game_records)
+    players = read_or_fetch("players",create_player_records)
     
-    # teamIDs = {}
-    # team_names = get_teams().keys()
-    # teams_data = get_teams_table().values()
-    # for team,team_name in zip(teams_data,team_names):
-    #     teamIDs[team_name] = team["school_id"]
-    # filename=f"data/teamIDS.json"
-    # with open(filename,"w") as file:
-    #     json.dump(teamIDs,file,indent=4)
+    performances_records = {}
+    for espn_game_id in games:
+        performances = fetch_performances_data(espn_game_id)
+        for espn_player_id in performances:
+            try:
+                performances_data = {
+                    "game_id": games[espn_game_id]["game_id"],
+                    "player_id": players[espn_player_id]["player_id"],
+                    "nil": 0,
+                    "nil_delta": 0,
+                }
+                key = f"{espn_game_id}-{espn_player_id}"
+                performances_records[key] = performances_data
+            except KeyError as e:
+                print(f"Game: {espn_game_id}   Player: {espn_player_id}")
+                print(e)
+    return performances_records
+
+'''
+MISC
+'''
+# gets all the types of college football positions in ESPN API
+def fetch_position_types():
+    url = "https://sports.core.api.espn.com/v2/sports/football/leagues/college-football/positions"
+    parameters = {"limit":100}
+    pos_urls = requests.get(url,parameters).json()["items"]
+    positions = {}
+    for pos_url in pos_urls:
+        try:
+            pos = requests.get(pos_url["$ref"]).json()
+            positions[pos["abbreviation"]] = pos
+        except KeyError as e:
+            print(e)
+    return positions
+
+
+            
+'''
+I/O METHODS
+'''
+# creates a json file from a dict of table records
+def write_table(table_records:dict, file_name:str) -> None:
+    filepath=f"data/tables/{file_name}.json"
+    with open(filepath,"w") as file:
+        json.dump(table_records,file,indent=4)
+        
+
+# reads a json file representing a table
+# returns as a python dictonary if the file exists
+# else returns None
+def read_table(table_file_name:str) -> dict|None:
+    filepath = f"data/tables/{table_file_name}.json"
+    try:
+        with open(filepath,"r") as file:
+            table_records = json.load(file)
+            return table_records
+    except FileNotFoundError as e:
+        return None
+
+
+# reads data if it exists, else fetchs data and writes it  
+# avoids fetching data again if its already been collected
+def read_or_fetch(file_name:str, create_records_func:Callable[[],dict])-> dict:
+    result = read_table(file_name)
+    if result is not None:
+        return result
+    else:
+        records = create_records_func()
+        write_table(records,file_name)
+        return records
+
+
+# collects Team, Player, Game, and Performance from ESPN API
+# writes as JSON files to data/tables/
+def collect_all_data() -> None:
+    print("Begining collection process!")
+    tables = [
+        ("teams",create_team_records),
+        ("players", create_player_records),
+        ("games", create_game_records),
+        ("performances",create_performance_records),
+    ]
+    for table_name,create_func in tables:
+        print(f"Fetching {table_name} data...")
+        write_table(create_func(),table_name)
+        print(f"Saving data at data/tables/{table_name}.json")
+        print(f"This data can be inserted into the database using insert_database.py")
+        
     
-    # players = get_players_table()
-    # filename = f"data/tables/players.json"
-    # with open (filename, "w") as file:
-    #     json.dump(players,file,indent=4)
     
-    # games = get_games(20250723,20260120)
-    # filename = f"data/tables/games.json"
-    # with open (filename, "w") as file:
-    #     json.dump(games,file,indent=4)
-    
-   
+if __name__ == "__main__": 
+    #write_table(create_team_records(),"teams")
+    # write_table(create_player_records(),"players")
+    # write_table(create_game_records(),"games")
+    #write_table(create_performance_records(),"performances")
+    collect_all_data()

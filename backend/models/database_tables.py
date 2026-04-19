@@ -1,4 +1,3 @@
-from __future__ import annotations 
 from typing import Optional,List
 from sqlmodel import SQLModel, Field, Relationship 
 from enum import Enum
@@ -50,8 +49,8 @@ class Player(SQLModel,table=True):
     team_id:int = Field(foreign_key="team.team_id")
     
     # Relationships
-    performances:List[Performance] = Relationship(back_populates="player")
-    team:Team = Relationship(back_populates="players")
+    performances:List["Performance"] = Relationship(back_populates="player")
+    team:"Team" = Relationship(back_populates="players")
     
     
 
@@ -67,8 +66,8 @@ class Team(SQLModel,table=True):
     
     # Relationships
     players:List[Player] = Relationship(back_populates="team")
-    away_games:List[Game] = Relationship(back_populates="away_team")
-    home_games:List[Game] = Relationship(back_populates="home_team")
+    away_games:List["Game"] = Relationship(back_populates="away_team", sa_relationship_kwargs={"foreign_keys": "[Game.away_id]"})
+    home_games:List["Game"] = Relationship(back_populates="home_team", sa_relationship_kwargs={"foreign_keys": "[Game.home_id]"})
 
 
 # Game(GameID, Date, (FK)AwayTID,  (FK)HomeTID, Location, AwayScore, HomeScore, Outcome)						
@@ -83,9 +82,9 @@ class Game(SQLModel,table=True):
     outcome:str
 
     # Relationships
-    away_team:Team = Relationship(back_populates="away_games")
-    home_team:Team = Relationship(back_populates="home_games")
-    performances:List[Performance] = Relationship(back_populates="game")
+    away_team:"Team" = Relationship(back_populates="away_games",sa_relationship_kwargs={"foreign_keys": "[Game.away_id]"})
+    home_team:"Team" = Relationship(back_populates="home_games",sa_relationship_kwargs={"foreign_keys": "[Game.home_id]"})
+    performances:List["Performance"] = Relationship(back_populates="game")
 
 
 #Performance( (FK)GameID, (FK)PlayerID,	NIL, NILDELTA)
@@ -93,10 +92,10 @@ class Performance(SQLModel,table=True):
     game_id:int = Field(primary_key=True, foreign_key="game.game_id")
     player_id:int = Field(primary_key=True, foreign_key="player.player_id")
     nil:int
-    nilt_delta:float
+    nil_delta:float
     
     # Relationships
-    player:Player = Relationship(back_populates="performances")
-    game:Game = Relationship(back_populates="performances")
+    player:"Player" = Relationship(back_populates="performances")
+    game:"Game" = Relationship(back_populates="performances")
 
 

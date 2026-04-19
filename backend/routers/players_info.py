@@ -13,24 +13,10 @@ router = APIRouter(prefix="/players", tags=["player"])
 @router.get("", response_model=List[PlayerTableData])
 def get_players(session:Session = Depends(get_session)):
     
-    players = session.exec(select(Player))
-    table:List[PlayerTableData] = []
     
-    for player in players:
-        team = player.team
-        performance = player.performances[0]
-        
-        data:PlayerTableData = PlayerTableData(
-            first_name=player.first_name,
-            last_name=player.last_name,
-            school_name=team.school,
-            sport=team.sport,
-            pos = player.position,
-            college_year=player.college_year,
-            nil=performance.nil,
-            delta_nil=performance.nilt_delta
-            )
-        table.append(data)
+    current_nil = session.exec()
+    players = session.exec(Player)
+    
 
     return table 
 

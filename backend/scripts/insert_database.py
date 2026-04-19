@@ -14,7 +14,7 @@ def insert_into_table(filename:str,Table:type):
                 
     data = read_table(filename)
     if data is None:
-        return 
+        raise RuntimeError(f"Could not find a {filename}.json in the data/tables folder. Make sure this file exisits in the correct location, data/tables/{filename}.json") 
 
     data = data.values()
     with Session(engine) as session:

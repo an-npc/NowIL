@@ -4,17 +4,15 @@ Written by Joshua Walther, msg me with any questions!
 
 This README will get you started with setting up the backend as well as explaining the strucutre of the backend and how FastAPI works. 
 
-To setup the project as a whole consult [DOCKER.md](/DOCKER.md)
-
-If the docker setup does not work and you need to setup the backend manually read the Quickstart section, however I recommend reading the other sections as well if you would like to work on the backend. If you just need to setup the backend server on your computer to test it or connect it to the frontend, the Quickstart section is sufficent 
-
+To setup the project, the frontend, backend, and database all in one,consult [DOCKER.md](/DOCKER.md)
+If the docker setup does not work and you need to setup the backend manually read the manual setup section. 
 
 # Table Contents
 - [NowIL - Backend](#nowil---backend)
 - [Table Contents](#table-contents)
 - [Backend Tech Stack](#backend-tech-stack)
 - [Backend file structure](#backend-file-structure)
-- [Manul Backend Setup](#manul-backend-setup)
+- [Manul Backend Setup - ONLY IF DOCKER NOT WORKING](#manul-backend-setup---only-if-docker-not-working)
   - [Prequisites](#prequisites)
   - [1. Create a python virtual environment and install dependencies](#1-create-a-python-virtual-environment-and-install-dependencies)
   - [2. Setup your local PostgreSQL database](#2-setup-your-local-postgresql-database)
@@ -23,36 +21,38 @@ If the docker setup does not work and you need to setup the backend manually rea
   - [4. Initialize database tables with Alembic](#4-initialize-database-tables-with-alembic)
   - [5. Run backend server locally](#5-run-backend-server-locally)
   - [FastAPI Automatic Docs](#fastapi-automatic-docs)
-- [APIs and FastAPI](#apis-and-fastapi)
+- [FastAPI and SQLModel](#fastapi-and-sqlmodel)
     - [Why use FastAPI?](#why-use-fastapi)
   - [API Functions](#api-functions)
   - [Routers](#routers)
   - [Models](#models)
+  - [Databas](#databas)
 
 # Backend Tech Stack
-- Python for programming language
-- FastAPI for python framework
-- PostgreSQL for relational database
-- SQLModel libray for database access and data validation
-- Alembic library for database migrations
-- PyTorch for machine learning
-- Docker for project setup and managment
-- Supabase for database hosting
+- *Python* for programming language
+- *FastAPI* for python framework
+- *PostgreSQL* for relational database
+- *SQLModel* libray for database access and data validation
+- *Alembic* library for database migrations
+- *PyTorch* for machine learning
+- *Docker* for project setup and managment
 
 # Backend file structure
 The *backend* directory contains all of the backend files and directorys:
 - .venv: python virtual environment
 - alembic: stores database migration files and version from alembic
+- data: holds data files
 - models: contains all of our model classe defining our tables and JSON formats
 - routers: contains all of our API routers classes with API functions
-- main.py: runs on start, creates the FastAPI app, registers routers with the app
-- database.py: creates and setup database engine and session fuction
+- scripts: python scripts to pull data from espn api, write it to data folder, and insert into the database
+- main.py: runs on server start, creates the FastAPI app, registers routers with the app
+- database.py: creates and sets up database engine and session fuction
 - requirements.txt: all python dependecies and packages
 - .env: contains all secret variables that cannot be commited to git, DB password, secret key
 
 
-# Manul Backend Setup 
-This section will instruct you on how to setup the backend manually so that you can run it on your machine if Docker is not working.  
+# Manul Backend Setup - ONLY IF DOCKER NOT WORKING
+This section will instruct you on how to setup the backend manually so that you can run it on your machine if Docker is not working. Docker does this automatically for you so you do not need to setup the backend manually if you already have docker working
 
 **I RECOMMEND TRYING TO SETUP WITH DOCKER FIRST, IT ONLY TAKES ONE COMMAND, IF IT DOESNT WORK RETURN HERE. CONSULT /nowil/DOCKER.MD**
 
@@ -173,7 +173,7 @@ Try using POST, GET, and DELETE methods to add, get, and delete records from you
 
 
 
-# APIs and FastAPI
+# FastAPI and SQLModel
 At this point the backend should be setup and running. This section will explain the structure of the backend and how to make changes. The [FastAPI Documentation](https://fastapi.tiangolo.com/tutorial/) is a very helpful, but lengthy resource, consult it for a more in depth explaination.
 
 ### Why use FastAPI?
@@ -244,7 +244,9 @@ class User(SQLModel,table=True):
     email:str
     hashed_password:str
 ```
-This defines a table in our database with `user_id` as a primary key, and additional attributes email and hashed_password. When we make changes to this table or create new table classes, we can use `alembic revisions` to sae the changes and `alembic upgrade` to apply the changes to our local database. 
+This defines a table in our database with `user_id` as a primary key, and additional attributes email and hashed_password. 
+
+When we make changes to this table class or create new table classes, we need to use Alembic to save the changes and to apply the changes to our local database. Alembic is a library that handles database migrations, like git for our database schema, it saves and tracks changes to the schema and automatically writes sql code that is executed. This code is designed so that updating the tables will not cause any data loss. Without alembic, changing the schema of the database means dropping it and lossing all data. 
 
 We can write SQLModel classes not only to represent tables for our database, but also it define the strucute of any JSON data the API will send or recieve. This is SQLModel's second function. Each model defines its variables and their types, as well as any restrictions like length, or optionality. These models will try to fit any incoming and outgoing data to the correct types if possible, but if the data cannot be put in the correct format it throws an error.
 
@@ -259,3 +261,6 @@ class UserResponse(SQLModel):
     email:str
 ```
 These two models define what data we expect to send and recieve for our User. For a user to signup they just need to send their email and password, and when we respond we dont want to sned their password or hashed_password back, but we need to send the user_id back so they know their user number
+
+## Databas
+

@@ -5,9 +5,9 @@ This Docker setup was generated with Claude, let me know if there are any errors
 ## Choose Your Setup Method
 
 **New to the project? Use Docker** — it handles React, Python, PostgreSQL, and all dependencies automatically with one command.  
-**Docker not working on your machine?** Follow the manual setup for the bakcend in the `backend/README.md` file.
+**Docker not working on your machine?** Follow the manual setup for the backend in the [Backend.md](backend/Backend.md) file.
 
-*`backend/README.MD` also contains useful information about the structure of the backend and how it works, I recommend reading some of it if you plan on working on the backend - Joshua*
+*[Backend.md](backend/Backend.md) also contains useful information about the structure of the backend and how it works, I recommend reading some of it if you plan on working on the backend - Joshua*
 ---
 
 ## Docker Setup (Recommended)

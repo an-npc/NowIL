@@ -6,9 +6,9 @@ Joshua Walther(walthe219) 		- Project Manager, Backend Lead\
 Melanie J. Steiner(an-npc) 		- Git Master, Frontend Lead\
 Alexis Harvey(alexisharveyyy) 	- Machine Learning & Data Lead, Backend\
 Vanik Makaryan(vmakaa) 			- Design Lead, Frontend\
-Kaden Casey (GITHUB) 			- Backend
+Kaden Casey(KadenC707) 			- Backend
 
-# About Our Software
+# What is NowIL
 
 NowIL
 

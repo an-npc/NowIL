@@ -7,6 +7,4 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
 
-RUN chmod +x start.sh
-
-CMD ["sh", "start.sh"]
+CMD ["fastapi", "dev", "main.py", "--host", "0.0.0.0", "--port", "8000"]

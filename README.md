@@ -92,7 +92,7 @@ docker compose exec frontend COMMAND		// execute a terminal command on frontend 
 or
 
 ```sh
-docker compose exec frontend bash		// open fronted terminal to execute commands directly
+docker compose exec frontend sh		// open fronted terminal to execute commands directly
 ```
 
 Commands:

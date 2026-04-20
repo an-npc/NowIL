@@ -2,7 +2,7 @@
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from routers import players_test,test
+from routers import players_info
 
 
 app = FastAPI()
@@ -14,8 +14,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-app.include_router(test.router)
-app.include_router(players_test.router)
+app.include_router(players_info.router)
 
 @app.get("/")
 def root():

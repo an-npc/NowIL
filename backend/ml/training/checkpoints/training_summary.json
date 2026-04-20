@@ -1,0 +1,46 @@
+{
+  "folds": [
+    {
+      "fold": 0,
+      "best_val_loss": 0.4656294882297516,
+      "best_val_mae_usd": 908783.4375,
+      "n_train": 28,
+      "n_val": 7,
+      "checkpoint": "training/checkpoints/fold_0.pt"
+    },
+    {
+      "fold": 1,
+      "best_val_loss": 0.632874608039856,
+      "best_val_mae_usd": 933253.125,
+      "n_train": 28,
+      "n_val": 7,
+      "checkpoint": "training/checkpoints/fold_1.pt"
+    },
+    {
+      "fold": 2,
+      "best_val_loss": 1.2285650968551636,
+      "best_val_mae_usd": 15202216.0,
+      "n_train": 28,
+      "n_val": 7,
+      "checkpoint": "training/checkpoints/fold_2.pt"
+    },
+    {
+      "fold": 3,
+      "best_val_loss": 0.6018214821815491,
+      "best_val_mae_usd": 1840586.75,
+      "n_train": 28,
+      "n_val": 7,
+      "checkpoint": "training/checkpoints/fold_3.pt"
+    },
+    {
+      "fold": 4,
+      "best_val_loss": 1.0814810991287231,
+      "best_val_mae_usd": 4250633.5,
+      "n_train": 28,
+      "n_val": 7,
+      "checkpoint": "training/checkpoints/fold_4.pt"
+    }
+  ],
+  "best_fold": 0,
+  "mean_val_mae_usd": 4627094.5625
+}

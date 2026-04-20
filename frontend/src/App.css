@@ -182,69 +182,270 @@ h1 {
 }
 
 /* END HOMEPAGE PAGE */
-/* PREDICT PAGE */
-.predict-sect {
-  grid-column: 1/13;
-  grid-row: 2/14;
-  /* background: #15803d; */
-  border-radius: 30px;
-  padding: 15px;
+/* ===== Predict page (new layout) ===== */
+.predict-page {
+  padding: 32px 48px;
+  background: #f5f7f6;
+  min-height: 100vh;
+  font-family: system-ui, -apple-system, sans-serif;
+  width: 85vw;
 }
 
-.text-input {
-  border: 2px solid #1B4332;
-  border-radius: 7px;
-  background-color: rgb(249, 249, 249);
-  min-width: 400px;
+/* Header */
+.predict-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
 }
 
+.predict-header h1 {
+  font-size: 40px;
+  font-weight: 800;
+  margin: 0;
+  color: #0a0a0a;
+}
 
-.submit-btn {
-  background-color: #1B4332;
-  color: white;
+.predict-search {
+  display: flex;
+  align-items: center;
+  background: #fff;
+  border-radius: 999px;
+  padding: 10px 18px;
+  width: 360px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+}
+
+.predict-search-icon {
+  color: #9ca3af;
+  margin-right: 10px;
+}
+
+.predict-search-input {
   border: none;
-  padding: 10px 20px;
-  border-radius: 5px;
+  outline: none;
+  flex: 1;
+  font-size: 14px;
+  background: transparent;
+}
+
+/* Sport tabs */
+.sport-tabs {
+  display: flex;
+  gap: 8px;
+  justify-content: space-between;
+  background: #fff;
+  border-radius: 999px;
+  padding: 6px 12px;
+  margin-bottom: 28px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+}
+
+.sport-tab {
+  flex: 1;
+  border: none;
+  background: transparent;
+  padding: 10px 16px;
+  border-radius: 999px;
+  font-size: 15px;
+  color: #6b7280;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.sport-tab:hover {
+  color: #0a0a0a;
+}
+
+.sport-tab-active {
+  color: #0a0a0a;
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+/* Form */
+.predict-form {
+  margin-bottom: 32px;
+}
+
+.predict-form-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr) auto;
+  gap: 16px 20px;
+  align-items: center;
+}
+
+.pill-input {
+  padding: 14px 22px;
+  border: 1.5px solid #d1d5db;
+  border-radius: 999px;
+  background: #fff;
+  font-size: 14px;
+  font-weight: 500;
+  color: #4b5563;
+  letter-spacing: 0.5px;
+  outline: none;
+  transition: border-color 0.15s;
+  min-width: 0;
+}
+
+.pill-input:focus {
+  border-color: #166534;
+}
+
+.pill-input::placeholder {
+  color: #9ca3af;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+}
+
+select.pill-input {
+  appearance: none;
   cursor: pointer;
 }
 
-.reset-btn {
-  background-color: cornsilk;
-  color: #1B4332;
+.submit-pill {
+  grid-row: span 2;
+  padding: 20px 40px;
   border: none;
-  padding: 10px 20px;
-  border-radius: 5px;
+  border-radius: 999px;
+  background: #0f3d2e;
+  color: #fff;
+  font-weight: 700;
+  letter-spacing: 1px;
+  cursor: pointer;
+  font-size: 15px;
+  box-shadow: 0 4px 10px rgba(15, 61, 46, 0.25);
+  transition: transform 0.1s;
+}
+
+.submit-pill:hover {
+  transform: translateY(-1px);
+}
+
+/* Results */
+.predict-results {
+  margin-top: 20px;
+}
+
+.eval-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+  text-align: center;
+  margin-bottom: 28px;
+}
+
+.eval-title {
+  font-size: 28px;
+  font-weight: 700;
+  font-family: Georgia, 'Times New Roman', serif;
+  margin: 0 0 8px;
+  color: #0a0a0a;
+}
+
+.eval-value {
+  font-size: 26px;
+  font-family: Georgia, 'Times New Roman', serif;
+  color: #0f3d2e;
+  margin: 0;
+}
+
+.results-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 24px;
+  align-items: start;
+}
+
+/* NIL Graph card */
+.nil-graph-card {
+  background: #fff;
+  border: 2px solid #3b82f6;
+  border-radius: 16px;
+  padding: 20px;
+}
+
+.nil-graph-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 8px;
+}
+
+.nil-graph-header h3 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.1;
+}
+
+.compare-btn {
+  border: 1.5px solid #d1d5db;
+  background: #fff;
+  border-radius: 999px;
+  padding: 6px 18px;
+  font-size: 13px;
   cursor: pointer;
 }
 
-.make-line {
-  margin: 20px 0px;
-  border-bottom: 2px solid gray;
+.chart-title {
+  text-align: center;
+  font-weight: 600;
+  margin: 8px 0 12px;
+  font-size: 14px;
 }
 
-.shift-right {
-  padding-left: 15px;
+/* Cohort table */
+.cohort-card {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 16px;
+  padding: 16px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
 }
 
-
-
-@media(min-width: 768px) {
-  .predict-input {
-    max-width: 55vw;
-  }
+.cohort-title {
+  text-align: center;
+  font-size: 13px;
+  font-weight: 700;
+  color: #166534;
+  letter-spacing: 0.5px;
+  margin: 4px 0 12px;
 }
 
-select {
-  min-width: 400px;
+.cohort-subtitle {
+  font-weight: 400;
+  font-style: italic;
+  color: #166534;
 }
 
-/*
-
-#snackbar {
-  visibility: hidden;
-  max-height: 0px;
+.cohort-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
 }
-*/
 
+.cohort-table th {
+  text-align: left;
+  color: #166534;
+  font-weight: 700;
+  padding: 8px 6px;
+  border-bottom: 1px solid #e5e7eb;
+}
 
-/* END PREDICT PAGE */
+.cohort-table td {
+  padding: 8px 6px;
+  color: #166534;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.cohort-table tr:last-child td {
+  border-bottom: none;
+}
+
+/* Override: the old global `select` rule forces min-width: 400px which breaks the pill grid */
+select.pill-input {
+  min-width: 0;
+}

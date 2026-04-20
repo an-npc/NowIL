@@ -1,19 +1,19 @@
 from __future__ import annotations
 from typing import Optional
 from sqlmodel import SQLModel
-from models.database_tables import CollegeYear
+from models.database_tables import CollegeYear,PositionType
 
   
 class PlayerTableData(SQLModel):
-    id:int
+    player_id:int
     first_name:str
     last_name:str
-    school_name:str
+    school:str
     sport:str
-    pos:str
+    position:PositionType
     college_year:CollegeYear
     nil:int
-    delta_nil:float
+    nil_delta:float
     
     #FirstName,LastName,SchoolName,Sport,Pos,NIL,DeltaNIL 
     

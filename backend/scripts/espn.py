@@ -2,6 +2,7 @@ import requests
 import json
 from typing import Callable
 from models.database_tables import PositionType
+import random
 
 #https://github.com/pseudo-r/Public-ESPN-API
 #https://github.com/pseudo-r/Public-ESPN-API/blob/main/docs/sports/football.md
@@ -212,7 +213,8 @@ def create_performance_records() -> dict:
                     "game_id": games[espn_game_id]["game_id"],
                     "player_id": players[espn_player_id]["player_id"],
                     "nil": 0,
-                    "nil_delta": 0,
+                    "nil": generate_random_nil(),
+                    "nil_delta": generate_random_delta(),
                 }
                 key = f"{espn_game_id}-{espn_player_id}"
                 performances_records[key] = performances_data
@@ -238,6 +240,11 @@ def fetch_position_types():
             print(e)
     return positions
 
+def generate_random_nil():
+    return random.randint(10000,100000)
+
+def generate_random_delta():
+    return random.normalvariate(0,.25)
 
             
 '''
@@ -295,7 +302,7 @@ def collect_all_data() -> None:
     
 if __name__ == "__main__": 
     #write_table(create_team_records(),"teams")
-    # write_table(create_player_records(),"players")
+    #write_table(create_player_records(),"players")
     # write_table(create_game_records(),"games")
     #write_table(create_performance_records(),"performances")
     collect_all_data()

@@ -99,3 +99,38 @@ class Performance(SQLModel,table=True):
     game:"Game" = Relationship(back_populates="performances")
 
 
+# class QBPerformance(Performance,table=True):
+#     pass
+
+
+# class RBPerformance(Performance,table=True):
+#     pass
+
+
+# class WRPerformance(Performance,table=True):
+#     pass
+
+
+# class TEPerformance(Performance,table=True):
+#     pass
+
+
+# class OLPerformance(Performance,table=True):
+#     pass
+
+
+# class DLPerformance(Performance,table=True):
+#     pass
+
+
+# class LBPerformance(Performance,table=True):
+#     pass
+
+
+# class CBPerformance(Performance,table=True):
+#     pass
+
+
+# class SPerformance(Performance,table=True):
+#     pass
+

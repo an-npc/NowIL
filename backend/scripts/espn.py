@@ -48,7 +48,7 @@ def create_team_records() -> dict:
         team = {
             "espn_id": team_data["id"],
             "team_id": school_id,
-            "sport":"football",
+            "sport":"Football",
             "school": team_data["location"],
             "city": team_data["venue"]["address"]["city"],
             "state": team_data["venue"]["address"]["state"],

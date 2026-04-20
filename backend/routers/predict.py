@@ -51,9 +51,8 @@ def get_selection_options(session:Session = Depends(get_session)):
         "years": years
     }
 
-
 @router.post("/selection")
-def send_stat_types(selections:SelectorForm):
+def get_stat_types(selections:SelectorForm):
     pass
 
 

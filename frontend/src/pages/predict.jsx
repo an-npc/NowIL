@@ -7,14 +7,10 @@ import '../App.css'
 import { Home, User, Slack, Dribbble, Heart, Edit, Search, HelpCircle } from 'react-feather';
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 
-import { fetchAPIJson } from '../api/api-funcs'
+import { fetchOrPlaceholder} from '../api/api-funcs'
+import { predict_options } from '../assets/data/placeholder-data'
 
-// let temp_schools = ['Louisiana State University', 'University of Alabama', 'University of Georgia', 'University of Florida', 'University of Texas', 'University of Michigan', 'Ohio State University', 'University of Notre Dame', 'University of Southern California', 'Penn State University'];
-// let temp_positions = ['Quarterback', 'Running Back', 'Wide Receiver', 'Linebacker', 'Safety', 'Defensive End', 'Offensive Line', 'Kicker'];
-// let temp_years = ['2020', '2021', '2022', '2023', '2024'];
-// let temp_conferences = ['SEC', 'ACC', 'Big Ten', 'Pac-12', 'Big 12', 'AAC', 'Mountain West', 'Sun Belt', 'MAC', 'Conference USA'];
-
-const options = await fetchAPIJson("/predict/options")
+const options = await fetchOrPlaceholder("/predict/options",null,predict_options)
 
 
 function Predict() {
@@ -107,7 +103,7 @@ function Predict() {
                             <select onChange={handleConferenceChange}>
                                 <option>select...</option>
                                 {options["conferences"].map((item) => (
-                                    <option value={item} >
+                                    <option key = {item} value={item} >
                                         {item}
                                     </option>
                                 ))}
@@ -118,7 +114,7 @@ function Predict() {
                             <select onChange={handleSchoolChange}>
                                 <option>select...</option>
                                 {options["schools"].map((item) => (
-                                    <option value={item} onChange={handleSchoolChange}>
+                                    <option key = {item} value={item} onChange={handleSchoolChange}>
                                         {item}
                                     </option>
                                 ))}
@@ -129,7 +125,7 @@ function Predict() {
                             <select onChange={handlePositionChange}>
                                 <option >select...</option>
                                 {options["positions"].map((item) => (
-                                    <option value={item} onChange={handlePositionChange}>
+                                    <option key = {item} value={item} onChange={handlePositionChange}>
                                         {item}
                                     </option>
                                 ))}
@@ -140,7 +136,7 @@ function Predict() {
                             <select onChange={handleYearChange}>
                                 <option>select...</option>
                                 {options["years"].map((item) => (
-                                    <option value={item}>
+                                    <option key = {item} value={item}>
                                         {item}
                                     </option>
                                 ))}

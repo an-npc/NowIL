@@ -2,7 +2,7 @@
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from routers import players_info
+from routers import players_info,predict
 
 
 app = FastAPI()
@@ -15,6 +15,7 @@ app.add_middleware(
 )
 
 app.include_router(players_info.router)
+app.include_router(predict.router)
 
 @app.get("/")
 def root():

@@ -1,4 +1,4 @@
-FROM python:3.12-slim
+FROM pytorch/pytorch:2.6.0-cpu-cxx11-abi
 
 WORKDIR /app
 

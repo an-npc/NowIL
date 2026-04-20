@@ -60,7 +60,6 @@ def get_players_data(
     ).all()
 
     return tabledata
-     
 
 
 @router.get("/{player_id}/data", response_model=PlayerTableData)

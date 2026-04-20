@@ -212,7 +212,6 @@ def create_performance_records() -> dict:
                 performances_data = {
                     "game_id": games[espn_game_id]["game_id"],
                     "player_id": players[espn_player_id]["player_id"],
-                    "nil": 0,
                     "nil": generate_random_nil(),
                     "nil_delta": generate_random_delta(),
                 }

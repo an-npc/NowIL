@@ -51,7 +51,7 @@ function Homepage() {
                                 <td>{item.sport}</td>
                                 <td>{item.position}</td>
                                 <td>{USD.format(item.nil)}</td>
-                                <td>{`${item.nil_delta.toFixed(2)}%`}</td>
+                                <td>{`${item.nil_delta.toFixed(2)*100}%`}</td>
                                 <td><Heart/></td>
                             </tr>
                         ))

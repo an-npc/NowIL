@@ -43,7 +43,7 @@ function Guest() {
                             <p>{item.sport}</p>
                             <p>{item.position}</p>
                             <p>{USD.format(item.nil)}</p>
-                            <p>{`${item.nil_delta.toFixed(2)}%`}</p>
+                            <p>{`${item.nil_delta.toFixed(2)*100}%`}</p>
                             <p><Heart/></p>
                         </div>
                     ))}

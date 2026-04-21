@@ -22,7 +22,6 @@ NowIL is a colligate sports website that provides real-time Name Image Likeness(
 
 **Frontend**:
 - **React.js** - Frontend Framework in JavaScript/HTML
-- **Tailwind.css**- CSS Framework
 - **Vite** - Build manager
 - **Rechart** - React chart library
 - **React Routing** - React routing library to make multipage app

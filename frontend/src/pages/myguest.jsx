@@ -6,47 +6,17 @@ import Swimming from '../assets/swimming.svg'
 import '../App.css'
 import { Home, User, Slack, Dribbble, Heart, Edit, Search } from 'react-feather';
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
+import {fetchOrPlaceholder } from '../api/api-funcs'
+import {top_10_data} from '../assets/data/placeholder-data'
 
-let data = [
-    {
-        id: 1,
-        rank: 1,
-        athlete: 'John Doe',
-        college: 'University of Nowhere',
-        sport: 'Basketball',
-        position: 'Guard',
-        nilValue: '$1M',
-        nilChange: '+$500K',
-        following: true
-    },
-    {
-        id: 2,
-        rank: 2,
-        athlete: 'Jane Smith',
-        college: 'College of Somewhere',
-        sport: 'Football',
-        position: 'Quarterback',
-        nilValue: '$800K',
-        nilChange: '+$300K',
-        following: false
-    },
-    {
-        id: 3,
-        rank: 3,
-        athlete: 'Mike Johnson',
-        college: 'State University',
-        sport: 'Baseball',
-        position: 'Pitcher',
-        nilValue: '$600K',
-        nilChange: '+$200K',
-        following: true
-    }
-];
+const params = new URLSearchParams({limit:10})
+let data = await fetchOrPlaceholder("/players/data",params,top_10_data)
 
 function Guest() {
+    const USD = new Intl.NumberFormat('en-US', {style: 'currency', currency: 'USD',});
     return (
         <main className='grid-container-main' >
-            <header className='page-title center-vertical'><h1>guest</h1></header>
+            <header className='page-title center-vertical'><h1>Players</h1></header>
             <form className='search-bar center-vertical'>
                 <div className='row'>
                     <input type='search' value='search for your team' />
@@ -65,16 +35,16 @@ function Guest() {
                     <p>FOLLOW</p>
                 </div>
                 <div className=''>
-                    {data.map((item) => (
-                        <div key={item.id} className='table-row'>
-                            <p>{item.rank}</p>
-                            <p>{item.athlete}</p>
-                            <p>{item.college}</p>
+                    {data.map((item,index) => (
+                        <div key={item.player_id} className='table-row'>
+                            <p>{index+1}</p>
+                            <p>{`${item.first_name} ${item.last_name}`}</p>
+                            <p>{item.school}</p>
                             <p>{item.sport}</p>
                             <p>{item.position}</p>
-                            <p>{item.nilValue}</p>
-                            <p>{item.nilChange}</p>
-                            <p>{item.following ? 'Following' : 'Not Following'}</p>
+                            <p>{USD.format(item.nil)}</p>
+                            <p>{`${item.nil_delta.toFixed(2)*100}%`}</p>
+                            <p><Heart/></p>
                         </div>
                     ))}
                 </div>

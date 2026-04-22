@@ -18,14 +18,14 @@ def get_selection_options(session:Session = Depends(get_session)):
         select(
             Player.position
         )
-        .distinct()
+        .distinct().order_by(Player.position)
     ).all()
     
     schools = session.exec(
         select(
             Team.school
         )
-        .distinct()
+        .distinct().order_by(Team.school)
     ).all()
     
     conferences = [
@@ -51,9 +51,8 @@ def get_selection_options(session:Session = Depends(get_session)):
         "years": years
     }
 
-
 @router.post("/selection")
-def send_stat_types(selections:SelectorForm):
+def get_stat_types(selections:SelectorForm):
     pass
 
 

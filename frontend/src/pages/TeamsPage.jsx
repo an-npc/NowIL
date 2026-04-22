@@ -6,6 +6,39 @@ import lsuLogo from '../assets/lsu-logo.png';
 import olemissLogo from '../assets/olemiss.png';
 import floridaLogo from '../assets/uf-logo.png';
 
+// Heart Icon Component
+const Heart = ({ isLiked, size = 20 }) => (
+  <svg
+    width={size}
+    height={size}
+    viewBox="0 0 24 24"
+    fill={isLiked ? "#dc2626" : "none"}
+    stroke={isLiked ? "#dc2626" : "#999"}
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
+    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+  </svg>
+);
+
+// Search Icon Component
+const SearchIcon = ({ size = 20 }) => (
+  <svg
+    width={size}
+    height={size}
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
+    <circle cx="11" cy="11" r="8"></circle>
+    <path d="m21 21-4.35-4.35"></path>
+  </svg>
+);
+
 // Team Card Component
 const TeamCard = ({ name, location, logoUrl, nilValue, nilChange, sports, headerColor, onNameClick }) => {
   const [isLiked, setIsLiked] = useState(false);
@@ -48,9 +81,10 @@ const TeamCard = ({ name, location, logoUrl, nilValue, nilChange, sports, header
         {/* Like Button */}
         <button
           onClick={() => setIsLiked(!isLiked)}
-          className="float-right text-2xl mb-3"
+          className="float-right mb-3"
+          style={{ background: 'none', border: 'none', cursor: 'pointer', padding: '4px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
         >
-          {isLiked ? '❤️' : '🤍'}
+          <Heart isLiked={isLiked} size={24} />
         </button>
         <div className="clear-both"></div>
 
@@ -58,11 +92,11 @@ const TeamCard = ({ name, location, logoUrl, nilValue, nilChange, sports, header
         <div className="grid grid-cols-2 gap-3 mb-4 border-t border-gray-200 pt-3 flex-1">
           <div>
             <p className="text-gray-600 text-xs">Total NIL Value:</p>
-            <p className="font-bold text-green-600 text-sm">{nilValue}</p>
+            <p className="font-bold text-sm" style={{ color: '#1db954' }}>{nilValue}</p>
           </div>
           <div>
             <p className="text-gray-600 text-xs">Total NIL Change:</p>
-            <p className={`font-bold text-sm ${nilChange.startsWith('+') ? 'text-green-600' : 'text-red-600'}`}>
+            <p className={`font-bold text-sm`} style={{ color: nilChange.startsWith('+') ? '#1db954' : '#dc2626' }}>
               {nilChange}
             </p>
           </div>
@@ -146,13 +180,20 @@ export default function TeamsPage() {
     },
   ];
 
+  const CARD_WIDTH = 350;
+  const CARD_GAP = 24;
+  const CARDS_VISIBLE = 3;
+
   const scroll = (direction) => {
     if (direction === 'left') {
       setCurrentIndex(Math.max(0, currentIndex - 1));
     } else {
-      setCurrentIndex(Math.min(teams.length - 3, currentIndex + 1));
+      setCurrentIndex(Math.min(teams.length - CARDS_VISIBLE, currentIndex + 1));
     }
   };
+
+  const viewportWidth = CARD_WIDTH * CARDS_VISIBLE + CARD_GAP * (CARDS_VISIBLE - 1);
+  const trackOffset = currentIndex * (CARD_WIDTH + CARD_GAP);
 
   const handleTeamClick = (slug) => {
     navigate(`/teams/${slug}`);
@@ -163,12 +204,14 @@ export default function TeamsPage() {
 
   return (
     <div className="flex-1 overflow-auto">
-      <div className="p-8 h-full flex flex-col">
+      <div className="pt-4 px-8 pb-8 h-full flex flex-col">
         {/* Header Section */}
-        <div className="flex items-center justify-between mb-8">
-          <h1 className="text-5xl font-bold text-gray-900">Teams</h1>
-          <div className="relative w-96">
-            <span className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400">🔍</span>
+        <div className="flex items-center justify-between mb-8 gap-8">
+          <h1 className="text-5xl font-bold text-gray-900 flex-shrink-0">Teams</h1>
+          <div className="relative flex-1 max-w-96">
+            <span className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 flex items-center justify-center" style={{ width: '20px', height: '20px' }}>
+              <SearchIcon size={20} />
+            </span>
             <input
               type="text"
               placeholder="Try searching for your favorite team..."
@@ -209,35 +252,65 @@ export default function TeamsPage() {
           </div>
 
           {/* Cards Container */}
-          <div className="flex-1 grid grid-cols-3 gap-6 mb-8">
-            {visibleTeams.map((team, index) => (
-              <TeamCard
-                key={currentIndex + index}
-                name={team.name}
-                location={team.location}
-                logoUrl={team.logoUrl}
-                nilValue={team.nilValue}
-                nilChange={team.nilChange}
-                headerColor={team.headerColor}
-                sports={team.sports}
-                onNameClick={() => handleTeamClick(team.slug)}
-              />
-            ))}
-          </div>
-
-          {/* Navigation Arrows */}
-          <div className="flex justify-between items-center">
+          <div className="flex items-center justify-between gap-6 mb-8">
+            {/* Left Arrow */}
             <button
               onClick={() => scroll('left')}
               disabled={currentIndex === 0}
-              className="text-5xl hover:text-gray-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
+              className="text-5xl hover:text-gray-700 transition disabled:opacity-50 disabled:cursor-not-allowed flex-shrink-0"
             >
               ←
             </button>
+
+            {/* Carousel Viewport */}
+            <div
+              style={{
+                width: `${viewportWidth}px`,
+                height: '550px',
+                overflow: 'hidden',
+                flexShrink: 0,
+              }}
+            >
+              {/* Sliding Track — all cards rendered, shifted via translateX */}
+              <div
+                style={{
+                  display: 'flex',
+                  gap: `${CARD_GAP}px`,
+                  height: '100%',
+                  transform: `translateX(-${trackOffset}px)`,
+                  transition: 'transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
+                  willChange: 'transform',
+                }}
+              >
+                {teams.map((team, index) => (
+                  <div
+                    key={index}
+                    style={{
+                      width: `${CARD_WIDTH}px`,
+                      height: '100%',
+                      flexShrink: 0,
+                    }}
+                  >
+                    <TeamCard
+                      name={team.name}
+                      location={team.location}
+                      logoUrl={team.logoUrl}
+                      nilValue={team.nilValue}
+                      nilChange={team.nilChange}
+                      headerColor={team.headerColor}
+                      sports={team.sports}
+                      onNameClick={() => handleTeamClick(team.slug)}
+                    />
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Right Arrow */}
             <button
               onClick={() => scroll('right')}
-              disabled={currentIndex >= teams.length - 3}
-              className="text-5xl hover:text-gray-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
+              disabled={currentIndex >= teams.length - CARDS_VISIBLE}
+              className="text-5xl hover:text-gray-700 transition disabled:opacity-50 disabled:cursor-not-allowed flex-shrink-0"
             >
               →
             </button>

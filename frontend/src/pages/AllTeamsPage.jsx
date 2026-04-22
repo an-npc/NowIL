@@ -1,16 +1,22 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import {
+  MaterialReactTable,
+  useMaterialReactTable,
+} from 'material-react-table';
+import { Box } from '@mui/material';
 import alabamaLogo from '../assets/ua-logo.png';
 import vanderbiltLogo from '../assets/v-logo.png';
 import lsuLogo from '../assets/lsu-logo.png';
 import olemissLogo from '../assets/olemiss.png';
 import floridaLogo from '../assets/uf-logo.png';
 
-// Main All Teams Page Component
 export default function AllTeamsPage() {
-  const [currentPage, setCurrentPage] = useState(1);
   const navigate = useNavigate();
-  const itemsPerPage = 10;
+  const [pagination, setPagination] = useState({
+    pageIndex: 0,
+    pageSize: 10,
+  });
 
   const allUniversities = [
     { id: 1, slug: 'alabama', name: 'University of Alabama', logo: alabamaLogo, playersTracked: 45, teamsTracked: 15 },
@@ -35,110 +41,137 @@ export default function AllTeamsPage() {
     { id: 20, slug: 'iowa', name: 'University of Iowa', logo: floridaLogo, playersTracked: 27, teamsTracked: 9 },
   ];
 
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const endIndex = startIndex + itemsPerPage;
-  const currentUniversities = allUniversities.slice(startIndex, endIndex);
-  const totalPages = Math.ceil(allUniversities.length / itemsPerPage);
+  const columns = useMemo(
+    () => [
+      {
+        accessorKey: 'id',
+        header: '#',
+        size: 50,
+        Cell: ({ row }) => row.index + 1,
+      },
+      {
+        accessorKey: 'logo',
+        header: 'LOGO',
+        size: 80,
+        Cell: ({ cell }) => (
+          <img src={cell.getValue()} alt="logo" style={{ width: '48px', height: '48px', objectFit: 'contain' }} />
+        ),
+      },
+      {
+        accessorKey: 'name',
+        header: 'UNIVERSITY NAME',
+      },
+      {
+        accessorKey: 'playersTracked',
+        header: 'PLAYERS TRACKED',
+        Cell: ({ cell }) => (
+          <span style={{ color: '#2563eb', fontWeight: 'bold' }}>
+            {cell.getValue()}
+          </span>
+        ),
+      },
+      {
+        accessorKey: 'teamsTracked',
+        header: 'TEAMS TRACKED',
+        Cell: ({ cell }) => (
+          <span style={{ color: '#2563eb', fontWeight: 'bold' }}>
+            {cell.getValue()}
+          </span>
+        ),
+      },
+      {
+        accessorKey: 'slug',
+        header: 'VIEW TEAMS',
+        Cell: ({ row }) => (
+          <a
+            href={`/teams/all/${row.original.slug}`}
+            style={{ color: '#2563eb', fontWeight: 'bold', textDecoration: 'none', cursor: 'pointer' }}
+            onMouseEnter={(e) => e.target.style.textDecoration = 'underline'}
+            onMouseLeave={(e) => e.target.style.textDecoration = 'none'}
+          >
+            View Teams →
+          </a>
+        ),
+      },
+    ],
+    [],
+  );
 
-  const handleNextPage = () => {
-    if (currentPage < totalPages) {
-      setCurrentPage(currentPage + 1);
-      window.scrollTo(0, 0);
-    }
-  };
-
-  const handlePrevPage = () => {
-    if (currentPage > 1) {
-      setCurrentPage(currentPage - 1);
-      window.scrollTo(0, 0);
-    }
-  };
+  const table = useMaterialReactTable({
+    columns,
+    data: allUniversities,
+    enableColumnActions: false,
+    enableColumnFilters: false,
+    enablePagination: true,
+    enableSorting: false,
+    state: {
+      pagination,
+    },
+    onPaginationChange: setPagination,
+    muiTablePaperProps: {
+      sx: {
+        boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+        border: 'none',
+        borderRadius: '12px',
+        overflow: 'hidden',
+      },
+    },
+    muiTableHeadCellProps: {
+      sx: {
+        backgroundColor: '#ffffff',
+        color: '#1f2937',
+        fontWeight: '700',
+        fontSize: '0.875rem',
+        textTransform: 'uppercase',
+        letterSpacing: '0.5px',
+        padding: '16px',
+        borderBottom: '2px solid #e5e7eb',
+      },
+    },
+    muiTableBodyCellProps: {
+      sx: {
+        padding: '14px 16px',
+        borderBottom: '1px solid #f0f0f0',
+        fontSize: '0.95rem',
+      },
+    },
+    muiTableBodyRowProps: ({ row }) => ({
+      sx: {
+        backgroundColor: row.index % 2 === 0 ? '#ffffff' : '#fafafa',
+        '&:hover': {
+          backgroundColor: '#f5f0ff',
+          transition: 'background-color 0.2s ease',
+        },
+      },
+    }),
+    muiPaginationProps: {
+      color: 'standard',
+      shape: 'rounded',
+      sx: {
+        padding: '16px',
+        '& .MuiPaginationItem-root': {
+          borderRadius: '6px',
+          color: '#5a3fa8',
+          '&.Mui-selected': {
+            backgroundColor: '#5a3fa8',
+            color: 'white',
+            fontWeight: '600',
+          },
+          '&:hover': {
+            backgroundColor: '#f5f0ff',
+          },
+        },
+      },
+    },
+  });
 
   return (
     <div className="flex-1 overflow-auto">
-      <div className="p-8">
-        {/* Header */}
+      <div className="pt-4 px-8 pb-8">
         <h1 className="text-5xl font-bold text-gray-900 mb-8">All Teams Tracked</h1>
-
-        {/* Table */}
-        <div className="bg-white border-2 border-gray-300 rounded-2xl overflow-hidden mb-8">
-          <table className="w-full">
-            <thead>
-              <tr className="bg-gray-100 border-b-2 border-gray-300">
-                <th className="px-6 py-4 text-left font-bold text-gray-900">#</th>
-                <th className="px-6 py-4 text-left font-bold text-gray-900">LOGO</th>
-                <th className="px-6 py-4 text-left font-bold text-gray-900">UNIVERSITY NAME</th>
-                <th className="px-6 py-4 text-left font-bold text-gray-900">PLAYERS TRACKED</th>
-                <th className="px-6 py-4 text-left font-bold text-gray-900">TEAMS TRACKED</th>
-                <th className="px-6 py-4 text-left font-bold text-gray-900">VIEW TEAMS</th>
-              </tr>
-            </thead>
-            <tbody>
-              {currentUniversities.map((uni, index) => (
-                <tr key={uni.id} className="border-b border-gray-200 hover:bg-gray-50">
-                  <td className="px-6 py-4 font-bold text-gray-900">{startIndex + index + 1}</td>
-                  <td className="px-6 py-4">
-                    <img src={uni.logo} alt={uni.name} className="w-12 h-12 object-contain" />
-                  </td>
-                  <td className="px-6 py-4 font-bold text-gray-900">{uni.name}</td>
-                  <td className="px-6 py-4 font-bold text-blue-600">{uni.playersTracked}</td>
-                  <td className="px-6 py-4 font-bold text-blue-600">{uni.teamsTracked}</td>
-                  <td className="px-6 py-4">
-                    <a 
-                      href={`/teams/all/${uni.slug}`}
-                      className="text-blue-600 font-bold hover:underline"
-                    >
-                      View Teams →
-                    </a>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-
-        {/* Pagination Controls */}
-        <div className="flex justify-between items-center">
-          <button
-            onClick={handlePrevPage}
-            disabled={currentPage === 1}
-            className="text-4xl hover:text-gray-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            ←
-          </button>
-
-          <div className="flex gap-2 items-center">
-            <span className="text-gray-700 font-bold">
-              Page {currentPage} of {totalPages}
-            </span>
-            <div className="flex gap-1">
-              {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
-                <button
-                  key={page}
-                  onClick={() => {
-                    setCurrentPage(page);
-                    window.scrollTo(0, 0);
-                  }}
-                  className={`px-3 py-2 rounded font-bold transition ${
-                    currentPage === page
-                      ? 'bg-gray-900 text-white'
-                      : 'bg-gray-200 text-gray-900 hover:bg-gray-300'
-                  }`}
-                >
-                  {page}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          <button
-            onClick={handleNextPage}
-            disabled={currentPage === totalPages}
-            className="text-4xl hover:text-gray-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            →
-          </button>
-        </div>
+        <Box sx={{ width: '100%' }}>
+          <MaterialReactTable table={table} />
+        </Box>
       </div>
     </div>
   );

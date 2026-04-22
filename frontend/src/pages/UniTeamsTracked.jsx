@@ -1,14 +1,18 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import {
+  MaterialReactTable,
+  useMaterialReactTable,
+} from 'material-react-table';
+import { Box } from '@mui/material';
 
-// Main University Teams Tracked Page Component
 export default function UniTeamsTracked() {
   const navigate = useNavigate();
   const { teamSlug } = useParams();
-  const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 10;
-
-  // Team data mapped by slug
+  const [pagination, setPagination] = useState({
+    pageIndex: 0,
+    pageSize: 10,
+  });
   const teamDataMap = {
     lsu: {
       name: 'Louisiana State University',
@@ -95,28 +99,130 @@ export default function UniTeamsTracked() {
   const universityName = teamData.name;
   const universityShort = teamData.short;
 
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const endIndex = startIndex + itemsPerPage;
-  const currentTeams = lsuTeams.slice(startIndex, endIndex);
-  const totalPages = Math.ceil(lsuTeams.length / itemsPerPage);
+  const teamsColumns = useMemo(
+    () => [
+      {
+        accessorKey: 'rank',
+        header: '#',
+        size: 50,
+      },
+      {
+        accessorKey: 'teamName',
+        header: 'TEAM NAME',
+      },
+      {
+        accessorKey: 'sport',
+        header: 'SPORT',
+      },
+      {
+        accessorKey: 'coach',
+        header: 'COACH',
+      },
+      {
+        accessorKey: 'nilValue',
+        header: 'NIL VALUE',
+        Cell: ({ cell }) => (
+          <span style={{ color: '#16a34a', fontWeight: 'bold' }}>
+            {cell.getValue()}
+          </span>
+        ),
+      },
+      {
+        accessorKey: 'nilChange',
+        header: 'NIL CHANGE',
+        Cell: ({ cell }) => {
+          const value = cell.getValue();
+          return (
+            <span style={{ color: value.startsWith('+') ? '#16a34a' : '#dc2626', fontWeight: 'bold' }}>
+              {value}
+            </span>
+          );
+        },
+      },
+      {
+        accessorKey: 'playersTracked',
+        header: 'PLAYERS TRACKED',
+        Cell: ({ cell }) => (
+          <span style={{ color: '#2563eb', fontWeight: 'bold' }}>
+            {cell.getValue()}
+          </span>
+        ),
+      },
+    ],
+    [],
+  );
 
-  const handleNextPage = () => {
-    if (currentPage < totalPages) {
-      setCurrentPage(currentPage + 1);
-      window.scrollTo(0, 0);
-    }
-  };
-
-  const handlePrevPage = () => {
-    if (currentPage > 1) {
-      setCurrentPage(currentPage - 1);
-      window.scrollTo(0, 0);
-    }
-  };
+  const teamsTable = useMaterialReactTable({
+    columns: teamsColumns,
+    data: lsuTeams,
+    enableColumnActions: false,
+    enableColumnFilters: false,
+    enablePagination: true,
+    enableSorting: false,
+    state: {
+      pagination,
+    },
+    onPaginationChange: setPagination,
+    muiTablePaperProps: {
+      sx: {
+        boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+        border: 'none',
+        borderRadius: '12px',
+        overflow: 'hidden',
+      },
+    },
+    muiTableHeadCellProps: {
+      sx: {
+        backgroundColor: '#ffffff',
+        color: '#1f2937',
+        fontWeight: '700',
+        fontSize: '0.875rem',
+        textTransform: 'uppercase',
+        letterSpacing: '0.5px',
+        padding: '16px',
+        borderBottom: '2px solid #e5e7eb',
+      },
+    },
+    muiTableBodyCellProps: {
+      sx: {
+        padding: '14px 16px',
+        borderBottom: '1px solid #f0f0f0',
+        fontSize: '0.95rem',
+      },
+    },
+    muiTableBodyRowProps: ({ row }) => ({
+      sx: {
+        backgroundColor: row.index % 2 === 0 ? '#ffffff' : '#fafafa',
+        '&:hover': {
+          backgroundColor: '#f5f0ff',
+          transition: 'background-color 0.2s ease',
+        },
+      },
+    }),
+    muiPaginationProps: {
+      color: 'standard',
+      shape: 'rounded',
+      sx: {
+        padding: '16px',
+        '& .MuiPaginationItem-root': {
+          borderRadius: '6px',
+          color: '#5a3fa8',
+          '&.Mui-selected': {
+            backgroundColor: '#5a3fa8',
+            color: 'white',
+            fontWeight: '600',
+          },
+          '&:hover': {
+            backgroundColor: '#f5f0ff',
+          },
+        },
+      },
+    },
+  });
 
   return (
     <div className="flex-1 overflow-auto">
-      <div className="p-8">
+      <div className="pt-4 px-8 pb-8">
         {/* Breadcrumb Header */}
         <div className="mb-8">
           <div className="flex items-center gap-3 mb-6">
@@ -138,7 +244,7 @@ export default function UniTeamsTracked() {
           <div className="grid grid-cols-3 gap-6">
             <div>
               <p className="text-gray-600 text-sm">Total NIL Value</p>
-              <p className="text-2xl font-bold text-green-600">{teamData.totalNilValue}</p>
+              <p className="text-2xl font-bold" style={{ color: '#1db954' }}>{teamData.totalNilValue}</p>
             </div>
             <div>
               <p className="text-gray-600 text-sm">Total Players Tracked</p>
@@ -146,7 +252,7 @@ export default function UniTeamsTracked() {
             </div>
             <div>
               <p className="text-gray-600 text-sm">Overall NIL Change</p>
-              <p className={`text-2xl font-bold ${teamData.totalNilChange.startsWith('+') ? 'text-green-600' : 'text-red-600'}`}>
+              <p className={`text-2xl font-bold`} style={{ color: teamData.totalNilChange.startsWith('+') ? '#1db954' : '#dc2626' }}>
                 {teamData.totalNilChange}
               </p>
             </div>
@@ -155,77 +261,9 @@ export default function UniTeamsTracked() {
 
         {/* Teams Table */}
         <div className="bg-white border-2 border-gray-300 rounded-2xl overflow-hidden mb-8">
-          <table className="w-full">
-            <thead>
-              <tr className="bg-gray-100 border-b-2 border-gray-300">
-                <th className="px-6 py-4 text-left font-bold text-gray-900">#</th>
-                <th className="px-6 py-4 text-left font-bold text-gray-900">TEAM NAME</th>
-                <th className="px-6 py-4 text-left font-bold text-gray-900">SPORT</th>
-                <th className="px-6 py-4 text-left font-bold text-gray-900">COACH</th>
-                <th className="px-6 py-4 text-left font-bold text-gray-900">NIL VALUE</th>
-                <th className="px-6 py-4 text-left font-bold text-gray-900">NIL CHANGE</th>
-                <th className="px-6 py-4 text-left font-bold text-gray-900">PLAYERS TRACKED</th>
-              </tr>
-            </thead>
-            <tbody>
-              {currentTeams.map((team) => (
-                <tr key={team.rank} className="border-b border-gray-200 hover:bg-gray-50">
-                  <td className="px-6 py-4 font-bold text-gray-900">{team.rank}</td>
-                  <td className="px-6 py-4 font-bold text-gray-900">{team.teamName}</td>
-                  <td className="px-6 py-4 text-gray-600">{team.sport}</td>
-                  <td className="px-6 py-4 text-gray-600">{team.coach}</td>
-                  <td className="px-6 py-4 font-bold text-green-600">{team.nilValue}</td>
-                  <td className={`px-6 py-4 font-bold ${team.nilChange.startsWith('+') ? 'text-green-600' : 'text-red-600'}`}>
-                    {team.nilChange}
-                  </td>
-                  <td className="px-6 py-4 font-bold text-blue-600">{team.playersTracked}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-
-        {/* Pagination Controls */}
-        <div className="flex justify-between items-center">
-          <button
-            onClick={handlePrevPage}
-            disabled={currentPage === 1}
-            className="text-4xl hover:text-gray-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            ←
-          </button>
-
-          <div className="flex gap-2 items-center">
-            <span className="text-gray-700 font-bold">
-              Page {currentPage} of {totalPages}
-            </span>
-            <div className="flex gap-1">
-              {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
-                <button
-                  key={page}
-                  onClick={() => {
-                    setCurrentPage(page);
-                    window.scrollTo(0, 0);
-                  }}
-                  className={`px-3 py-2 rounded font-bold transition ${
-                    currentPage === page
-                      ? 'bg-gray-900 text-white'
-                      : 'bg-gray-200 text-gray-900 hover:bg-gray-300'
-                  }`}
-                >
-                  {page}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          <button
-            onClick={handleNextPage}
-            disabled={currentPage >= totalPages}
-            className="text-4xl hover:text-gray-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            →
-          </button>
+          <Box sx={{ width: '100%' }}>
+            <MaterialReactTable table={teamsTable} />
+          </Box>
         </div>
       </div>
     </div>

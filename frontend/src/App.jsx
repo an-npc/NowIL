@@ -135,7 +135,7 @@ const styles = {
     marginBottom: '24px',
   },
   logo: {
-    height: '48px',
+    height: '100px',
     objectFit: 'contain',
   },
   row: {

@@ -1,22 +1,28 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import {
+  MaterialReactTable,
+  useMaterialReactTable,
+} from 'material-react-table';
+import { Box } from '@mui/material';
 
 export default function PlayerDetailPage() {
   const { playerId } = useParams();
   const navigate = useNavigate();
 
   const allPlayers = [
-    { 
-      rank: 1, 
-      name: 'Arch Manning', 
-      college: 'UT Austin', 
-      sport: 'Football', 
-      pos: 'QB', 
-      nilValue: '$5.4M', 
-      nilChange: '-21%', 
-      number: 16, 
-      height: '6\'4"', 
-      weight: '230 lbs', 
+    {
+      rank: 1,
+      name: 'Arch Manning',
+      college: 'UT Austin',
+      sport: 'Football',
+      pos: 'QB',
+      nilValue: '$5.4M',
+      nilChange: '-21%',
+      number: 16,
+      height: '6\'4"',
+      weight: '230 lbs',
       hometown: 'New Orleans, LA',
       highSchool: 'Isidore Newman School',
       year: 'Junior',
@@ -26,6 +32,13 @@ export default function PlayerDetailPage() {
         { date: '10/11', vs: 'Alabama', result: 'L', score: '48-32', att: 50, yds: 360, nilValue: '$5.2M', nilChange: '-0.02%' },
         { date: '9/27', vs: 'UT Austin', result: 'W', score: '28-11', att: 31, yds: 380, nilValue: '$5.4M', nilChange: '+0.01%' },
         { date: '9/20', vs: 'Ohio State', result: 'L', score: '46-23', att: 29, yds: 210, nilValue: '$5.3M', nilChange: '-0.05%' },
+      ],
+      nilHistory: [
+        { month: 'Jun', value: 4.8 },
+        { month: 'Jul', value: 4.9 },
+        { month: 'Aug', value: 5.1 },
+        { month: 'Sep', value: 5.3 },
+        { month: 'Oct', value: 5.4 },
       ]
     },
     { 
@@ -48,6 +61,13 @@ export default function PlayerDetailPage() {
         { date: '10/11', vs: 'Duke', result: 'L', score: '68-65', att: 32, yds: 18, nilValue: '$4.3M', nilChange: '-0.02%' },
         { date: '9/27', vs: 'Kansas', result: 'W', score: '82-79', att: 35, yds: 22, nilValue: '$4.4M', nilChange: '+0.01%' },
         { date: '9/20', vs: 'UCLA', result: 'L', score: '75-68', att: 30, yds: 16, nilValue: '$4.1M', nilChange: '-0.05%' },
+      ],
+      nilHistory: [
+        { month: 'Jun', value: 3.8 },
+        { month: 'Jul', value: 3.9 },
+        { month: 'Aug', value: 4.0 },
+        { month: 'Sep', value: 4.1 },
+        { month: 'Oct', value: 4.2 },
       ]
     },
     { 
@@ -70,6 +90,13 @@ export default function PlayerDetailPage() {
         { date: '10/11', vs: 'Michigan', result: 'L', score: '30-24', att: 8, yds: 98, nilValue: '$4.3M', nilChange: '-0.02%' },
         { date: '9/27', vs: 'Iowa', result: 'W', score: '41-21', att: 10, yds: 142, nilValue: '$4.4M', nilChange: '+0.01%' },
         { date: '9/20', vs: 'Wisconsin', result: 'W', score: '38-14', att: 11, yds: 167, nilValue: '$4.1M', nilChange: '-0.05%' },
+      ],
+      nilHistory: [
+        { month: 'Jun', value: 3.5 },
+        { month: 'Jul', value: 3.7 },
+        { month: 'Aug', value: 3.9 },
+        { month: 'Sep', value: 4.0 },
+        { month: 'Oct', value: 4.2 },
       ]
     },
     { 
@@ -92,10 +119,17 @@ export default function PlayerDetailPage() {
         { date: '10/11', vs: 'Alabama', result: 'L', score: '48-32', att: 50, yds: 360, nilValue: '$5.2M', nilChange: '-0.02%' },
         { date: '9/27', vs: 'UT Austin', result: 'W', score: '28-11', att: 31, yds: 380, nilValue: '$5.4M', nilChange: '+0.01%' },
         { date: '9/20', vs: 'Ohio State', result: 'L', score: '46-23', att: 29, yds: 210, nilValue: '$5.3M', nilChange: '-0.05%' },
+      ],
+      nilHistory: [
+        { month: 'Jun', value: 3.2 },
+        { month: 'Jul', value: 3.4 },
+        { month: 'Aug', value: 3.6 },
+        { month: 'Sep', value: 3.8 },
+        { month: 'Oct', value: 4.0 },
       ]
     },
-    { 
-      rank: 5, 
+    {
+      rank: 5,
       name: 'Brendan Sorsby', 
       college: 'Texas A&M', 
       sport: 'Football', 
@@ -114,16 +148,127 @@ export default function PlayerDetailPage() {
         { date: '10/11', vs: 'Arkansas', result: 'L', score: '42-35', att: 42, yds: 298, nilValue: '$3.2M', nilChange: '-0.02%' },
         { date: '9/27', vs: 'Mississippi', result: 'W', score: '38-17', att: 25, yds: 344, nilValue: '$3.3M', nilChange: '+0.01%' },
         { date: '9/20', vs: 'Florida', result: 'L', score: '44-28', att: 38, yds: 256, nilValue: '$3.0M', nilChange: '-0.05%' },
+      ],
+      nilHistory: [
+        { month: 'Jun', value: 1.8 },
+        { month: 'Jul', value: 2.0 },
+        { month: 'Aug', value: 2.4 },
+        { month: 'Sep', value: 2.7 },
+        { month: 'Oct', value: 3.1 },
       ]
-    },
+    }
   ];
 
   const player = allPlayers.find(p => p.rank === parseInt(playerId));
 
+  const gameHistoryColumns = useMemo(
+    () => [
+      {
+        accessorKey: 'date',
+        header: 'Date',
+      },
+      {
+        accessorKey: 'vs',
+        header: 'VS',
+      },
+      {
+        accessorKey: 'result',
+        header: 'WIN/LOSS',
+        Cell: ({ cell }) => {
+          const value = cell.getValue();
+          return (
+            <span style={{ color: value === 'W' ? '#16a34a' : '#dc2626', fontWeight: 600 }}>
+              {value}
+            </span>
+          );
+        },
+      },
+      {
+        accessorKey: 'score',
+        header: 'SCORE',
+      },
+      {
+        accessorKey: 'att',
+        header: 'ATT',
+      },
+      {
+        accessorKey: 'yds',
+        header: 'YDS',
+      },
+      {
+        accessorKey: 'nilValue',
+        header: 'NIL VALUE',
+        Cell: ({ cell }) => (
+          <span style={{ color: '#16a34a', fontWeight: 600 }}>
+            {cell.getValue()}
+          </span>
+        ),
+      },
+      {
+        accessorKey: 'nilChange',
+        header: 'NIL CHANGE',
+        Cell: ({ cell }) => {
+          const value = cell.getValue();
+          return (
+            <span style={{ color: value.startsWith('+') ? '#16a34a' : '#dc2626', fontWeight: 600 }}>
+              {value}
+            </span>
+          );
+        },
+      },
+    ],
+    [],
+  );
+
+  const gameHistoryTable = useMaterialReactTable({
+    columns: gameHistoryColumns,
+    data: player?.gameHistory || [],
+    enableColumnActions: false,
+    enableColumnFilters: false,
+    enablePagination: false,
+    enableSorting: false,
+    muiTablePaperProps: {
+      sx: {
+        boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+        border: 'none',
+        borderRadius: '12px',
+        overflow: 'hidden',
+      },
+    },
+    muiTableHeadCellProps: {
+      sx: {
+        backgroundColor: '#ffffff',
+        color: '#1f2937',
+        fontWeight: '700',
+        fontSize: '0.875rem',
+        textTransform: 'uppercase',
+        letterSpacing: '0.5px',
+        padding: '16px',
+        borderBottom: '2px solid #e5e7eb',
+      },
+    },
+    muiTableBodyCellProps: {
+      sx: {
+        padding: '14px 16px',
+        borderBottom: '1px solid #f0f0f0',
+        fontSize: '0.95rem',
+      },
+    },
+    muiTableBodyRowProps: ({ row }) => ({
+      sx: {
+        backgroundColor: row.index % 2 === 0 ? '#ffffff' : '#fafafa',
+        '&:hover': {
+          backgroundColor: '#f5f0ff',
+          transition: 'background-color 0.2s ease',
+        },
+      },
+    }),
+  });
+
   if (!player) {
     return (
       <div className="flex-1 overflow-auto">
-        <div className="p-8">
+        <div className="pt-4 px-8 pb-8">
           <h1 className="text-3xl font-bold text-gray-900">Player not found</h1>
           <button
             onClick={() => navigate('/players/tracked')}
@@ -138,7 +283,7 @@ export default function PlayerDetailPage() {
 
   return (
     <div className="flex-1 overflow-auto bg-gray-50">
-      <div className="p-8">
+      <div className="pt-4 px-8 pb-8">
         {/* Breadcrumb */}
         <div className="flex items-center gap-2 mb-8">
           <button
@@ -208,7 +353,7 @@ export default function PlayerDetailPage() {
             </div>
 
             {/* Tab Content */}
-            <div style={styles.tabContent}>
+            <div style={{ ...styles.tabContent, height: '390px', overflowY: 'auto' }}>
               <div style={styles.infoGrid}>
                 {/* Left Column */}
                 <div>
@@ -248,44 +393,35 @@ export default function PlayerDetailPage() {
           </div>
         </div>
 
+        {/* NIL History Chart - Full Width */}
+        <div style={styles.chartContainer}>
+          <h3 style={styles.chartTitle}>NIL Value History</h3>
+          <ResponsiveContainer width="100%" height={420}>
+            <LineChart data={player.nilHistory}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="month" />
+              <YAxis />
+              <Tooltip formatter={(value) => `$${value.toFixed(1)}M`} />
+              <Legend />
+              <Line
+                type="monotone"
+                dataKey="value"
+                stroke="#5a3fa8"
+                strokeWidth={2}
+                dot={{ fill: '#5a3fa8', r: 4 }}
+                activeDot={{ r: 6 }}
+                name="NIL Value (Millions)"
+              />
+            </LineChart>
+          </ResponsiveContainer>
+        </div>
+
         {/* Game History Table */}
         <div style={styles.gameHistorySection}>
           <h2 style={styles.gameHistoryTitle}>Game History - Stats</h2>
-          
-          <div style={styles.tableWrapper}>
-            <table style={styles.gameTable}>
-              <thead>
-                <tr style={styles.tableHeader}>
-                  <th style={styles.tableHeaderCell}>Date</th>
-                  <th style={styles.tableHeaderCell}>VS</th>
-                  <th style={styles.tableHeaderCell}>WIN/LOSS</th>
-                  <th style={styles.tableHeaderCell}>SCORE</th>
-                  <th style={styles.tableHeaderCell}>ATT</th>
-                  <th style={styles.tableHeaderCell}>YDS</th>
-                  <th style={styles.tableHeaderCell}>NIL VALUE</th>
-                  <th style={styles.tableHeaderCell}>NIL CHANGE</th>
-                </tr>
-              </thead>
-              <tbody>
-                {player.gameHistory && player.gameHistory.map((game, index) => (
-                  <tr key={index} style={styles.tableRow}>
-                    <td style={styles.tableCell}>{game.date}</td>
-                    <td style={styles.tableCell}>{game.vs}</td>
-                    <td style={{ ...styles.tableCell, color: game.result === 'W' ? '#16a34a' : '#dc2626', fontWeight: 600 }}>
-                      {game.result}
-                    </td>
-                    <td style={styles.tableCell}>{game.score}</td>
-                    <td style={styles.tableCell}>{game.att}</td>
-                    <td style={styles.tableCell}>{game.yds}</td>
-                    <td style={{ ...styles.tableCell, color: '#16a34a', fontWeight: 600 }}>{game.nilValue}</td>
-                    <td style={{ ...styles.tableCell, color: game.nilChange.startsWith('+') ? '#16a34a' : '#dc2626', fontWeight: 600 }}>
-                      {game.nilChange}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+          <Box sx={{ width: '100%' }}>
+            <MaterialReactTable table={gameHistoryTable} />
+          </Box>
         </div>
       </div>
     </div>
@@ -438,5 +574,18 @@ const styles = {
     textAlign: 'left',
     fontSize: '0.95rem',
     color: '#333',
+  },
+  chartContainer: {
+    background: 'white',
+    borderRadius: '12px',
+    border: '2px solid #ddd',
+    padding: '24px',
+    marginBottom: '24px',
+  },
+  chartTitle: {
+    fontSize: '1.125rem',
+    fontWeight: 700,
+    color: '#333',
+    marginBottom: '16px',
   },
 };

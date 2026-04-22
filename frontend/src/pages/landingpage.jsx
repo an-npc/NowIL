@@ -1,6 +1,23 @@
 import { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import logo from "../assets/nowil-logo.png";
+import NowILLogo from "../assets/Logo.svg";
+
+// ─── Heart Icon Component ─────────────────────────────────────────────────────
+const Heart = ({ isLiked, size = 20 }) => (
+  <svg
+    width={size}
+    height={size}
+    viewBox="0 0 24 24"
+    fill={isLiked ? "#dc2626" : "none"}
+    stroke={isLiked ? "#dc2626" : "#999"}
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
+    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+  </svg>
+);
 
 // ─── PlayerCard Component ──────────────────────────────────────────────────────
 function PlayerCard({ player, onFollow }) {
@@ -20,10 +37,10 @@ function PlayerCard({ player, onFollow }) {
           {player.name} | {player.college} | {player.pos} | #{player.number}
         </span>
         <button
-          style={{ background: "none", border: "none", cursor: "pointer", fontSize: "1.1rem", color: hearted ? "#ef4444" : "#ccc" }}
+          style={{ background: "none", border: "none", cursor: "pointer", padding: 0, display: "flex", alignItems: "center", justifyContent: "center" }}
           onClick={() => { setHearted(!hearted); onFollow && onFollow(player); }}
         >
-          {hearted ? "♥" : "♡"}
+          <Heart isLiked={hearted} size={18} />
         </button>
       </div>
       <div style={styles.playerCardImg}>
@@ -134,12 +151,12 @@ function NILChart() {
           datasets: [{
             label: "NIL Value per Game",
             data: CHART_DATA.values,
-            borderColor: "#1db954",
-            backgroundColor: "rgba(29,185,84,0.08)",
+            borderColor: "#0F5A2B",
+            backgroundColor: "rgba(15, 90, 43, 0.08)",
             tension: 0.4,
             fill: true,
             pointRadius: 4,
-            pointBackgroundColor: "#1db954",
+            pointBackgroundColor: "#0F5A2B",
             pointBorderColor: "white",
             pointBorderWidth: 2,
           }],
@@ -253,10 +270,10 @@ function PlayersTable({ onGateClick }) {
               </td>
               <td style={styles.td}>
                 <button
-                  style={{ background: "none", border: "none", cursor: "pointer", fontSize: "1.1rem", color: followed[i] ? "#ef4444" : "#ccc" }}
+                  style={{ background: "none", border: "none", cursor: "pointer", padding: 0, display: "flex", alignItems: "center", justifyContent: "center" }}
                   onClick={() => { followed[i] ? toggleFollow(i) : onGateClick(); }}
                 >
-                  {followed[i] ? "♥" : "♡"}
+                  <Heart isLiked={followed[i]} size={20} />
                 </button>
               </td>
             </tr>
@@ -302,7 +319,7 @@ export default function App() {
         <PlayerCard player={FEATURED_PLAYER} onFollow={() => openModal("signup")} />
         <div style={styles.heroText}>
           <h1 style={styles.heroH1}>
-            <span style={{ color: "#000000" }}>Real time </span><span style={{ color: "#1db954" }}>NIL</span> <span style={{ color: "#000000" }}>estimations after every game </span>
+            <span style={{ color: "#000000" }}>Real time </span><span style={{ color: "#0F5A2B" }}>NIL</span> <span style={{ color: "#000000" }}>estimations after every game </span>
           </h1>
           <p style={styles.heroP}>
             Track, follow, and discover college athletes' Name, Image &amp; Likeness valuations updated after every game.
@@ -320,7 +337,7 @@ export default function App() {
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
             <span style={{ fontWeight: 700, fontSize: "0.95rem" }}>NIL Graph</span>
             <span style={{ display: "flex", alignItems: "center", gap: 6, fontSize: "0.8rem", color: "#666" }}>
-              <span style={{ width: 10, height: 10, borderRadius: "50%", background: "#1db954", display: "inline-block" }} />
+              <span style={{ width: 10, height: 10, borderRadius: "50%", background: "#0F5A2B", display: "inline-block" }} />
               NIL Value per Game
             </span>
           </div>
@@ -356,7 +373,7 @@ export default function App() {
       {/* TABLE */}
       <div style={styles.tableSection}>
         <h2 style={{ fontSize: "1.5rem", fontWeight: 800, marginBottom: 20 }}>
-          <span style={{ color: "#1db954" }}>Sort and filter</span> <span style={{ color: "#000000" }}>players by NIL, position, team and more!</span>
+          <span style={{ color: "#0F5A2B" }}>Sort and filter</span> <span style={{ color: "#000000" }}>players by NIL, position, team and more!</span>
         </h2>
         <div style={{ display: "flex", gap: 10, alignItems: "center", marginBottom: 16, flexWrap: "wrap" }}>
           <div style={styles.filterSearch}>
@@ -371,10 +388,10 @@ export default function App() {
 
       {/* FOOTER */}
       <footer style={styles.footer}>
-        <div style={{ color: "white", fontWeight: 800, fontSize: "1.1rem" }}>
-          Now<span style={{ color: "#1db954" }}>IL</span>
+        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+          <img src={NowILLogo} alt="NowIL Logo" style={{ height: "30px", display: "block" }} />
         </div>
-        <div>© 2024 NowIL. All rights reserved.</div>
+        <div>© 2026 NowIL. All rights reserved.</div>
         <div style={{ display: "flex", gap: 20 }}>
           {["Privacy", "Terms", "Contact"].map((l) => (
             <a key={l} href="#" style={{ color: "#aaa", textDecoration: "none" }}>{l}</a>
@@ -399,7 +416,7 @@ const styles = {
   navUl: { listStyle: "none", display: "flex", gap: 28, alignItems: "center", margin: 0, padding: 0 },
   navLink: { textDecoration: "none", color: "#666", fontSize: "0.9rem", fontWeight: 500 },
   btnLogin: {
-    background: "#1db954", color: "white", border: "none", padding: "8px 20px",
+    background: "#0F5A2B", color: "white", border: "none", padding: "8px 20px",
     borderRadius: 6, fontSize: "0.9rem", fontWeight: 600, cursor: "pointer",
   },
   hero: {
@@ -410,7 +427,7 @@ const styles = {
   heroH1: { fontSize: "2.4rem", fontWeight: 800, lineHeight: 1.2, maxWidth: 360 },
   heroP: { color: "#666", margin: "16px 0 28px", fontSize: "1rem", maxWidth: 340 },
   btnPrimary: {
-    background: "#1db954", color: "white", border: "none",
+    background: "#0F5A2B", color: "white", border: "none",
     padding: "14px 40px", borderRadius: 8, fontSize: "1rem", fontWeight: 700, cursor: "pointer",
   },
   playerCard: {
@@ -444,7 +461,7 @@ const styles = {
   },
   statLabel: {
     position: "absolute", top: -18, left: "50%", transform: "translateX(-50%)",
-    background: "#1db954", color: "white", fontSize: "0.72rem", fontWeight: 700,
+    background: "#0F5A2B", color: "white", fontSize: "0.72rem", fontWeight: 700,
     whiteSpace: "nowrap", padding: "3px 14px", borderRadius: 50,
   },
   statNumber: { fontSize: "2rem", fontWeight: 800, marginTop: 4 },
@@ -461,7 +478,7 @@ const styles = {
   },
   filterTag: {
     display: "flex", alignItems: "center", gap: 6,
-    background: "#1db954", color: "white",
+    background: "#0F5A2B", color: "white",
     padding: "6px 12px", borderRadius: 6, fontSize: "0.8rem", fontWeight: 600,
   },
   filterBtn: {
@@ -500,5 +517,5 @@ const styles = {
     boxSizing: "border-box", background: "white"
   },
   modalSwitch: { textAlign: "center", marginTop: 16, fontSize: "0.85rem", color: "#666" },
-  link: { color: "#1db954", fontWeight: 600, cursor: "pointer" },
+  link: { color: "#0F5A2B", fontWeight: 600, cursor: "pointer" },
 };

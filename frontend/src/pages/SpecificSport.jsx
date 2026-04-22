@@ -1,10 +1,32 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import {
+  MaterialReactTable,
+  useMaterialReactTable,
+} from 'material-react-table';
+import { Box } from '@mui/material';
+
+// ─── Heart Icon Component ─────────────────────────────────────────────────────
+const Heart = ({ isLiked, size = 20 }) => (
+  <svg
+    width={size}
+    height={size}
+    viewBox="0 0 24 24"
+    fill={isLiked ? "#dc2626" : "none"}
+    stroke={isLiked ? "#dc2626" : "#999"}
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
+    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+  </svg>
+);
 
 export default function SportsDetailPage() {
   const { sportSlug } = useParams();
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState('');
+  const [followed, setFollowed] = useState({});
 
   // Sport data mapped by slug
   const sportDataMap = {
@@ -81,9 +103,117 @@ export default function SportsDetailPage() {
 
   const sportData = sportDataMap[sportSlug] || sportDataMap['football'];
 
+  const trendingPlayersColumns = useMemo(
+    () => [
+      {
+        accessorKey: 'rank',
+        header: '#',
+        size: 50,
+      },
+      {
+        accessorKey: 'name',
+        header: 'ATHLETE',
+      },
+      {
+        accessorKey: 'college',
+        header: 'COLLEGE',
+      },
+      {
+        accessorKey: 'sport',
+        header: 'SPORT',
+      },
+      {
+        accessorKey: 'pos',
+        header: 'POS',
+      },
+      {
+        accessorKey: 'nilValue',
+        header: 'NIL VALUE',
+        Cell: ({ cell }) => (
+          <span style={{ color: '#16a34a', fontWeight: 'bold' }}>
+            {cell.getValue()}
+          </span>
+        ),
+      },
+      {
+        accessorKey: 'nilChange',
+        header: 'NIL CHANGE',
+        Cell: ({ cell }) => {
+          const value = cell.getValue();
+          return (
+            <span style={{ color: value.startsWith('+') ? '#16a34a' : '#dc2626', fontWeight: 'bold' }}>
+              {value}
+            </span>
+          );
+        },
+      },
+      {
+        accessorKey: 'rank',
+        header: 'FOLLOW',
+        Cell: ({ row }) => {
+          const playerIndex = row.original.rank;
+          return (
+            <button
+              style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+              onClick={() => setFollowed(prev => ({ ...prev, [playerIndex]: !prev[playerIndex] }))}
+            >
+              <Heart isLiked={followed[playerIndex] || false} size={24} />
+            </button>
+          );
+        },
+      },
+    ],
+    [followed],
+  );
+
+  const trendingPlayersTable = useMaterialReactTable({
+    columns: trendingPlayersColumns,
+    data: sportData.trendingPlayers,
+    enableColumnActions: false,
+    enableColumnFilters: false,
+    enablePagination: false,
+    enableSorting: false,
+    muiTablePaperProps: {
+      sx: {
+        boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+        border: 'none',
+        borderRadius: '12px',
+        overflow: 'hidden',
+      },
+    },
+    muiTableHeadCellProps: {
+      sx: {
+        backgroundColor: '#ffffff',
+        color: '#1f2937',
+        fontWeight: '700',
+        fontSize: '0.875rem',
+        textTransform: 'uppercase',
+        letterSpacing: '0.5px',
+        padding: '16px',
+        borderBottom: '2px solid #e5e7eb',
+      },
+    },
+    muiTableBodyCellProps: {
+      sx: {
+        padding: '14px 16px',
+        borderBottom: '1px solid #f0f0f0',
+        fontSize: '0.95rem',
+      },
+    },
+    muiTableBodyRowProps: ({ row }) => ({
+      sx: {
+        backgroundColor: row.index % 2 === 0 ? '#ffffff' : '#fafafa',
+        '&:hover': {
+          backgroundColor: '#f5f0ff',
+          transition: 'background-color 0.2s ease',
+        },
+      },
+    }),
+  });
+
   return (
     <div className="flex-1 overflow-auto bg-gray-50">
-      <div className="p-8">
+      <div className="pt-4 px-8 pb-8">
         {/* Breadcrumb */}
         <div className="flex items-center justify-between mb-8">
           <div className="flex items-center gap-2">
@@ -163,37 +293,9 @@ export default function SportsDetailPage() {
             <h2 className="text-xl font-bold text-gray-900">Trending Players - 2026 Season</h2>
             <button className="text-lg font-bold text-gray-900 hover:text-blue-600">View All →</button>
           </div>
-
-          <table className="w-full">
-            <thead>
-              <tr className="bg-gray-50 border-b-2 border-gray-300">
-                <th className="px-6 py-4 text-left font-bold text-gray-900">#</th>
-                <th className="px-6 py-4 text-left font-bold text-gray-900">ATHLETE</th>
-                <th className="px-6 py-4 text-left font-bold text-gray-900">COLLEGE</th>
-                <th className="px-6 py-4 text-left font-bold text-gray-900">SPORT</th>
-                <th className="px-6 py-4 text-left font-bold text-gray-900">POS</th>
-                <th className="px-6 py-4 text-left font-bold text-gray-900">NIL VALUE</th>
-                <th className="px-6 py-4 text-left font-bold text-gray-900">NIL CHANGE</th>
-                <th className="px-6 py-4 text-left font-bold text-gray-900">FOLLOW</th>
-              </tr>
-            </thead>
-            <tbody>
-              {sportData.trendingPlayers.map((player) => (
-                <tr key={player.rank} className="border-b border-gray-200 hover:bg-gray-50">
-                  <td className="px-6 py-4 font-bold text-gray-900">{player.rank}</td>
-                  <td className="px-6 py-4 font-bold text-gray-900">{player.name}</td>
-                  <td className="px-6 py-4 text-gray-600">{player.college}</td>
-                  <td className="px-6 py-4 text-gray-600">{player.sport}</td>
-                  <td className="px-6 py-4 text-gray-600">{player.pos}</td>
-                  <td className="px-6 py-4 font-bold text-green-600">{player.nilValue}</td>
-                  <td className={`px-6 py-4 font-bold ${player.nilChange.startsWith('+') ? 'text-green-600' : 'text-red-600'}`}>
-                    {player.nilChange}
-                  </td>
-                  <td className="px-6 py-4 text-2xl cursor-pointer hover:scale-110 transition">🤍</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+          <Box sx={{ width: '100%' }}>
+            <MaterialReactTable table={trendingPlayersTable} />
+          </Box>
         </div>
       </div>
     </div>

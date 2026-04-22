@@ -1,9 +1,16 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import {
+  MaterialReactTable,
+  useMaterialReactTable,
+} from 'material-react-table';
+import { Box } from '@mui/material';
 
 export default function TrendingPlayersPage() {
-  const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 10;
+  const [pagination, setPagination] = useState({
+    pageIndex: 0,
+    pageSize: 10,
+  });
 
   const allPlayers = [
     { rank: 1, name: 'Arch Manning', college: 'UT Austin', sport: 'Football', pos: 'QB', nilValue: '$5.4M', nilChange: '-21%' },
@@ -38,108 +45,138 @@ export default function TrendingPlayersPage() {
     { rank: 30, name: 'Jordan Addison', college: 'Pitt', sport: 'Football', pos: 'WR', nilValue: '$3.2M', nilChange: '+17%' },
   ];
 
-  // Pagination logic
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const endIndex = startIndex + itemsPerPage;
-  const currentPlayers = allPlayers.slice(startIndex, endIndex);
-  const totalPages = Math.ceil(allPlayers.length / itemsPerPage);
+  const columns = useMemo(
+    () => [
+      {
+        accessorKey: 'rank',
+        header: '#',
+        size: 50,
+      },
+      {
+        accessorKey: 'name',
+        header: 'ATHLETE',
+      },
+      {
+        accessorKey: 'college',
+        header: 'COLLEGE',
+      },
+      {
+        accessorKey: 'sport',
+        header: 'SPORT',
+      },
+      {
+        accessorKey: 'pos',
+        header: 'POS',
+      },
+      {
+        accessorKey: 'nilValue',
+        header: 'NIL VALUE',
+        Cell: ({ cell }) => (
+          <span style={{ color: '#16a34a', fontWeight: 'bold' }}>
+            {cell.getValue()}
+          </span>
+        ),
+      },
+      {
+        accessorKey: 'nilChange',
+        header: 'NIL CHANGE',
+        Cell: ({ cell }) => {
+          const value = cell.getValue();
+          return (
+            <span style={{ color: value.startsWith('+') ? '#16a34a' : '#dc2626', fontWeight: 'bold' }}>
+              {value}
+            </span>
+          );
+        },
+      },
+      {
+        accessorKey: 'rank',
+        header: 'FOLLOW',
+        Cell: () => (
+          <span style={{ fontSize: '1.5rem', cursor: 'pointer' }} onMouseEnter={(e) => e.target.style.transform = 'scale(1.2)'} onMouseLeave={(e) => e.target.style.transform = 'scale(1)'}>
+            🤍
+          </span>
+        ),
+      },
+    ],
+    [],
+  );
 
-  const handleNextPage = () => {
-    if (currentPage < totalPages) {
-      setCurrentPage(currentPage + 1);
-      window.scrollTo(0, 0);
-    }
-  };
-
-  const handlePrevPage = () => {
-    if (currentPage > 1) {
-      setCurrentPage(currentPage - 1);
-      window.scrollTo(0, 0);
-    }
-  };
+  const table = useMaterialReactTable({
+    columns,
+    data: allPlayers,
+    enableColumnActions: false,
+    enableColumnFilters: false,
+    enablePagination: true,
+    enableSorting: false,
+    state: {
+      pagination,
+    },
+    onPaginationChange: setPagination,
+    muiTablePaperProps: {
+      sx: {
+        boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+        border: 'none',
+        borderRadius: '12px',
+        overflow: 'hidden',
+      },
+    },
+    muiTableHeadCellProps: {
+      sx: {
+        backgroundColor: '#ffffff',
+        color: '#1f2937',
+        fontWeight: '700',
+        fontSize: '0.875rem',
+        textTransform: 'uppercase',
+        letterSpacing: '0.5px',
+        padding: '16px',
+        borderBottom: '2px solid #e5e7eb',
+      },
+    },
+    muiTableBodyCellProps: {
+      sx: {
+        padding: '14px 16px',
+        borderBottom: '1px solid #f0f0f0',
+        fontSize: '0.95rem',
+      },
+    },
+    muiTableBodyRowProps: ({ row }) => ({
+      sx: {
+        backgroundColor: row.index % 2 === 0 ? '#ffffff' : '#fafafa',
+        '&:hover': {
+          backgroundColor: '#f5f0ff',
+          transition: 'background-color 0.2s ease',
+        },
+      },
+    }),
+    muiPaginationProps: {
+      color: 'standard',
+      shape: 'rounded',
+      sx: {
+        padding: '16px',
+        '& .MuiPaginationItem-root': {
+          borderRadius: '6px',
+          color: '#5a3fa8',
+          '&.Mui-selected': {
+            backgroundColor: '#5a3fa8',
+            color: 'white',
+            fontWeight: '600',
+          },
+          '&:hover': {
+            backgroundColor: '#f5f0ff',
+          },
+        },
+      },
+    },
+  });
 
   return (
     <div className="flex-1 overflow-auto">
-      <div className="p-8">
-        {/* Header */}
+      <div className="pt-4 px-8 pb-8">
         <h1 className="text-5xl font-bold text-gray-900 mb-8">Players - Trending 2026 Season</h1>
-
-        {/* Table */}
-        <div className="bg-white border-2 border-gray-300 rounded-2xl overflow-hidden mb-8">
-          <table className="w-full">
-            <thead>
-              <tr className="bg-gray-100 border-b-2 border-gray-300">
-                <th className="px-6 py-4 text-left font-bold text-gray-900">#</th>
-                <th className="px-6 py-4 text-left font-bold text-gray-900">ATHLETE</th>
-                <th className="px-6 py-4 text-left font-bold text-gray-900">COLLEGE</th>
-                <th className="px-6 py-4 text-left font-bold text-gray-900">SPORT</th>
-                <th className="px-6 py-4 text-left font-bold text-gray-900">POS</th>
-                <th className="px-6 py-4 text-left font-bold text-gray-900">NIL VALUE</th>
-                <th className="px-6 py-4 text-left font-bold text-gray-900">NIL CHANGE</th>
-                <th className="px-6 py-4 text-left font-bold text-gray-900">FOLLOW</th>
-              </tr>
-            </thead>
-            <tbody>
-              {currentPlayers.map((player) => (
-                <tr key={player.rank} className="border-b border-gray-200 hover:bg-gray-50">
-                  <td className="px-6 py-4 font-bold text-gray-900">{player.rank}</td>
-                  <td className="px-6 py-4 font-bold text-gray-900">{player.name}</td>
-                  <td className="px-6 py-4 text-gray-600">{player.college}</td>
-                  <td className="px-6 py-4 text-gray-600">{player.sport}</td>
-                  <td className="px-6 py-4 text-gray-600">{player.pos}</td>
-                  <td className="px-6 py-4 font-bold text-green-600">{player.nilValue}</td>
-                  <td className={`px-6 py-4 font-bold ${player.nilChange.startsWith('+') ? 'text-green-600' : 'text-red-600'}`}>
-                    {player.nilChange}
-                  </td>
-                  <td className="px-6 py-4 text-2xl cursor-pointer hover:scale-110 transition">🤍</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-
-        {/* Pagination Controls */}
-        <div className="flex justify-between items-center">
-          <button
-            onClick={handlePrevPage}
-            disabled={currentPage === 1}
-            className="text-4xl hover:text-gray-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            ←
-          </button>
-
-          <div className="flex gap-2 items-center">
-            <span className="text-gray-700 font-bold">
-              Page {currentPage} of {totalPages}
-            </span>
-            <div className="flex gap-1">
-              {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
-                <button
-                  key={page}
-                  onClick={() => {
-                    setCurrentPage(page);
-                    window.scrollTo(0, 0);
-                  }}
-                  className={`px-3 py-2 rounded font-bold transition ${
-                    currentPage === page
-                      ? 'bg-gray-900 text-white'
-                      : 'bg-gray-200 text-gray-900 hover:bg-gray-300'
-                  }`}
-                >
-                  {page}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          <button
-            onClick={handleNextPage}
-            disabled={currentPage === totalPages}
-            className="text-4xl hover:text-gray-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            →
-          </button>
-        </div>
+        <Box sx={{ width: '100%' }}>
+          <MaterialReactTable table={table} />
+        </Box>
       </div>
     </div>
   );

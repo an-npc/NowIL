@@ -9,7 +9,7 @@ const SportCard = ({ icon, name, players, teams, onClick }) => {
     <div
       className="rounded-xl p-6 text-white transition-all cursor-pointer"
       style={{
-        backgroundColor: isHovered ? '#2d8659' : '#5fa876',
+        backgroundColor: isHovered ? '#3a8b56' : '#4fa86d',
       }}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
@@ -17,7 +17,7 @@ const SportCard = ({ icon, name, players, teams, onClick }) => {
     >
       <div className="text-5xl mb-4 text-center">{icon}</div>
       <h3 className="font-bold text-sm text-center mb-3">{name}</h3>
-      <div className="flex justify-center gap-3 text-xs text-green-100">
+      <div className="flex justify-center gap-3 text-xs" style={{ color: 'rgba(255, 255, 255, 0.9)' }}>
         <span>{players} players</span>
         <span>·</span>
         <span>{teams} teams</span>
@@ -34,7 +34,7 @@ const GrowthCard = ({ icon, name, growth, onClick }) => {
     <div
       className="rounded-xl p-6 text-white transition-all cursor-pointer"
       style={{
-        backgroundColor: isHovered ? '#2d8659' : '#5fa876',
+        backgroundColor: isHovered ? '#3a8b56' : '#4fa86d',
       }}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
@@ -42,7 +42,7 @@ const GrowthCard = ({ icon, name, growth, onClick }) => {
     >
       <div className="text-4xl mb-3 text-center">{icon}</div>
       <h3 className="font-bold text-sm text-center mb-4">{name}</h3>
-      <div className="flex justify-center items-center gap-2 text-lg font-bold border-t border-green-300 pt-3">
+      <div className="flex justify-center items-center gap-2 text-lg font-bold pt-3" style={{ borderTop: '1px solid rgba(255, 255, 255, 0.3)' }}>
         <span>↑</span>
         <span>{growth}%</span>
       </div>
@@ -82,7 +82,7 @@ export default function SportsPage() {
 
   return (
     <div className="flex-1 overflow-auto">
-      <div className="p-8">
+      <div className="pt-4 px-8 pb-8">
         {/* Header Section */}
         <div className="flex items-center justify-between mb-8">
           <h1 className="text-5xl font-bold text-gray-900">Sports</h1>

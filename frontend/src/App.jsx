@@ -1,12 +1,11 @@
-import { useState } from 'react';
-import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import NowILLogo from './assets/Logo.svg';
 import './App.css';
 import { Home, User, Slack, Dribbble, Heart, Edit } from 'react-feather';
+import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 
 import Homepage from './pages/homepage';
-import Guest from "./OnBoardingPage/Pages/Guest";
-import LP from "./pages/landingpage"
+import Guest from './OnBoardingPage/Pages/Guest';
+import LP from './pages/landingpage';
 import SportsPage from './pages/sportspage';
 import TeamsPage from './pages/TeamsPage';
 import PlayersPage from './pages/PlayersPage';
@@ -16,52 +15,31 @@ import UniTeamsTracked from './pages/UniTeamsTracked';
 import AllPlayersPage from './pages/AllPlayersTracked';
 import PlayerCardPage from './pages/PlayerCardPage';
 import SpecificSport from './pages/SpecificSport';
+import Predict from './pages/predict';
+import Index from './pages/Index';
 
+const menuItems = [
+  { label: 'home', icon: Home, path: '/homepage' },
+  { label: 'players', icon: User, path: '/players' },
+  { label: 'teams', icon: Slack, path: '/teams' },
+  { label: 'sports', icon: Dribbble, path: '/sports' },
+  { label: 'following', icon: Heart, path: '/following' },
+  { label: 'predict', icon: Edit, path: '/predict' },
+];
 
-
-
-
-// Reusable Sidebar Component
-const Sidebar = () => {
-  const [activeItem, setActiveItem] = useState('home');
-
-  const menuItems = [
-    { id: 'home', label: 'home', icon: Home, path: '/homepage' },
-    { id: 'players', label: 'players', icon: User, path: '/players' },
-    { id: 'teams', label: 'teams', icon: Slack, path: '/teams' },
-    { id: 'sports', label: 'sports', icon: Dribbble, path: '/sports' },
-    { id: 'following', label: 'following', icon: Heart, path: '/following' },
-    { id: 'predict', label: 'predict', icon: Edit, path: '/predict' },
-  ];
-
+function Sidebar() {
   return (
     <section style={styles.menuBar}>
       <div style={styles.column}>
         <div style={styles.center}>
           <img src={NowILLogo} alt='NowIL_Logo' style={styles.logo} />
         </div>
-        
         {menuItems.map((item) => {
           const Icon = item.icon;
-          const [isHovered, setIsHovered] = useState(false);
 
           return (
-            <Link 
-              key={item.id}
-              to={item.path}
-              style={{ textDecoration: 'none' }}
-              onClick={() => setActiveItem(item.id)}
-            >
-              <div 
-                style={{
-                  ...styles.row,
-                  backgroundColor: isHovered ? '#0a4620' : 'transparent',
-                  cursor: 'pointer',
-                  transition: 'background-color 0.2s',
-                }}
-                onMouseEnter={() => setIsHovered(true)}
-                onMouseLeave={() => setIsHovered(false)}
-              >
+            <Link key={item.path} to={item.path} style={styles.link}>
+              <div style={styles.row}>
                 <Icon style={styles.icon} />
                 <p style={styles.label}>{item.label}</p>
               </div>
@@ -71,7 +49,7 @@ const Sidebar = () => {
       </div>
     </section>
   );
-};
+}
 
 function App() {
   return (
@@ -80,21 +58,22 @@ function App() {
         <Sidebar />
         <div style={styles.routeContainer}>
           <Routes>
-            <Route path="/homepage" element={<Homepage />} />
-            <Route path="/guest" element={<Guest />} />
-            <Route path="/" element={<LP />} />
-            <Route path="/sports" element={<SportsPage />} />
-            <Route path="/teams" element={<TeamsPage />} />
-            <Route path="/sports/:sportSlug" element={<SpecificSport />} />
-            <Route path="/players" element={<PlayersPage />} />
-            <Route path="/players/trending" element={<TrendingPlayersPage />} />
-            <Route path="/teams/:teamSlug" element={<UniTeamsTracked />} />
-            <Route path="/teams/all" element={<AllTeamsPage />} />
-            <Route path="/teams/all/:slug" element={<UniTeamsTracked />} />
-            <Route path="/following" element={<div style={{ padding: '32px' }}><h1>Following Page</h1></div>} />
-            <Route path="/predict" element={<div style={{ padding: '32px' }}><h1>Predict Page</h1></div>} />
-            <Route path="/players/tracked" element={<AllPlayersPage />} />
-            <Route path="/players/:playerId" element={<PlayerCardPage />} />
+            <Route path='/' element={<LP />} />
+            <Route path='/homepage' element={<Homepage />} />
+            <Route path='/index' element={<Index />} />
+            <Route path='/guest' element={<Guest />} />
+            <Route path='/sports' element={<SportsPage />} />
+            <Route path='/sports/:sportSlug' element={<SpecificSport />} />
+            <Route path='/teams' element={<TeamsPage />} />
+            <Route path='/teams/:teamSlug' element={<UniTeamsTracked />} />
+            <Route path='/teams/all' element={<AllTeamsPage />} />
+            <Route path='/teams/all/:slug' element={<UniTeamsTracked />} />
+            <Route path='/players' element={<PlayersPage />} />
+            <Route path='/players/trending' element={<TrendingPlayersPage />} />
+            <Route path='/players/tracked' element={<AllPlayersPage />} />
+            <Route path='/players/:playerId' element={<PlayerCardPage />} />
+            <Route path='/following' element={<div style={{ padding: '32px' }}><h1>Following Page</h1></div>} />
+            <Route path='/predict' element={<Predict />} />
           </Routes>
         </div>
       </main>
@@ -104,7 +83,6 @@ function App() {
 
 export default App;
 
-// Styles matching your original design
 const styles = {
   appRow: {
     display: 'flex',
@@ -137,6 +115,9 @@ const styles = {
   logo: {
     height: '100px',
     objectFit: 'contain',
+  },
+  link: {
+    textDecoration: 'none',
   },
   row: {
     display: 'flex',

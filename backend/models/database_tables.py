@@ -20,15 +20,10 @@ class CollegeYear(str,Enum):
 
 class PositionType(str,Enum):
     Quaterback = "QB"
-    Runningback = "RB"
     WideReciever = "WR"
     TightEnd = "TE"
-    OffensiveLine = "OL"
-    DefensiveLine = "DL"
     Linebacker = "LB"
-    Cornerback = "CB"
     Safety = "S"
-    
     
 # DATABASE TABLES
         
@@ -47,6 +42,8 @@ class Player(SQLModel,table=True):
     number:int|None
     
     team_id:int = Field(foreign_key="team.team_id")
+    
+    base_nil:int
     
     # Relationships
     performances:List["Performance"] = Relationship(back_populates="player")
@@ -99,38 +96,54 @@ class Performance(SQLModel,table=True):
     game:"Game" = Relationship(back_populates="performances")
 
 
-# class QBPerformance(Performance,table=True):
-#     pass
+class QBPerformance(SQLModel,table=True):
+    game_id:int = Field(primary_key=True, foreign_key="game.game_id")
+    player_id:int = Field(primary_key=True, foreign_key="player.player_id")
+    rush_yards:int
+    pass_tds:int
+    ints:int
+    rush_tds: int
+    completion_pct: float
+    pass_yards: int
 
 
-# class RBPerformance(Performance,table=True):
-#     pass
+class WRPerformance(SQLModel,table=True):
+    game_id:int = Field(primary_key=True, foreign_key="game.game_id")
+    player_id:int = Field(primary_key=True, foreign_key="player.player_id")
+    receiving_yards:int
+    receiving_tds:int
+    receptions:int
+    yards_per_rec:float
 
 
-# class WRPerformance(Performance,table=True):
-#     pass
+class TEPerformance(SQLModel,table=True):
+    game_id:int = Field(primary_key=True, foreign_key="game.game_id")
+    player_id:int = Field(primary_key=True, foreign_key="player.player_id")
+    receiving_yards: int
+    receiving_tds: int
+    receptions:int
 
 
-# class TEPerformance(Performance,table=True):
-#     pass
+class LBPerformance(SQLModel,table=True):
+    game_id:int = Field(primary_key=True, foreign_key="game.game_id")
+    player_id:int = Field(primary_key=True, foreign_key="player.player_id")
+    pass_breakups:int
+    def_ints:int
+    solo_tackles:int
+    sacks:int
+    tfl:int
+    forced_fumbles:int
+    total_tackles:int
 
 
-# class OLPerformance(Performance,table=True):
-#     pass
-
-
-# class DLPerformance(Performance,table=True):
-#     pass
-
-
-# class LBPerformance(Performance,table=True):
-#     pass
-
-
-# class CBPerformance(Performance,table=True):
-#     pass
-
-
-# class SPerformance(Performance,table=True):
-#     pass
+class SPerformance(SQLModel,table=True):
+    game_id:int = Field(primary_key=True, foreign_key="game.game_id")
+    player_id:int = Field(primary_key=True, foreign_key="player.player_id")
+    pass_breakups:int 
+    def_ints:int
+    solo_tackles:int
+    fumble_recoveries:int
+    defensive_tds:int
+    forced_fumbles:int
+    total_tackles:int
 

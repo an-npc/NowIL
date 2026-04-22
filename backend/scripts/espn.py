@@ -80,7 +80,7 @@ def fetch_rosters_data() -> dict:
         parameters = {"lang": "en", "region": "us", "limit":200} #?lang=en&region=us
         athlete_urls = requests.get(url,parameters).json()["items"]
     
-        print(f"fetching team {team["team_id"]}'s roster...")
+        print(f"fetching team {team['team_id']}'s roster...")
         athletes = {}
         for athlete_url in athlete_urls:
             
@@ -120,15 +120,16 @@ def create_player_records() -> dict:
                     "homestate":player["birthPlace"]["state"],
                     "position":player["position"]["abbreviation"],
                     "number":player["jersey"],  
-                    "team_id": team_id
+                    "team_id": team_id,
+                    "base_nil":-1,
                 } 
                 player_table[player["id"]] = player_data
                 player_id+=1  
             except KeyError as e:
-                print(f"Team table id: {team_id}   Player: {player["fullName"]}")
+                print(f"Team table id: {team_id}   Player: {player['fullName']}")
                 print(e)
             except ValueError as e:
-                print(f"Team table id: {team_id}   Player: {player["fullName"]}")
+                print(f"Team table id: {team_id}   Player: {player['fullName']}")
                 print(e)
 
     return player_table  
@@ -177,7 +178,7 @@ def create_game_records() -> dict:
             games[game["espn_id"]] = game
             game_id+=1
         except KeyError as e:
-                print(f"Game: {event["name"]}   Date: {event["date"]}")
+                print(f"Game: {event['name']}   Date: {event['date']}")
                 print(e)
     return games
 
@@ -212,8 +213,8 @@ def create_performance_records() -> dict:
                 performances_data = {
                     "game_id": games[espn_game_id]["game_id"],
                     "player_id": players[espn_player_id]["player_id"],
-                    "nil": generate_random_nil(),
-                    "nil_delta": generate_random_delta(),
+                    "nil": -1,  #generate_random_nil(),
+                    "nil_delta": -1 #generate_random_delta(),
                 }
                 key = f"{espn_game_id}-{espn_player_id}"
                 performances_records[key] = performances_data
@@ -295,7 +296,7 @@ def collect_all_data() -> None:
         print(f"Fetching {table_name} data...")
         write_table(create_func(),table_name)
         print(f"Saving data at data/tables/{table_name}.json")
-        print(f"This data can be inserted into the database using insert_database.py")
+    print(f"This data can be inserted into the database using insert_database.py")
         
     
     

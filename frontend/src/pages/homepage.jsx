@@ -1,111 +1,93 @@
-import { useState } from 'react'
+import { useState, useRef, useCallback, ReactComponent } from 'react'
+import Baseball from '../assets/baseball.svg'
+import Basketball from '../assets/basketball.svg'
+import Football from '../assets/football.svg'
 import Volleyball from '../assets/volleyball.svg'
 import Soccer from '../assets/soccer.svg'
-import Baseball from '../assets/baseball.svg'
 import Swimming from '../assets/swimming.svg'
+import Golf from '../assets/golf.svg'
 import '../App.css'
 import { Home, User, Slack, Dribbble, Heart, Edit, Search } from 'react-feather';
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 
-let data = [
-    {
-        id: 1,
-        rank: 1,
-        athlete: 'John Doe',
-        college: 'University of Nowhere',
-        sport: 'Basketball',
-        position: 'Guard',
-        nilValue: '$1M',
-        nilChange: '+$500K',
-        following: true
-    },
-    {
-        id: 2,
-        rank: 2,
-        athlete: 'Jane Smith',
-        college: 'College of Somewhere',
-        sport: 'Football',
-        position: 'Quarterback',
-        nilValue: '$800K',
-        nilChange: '+$300K',
-        following: false
-    },
-    {
-        id: 3,
-        rank: 3,
-        athlete: 'Mike Johnson',
-        college: 'State University',
-        sport: 'Baseball',
-        position: 'Pitcher',
-        nilValue: '$600K',
-        nilChange: '+$200K',
-        following: true
-    }
-];
+import { MaterialReactTable, useMaterialReactTable } from 'material-react-table';
+import {fetchOrPlaceholder } from '../api/api-funcs'
+import {top_10_data} from '../assets/data/placeholder-data'
+
+const params = new URLSearchParams({limit:10})
+let data = await fetchOrPlaceholder("/players/data",params,top_10_data)
+
 
 function Homepage() {
+    const USD = new Intl.NumberFormat('en-US', {style: 'currency', currency: 'USD',});
     return (
         <main className='grid-container-main' >
-            <header className='page-title center-vertical'><h1>homepage</h1></header>
+            <header className='page-title center-vertical'><h1>Home</h1></header>
             <form className='search-bar center-vertical'>
-                <div className='row'>
-                    <input type='search' value='search for your team' />
-                    <input type='submit' />
+                <div className='row row-spacing'>
+                    <input className='search-input' type='search' value='search for your team' />
+                    <button type='submit'><Search size={30} /></button>
                 </div>
             </form>
             <section className='chart'>
-                <div id='header' className='table-row-header'>
-                    <p>#</p>
-                    <p>ATHLETE</p>
-                    <p>COLLEGE</p>
-                    <p>SPORT</p>
-                    <p>POS</p>
-                    <p>NIL VALUE</p>
-                    <p>NIL CHANGE</p>
-                    <p>FOLLOW</p>
-                </div>
-                <div className=''>
-                    {data.map((item) => (
-                        <div key={item.id} className='table-row'>
-                            <p>{item.rank}</p>
-                            <p>{item.athlete}</p>
-                            <p>{item.college}</p>
-                            <p>{item.sport}</p>
-                            <p>{item.position}</p>
-                            <p>{item.nilValue}</p>
-                            <p>{item.nilChange}</p>
-                            <p>{item.following ? 'Following' : 'Not Following'}</p>
-                        </div>
-                    ))}
-                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>ATHLETE</th>
+                            <th>COLLEGE</th>
+                            <th>SPORT</th>
+                            <th>POS</th>
+                            <th>NIL VALUE</th>
+                            <th>NIL CHANGE</th>
+                            <th>FOLLOW</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    { 
+                        data.map((item, index) => (
+                            <tr key={item.player_id}>
+                                <th>{index+1}</th>
+                                <td>{`${item.first_name} ${item.last_name}`}</td>
+                                <td>{item.school}</td>
+                                <td>{item.sport}</td>
+                                <td>{item.position}</td>
+                                <td>{USD.format(item.nil)}</td>
+                                <td>{`${item.nil_delta.toFixed(2)*100}%`}</td>
+                                <td><Heart/></td>
+                            </tr>
+                        ))
+                    }
+                    </tbody>
+                </table>
             </section>
             <section className='trending'>
                 <div className='sub-trending'>
                     <div className='sports-card'>
                         <img
                             src={Volleyball}
-                            alt='volleyball-img'
+                            alt='baseball-img'
                             className='change-color' />
                         <p className='sports-title'>VOLLEYBALL</p>
                     </div>
                     <div className='sports-card'>
                         <img
                             src={Baseball}
-                            alt='volleyball-img'
+                            alt='baseball-img'
                             className='change-color' />
                         <p className='sports-title'>BASEBALL</p>
                     </div>
                     <div className='sports-card'>
                         <img
                             src={Swimming}
-                            alt='volleyball-img'
+                            alt='swimming-img'
                             className='change-color' />
                         <p className='sports-title'>SWIMMING</p>
                     </div>
                     <div className='sports-card'>
                         <img
                             src={Soccer}
-                            alt='volleyball-img'
+                            alt='soccer-img'
                             className='change-color' />
                         <p className='sports-title'>SOCCER</p>
                     </div>

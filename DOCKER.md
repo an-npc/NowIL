@@ -5,9 +5,9 @@ This Docker setup was generated with Claude, let me know if there are any errors
 ## Choose Your Setup Method
 
 **New to the project? Use Docker** — it handles React, Python, PostgreSQL, and all dependencies automatically with one command.  
-**Docker not working on your machine?** Follow the manual setup for the bakcend in the `backend/README.md` file.
+**Docker not working on your machine?** Follow the manual setup for the backend in the [Backend.md](backend/Backend.md) file.
 
-*`backend/README.MD` also contains useful information about the structure of the backend and how it works, I recommend reading some of it if you plan on working on the backend - Joshua*
+*[Backend.md](backend/Backend.md) also contains useful information about the structure of the backend and how it works, I recommend reading some of it if you plan on working on the backend - Joshua*
 ---
 
 ## Docker Setup (Recommended)
@@ -51,7 +51,7 @@ This will automatically:
 - Install all Python dependencies
 - Start the FastAPI backend on `http://localhost:8000`
 
-**4. Initialize the database tables**
+**4. Initialize the database tables**   
 
 In a second terminal:
 ```bash
@@ -70,10 +70,22 @@ pip install -r requirements.txt
 ```
 Note: `.venv/Scripts/Activate.ps1 `  is Windows specific, if on Mac or Linux use `source venv/bin/activate`
 
+VSCode does not recongize the .venv python interpreter by default. To get vscode working:
+
+1. In VSCode, Press `Ctrl + Shift + P` to open the commands dropdown
+
+2. Type `Python: Select Interpreter` then `Enter interpreter path...`
+
+3. Select `backend/.venv/Scripts/python.exe`
+
+You should not get working editor support from VSCode 
+
 **6. Verify servers are running**
 That's it! The backend is running at `http://localhost:8000` and the API docs are at `http://localhost:8000/docs`. The frontend is running at `http:localhost:5173` .
 
 ### Useful Docker Commands
+
+Here are a few helpful commands to get started. For a full list see [Commands](README.md/#commands)
 ```bash
 # Start containers (after first build)
 docker compose up

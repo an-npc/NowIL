@@ -1,0 +1,108 @@
+# Game-by-game NIL tracker configuration.
+# All adjustment weights, baselines, and thresholds live here.
+
+season: 2025
+conference: SEC
+season_types:
+  - regular
+  - postseason
+
+# Positions tracked by this model.
+positions:
+  - QB
+  - WR
+  - TE
+  - LB    # players.json uses LB; maps to MLB in the parent project
+  - S
+
+# Per-position stat baselines.
+# "average" is a typical starting-level game. Performance score is computed
+# as the weighted deviation from these baselines.
+baselines:
+  QB:
+    stats:
+      pass_yards:       { avg: 250, weight: 0.25 }
+      pass_tds:         { avg: 2.0, weight: 0.20 }
+      ints:             { avg: 0.8, weight: -0.20 }   # negative weight: more is worse
+      completion_pct:   { avg: 62.0, weight: 0.15 }
+      rush_yards:       { avg: 25,  weight: 0.10 }
+      rush_tds:         { avg: 0.2, weight: 0.10 }
+  WR:
+    stats:
+      receptions:       { avg: 5.0, weight: 0.20 }
+      receiving_yards:  { avg: 70,  weight: 0.30 }
+      receiving_tds:    { avg: 0.5, weight: 0.30 }
+      yards_per_rec:    { avg: 13.0, weight: 0.20 }
+  TE:
+    stats:
+      receptions:       { avg: 3.0, weight: 0.25 }
+      receiving_yards:  { avg: 40,  weight: 0.35 }
+      receiving_tds:    { avg: 0.3, weight: 0.40 }
+  LB:
+    stats:
+      total_tackles:    { avg: 7.0, weight: 0.25 }
+      solo_tackles:     { avg: 4.0, weight: 0.10 }
+      tfl:              { avg: 1.0, weight: 0.15 }
+      sacks:            { avg: 0.5, weight: 0.20 }
+      def_ints:         { avg: 0.1, weight: 0.15 }
+      pass_breakups:    { avg: 0.3, weight: 0.10 }
+      forced_fumbles:   { avg: 0.1, weight: 0.05 }
+  S:
+    stats:
+      total_tackles:    { avg: 5.0, weight: 0.20 }
+      solo_tackles:     { avg: 3.0, weight: 0.10 }
+      def_ints:         { avg: 0.2, weight: 0.25 }
+      pass_breakups:    { avg: 0.5, weight: 0.20 }
+      forced_fumbles:   { avg: 0.1, weight: 0.10 }
+      fumble_recoveries: { avg: 0.05, weight: 0.05 }
+      defensive_tds:    { avg: 0.05, weight: 0.10 }
+
+# Adjustment parameters.
+adjustment:
+  # Max percentage change per game (caps extreme swings).
+  max_pct_change_per_game: 0.08
+
+  # Floor: NIL cannot drop below this fraction of the initial value.
+  floor_pct: 0.30
+
+  # Base multiplier applied to performance score to get a dollar delta.
+  # delta = nil_current * base_multiplier * performance_score
+  base_multiplier: 0.05
+
+  # Momentum: consecutive games in the same direction compound.
+  momentum:
+    # After N consecutive positive (or negative) games, multiply the delta
+    # by (1 + streak_bonus * min(streak_length, max_streak)).
+    streak_bonus: 0.10
+    max_streak: 5
+
+  # Recency: games later in the season carry more weight.
+  recency:
+    # Multiplier = 1 + recency_slope * (week / total_weeks)
+    recency_slope: 0.30
+
+  # Decay: after an extreme spike or drop, pull 10% back toward the
+  # season running average each subsequent game if the extreme is not
+  # sustained.
+  decay:
+    enabled: true
+    decay_rate: 0.10
+
+  # Opponent strength modifier: scale performance score by opponent quality.
+  opponent_strength:
+    enabled: true
+    # If opponent Elo is above avg, boost the score; below, dampen.
+    elo_center: 1500
+    # Per 100 Elo points above center, add this fraction to the score.
+    elo_scale_per_100: 0.05
+
+  # Win/loss modifier: small bump for wins, small penalty for losses.
+  win_loss:
+    win_bonus: 0.03
+    loss_penalty: -0.02
+
+# CFBD API settings.
+cfbd:
+  base_url: https://api.collegefootballdata.com
+  cache_dir: data/cache/tracker
+  rate_limit_seconds: 0.3

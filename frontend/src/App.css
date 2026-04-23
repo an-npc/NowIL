@@ -22,6 +22,7 @@
   row-gap: 16px;
   margin-left: 16px;
   width: 85vw;
+  padding-right: 16px;
 }
 
 .search-bar {
@@ -38,11 +39,16 @@
   border: 2px solid #1B4332;
   border-radius: 7px;
   min-width: 50vw;
+  background-color: seashell;
 }
 
 h1 {
   font-weight: bold;
   color: black;
+}
+
+.find-elem {
+  background-color: aquamarine;
 }
 
 .center {
@@ -55,8 +61,11 @@ h1 {
   align-items: center;
 }
 
+.change-icon {
+  max-width: 50px;
+}
+
 .change-color {
-  fill: white;
   max-width: 50px;
 }
 
@@ -75,38 +84,174 @@ h1 {
   /* background: aquamarine; */
 }
 
-
 /* end general styles */
 /* START FOLLOWING PAGE */
 .hero-stats {
-  grid-column: 3/-1;
+  grid-column: 1/13;
   grid-row: 2/4;
-  color: #ee8cda;
-  background: #ee8cda;
+  /* background: #ee8cda; */
+  display: flex;
+  justify-content: space-between;
 }
 
+.following-category {
+  display: flex;
+  flex-direction: column;
+  /* justify-content: center; */
+  align-items: center;
+  border: 2px black solid;
+  border-radius: 16px;
+  background-color: seashell;
+  min-width: 20%;
+  overflow: hidden;
+}
+
+.following-category-tag {
+  background-color: #0f5a2b;
+  height: 20px;
+  color: #0f5a2b;
+  width: 100%;
+}
+
+.following-category-content {
+  /* background-color: #00FF85; */
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: center;
+  padding: 0 4px;
+}
+
+.following-category-content p {
+  font-weight: bolder;
+  /* font-family:Georgia, 'Times New Roman', Times, serif; */
+}
 .followed-sports {
-  grid-column: 3/10;
-  grid-row: 4/7;
-  background: yellow;
+  grid-column: 1/9;
+  grid-row: 4/9;
+  background: #0f5a2b;
+  border-radius: 16px;
 }
 
-.news-section {
-  grid-column: 10/13;
-  grid-row: 4/7;
-  background: azure;
+.followed-sports-header {
+  height: 10%;
+  display: flex;
+  align-items: center;
+  color: seashell;
+  padding: 16px;
+  margin-top: 4px;
+  /* background-color: red; */
+  justify-content: space-between;
+}
+
+.followed-sports-header p {
+  font-weight: bolder;
+}
+
+.text-bubble {
+  background-color: seagreen;
+  padding: 4px 8px;
+  border-radius: 16px;
+}
+
+.sport-categories {
+  /* background-color: pink; */
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  height: 85%;
+  flex-wrap: wrap;
+}
+
+.followed-sports-category {
+  color: seashell;
+  background-color: seagreen;
+  width: 40%;
+  min-width: 150px;
+  max-width: 250px;
+  max-height: 100px;
+  border-radius: 16px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  padding: 8px 0px;
+  margin: 4px 0px;
+}
+
+.following-news-section {
+  grid-column: 9/13;
+  grid-row: 4/9;
+  /* background: palevioletred; */
+}
+
+.video {
+  width: 100%;
+  height: 100%;
+  border-radius: 16px;
 }
 
 .follow-players {
-  grid-column: 3/13;
-  grid-row: 7/10;
+  grid-column: 1/13;
+  grid-row: 9/11;
   background: blue;
 }
 
 .follow-sports {
-  grid-column: 3/13;
-  grid-row: 10/13;
-  background: purple;
+  grid-column: 1/13;
+  grid-row: 11/13;
+  /* background: purple; */
+
+  display: flex;
+  flex-direction: row;
+  overflow: scroll;
+  align-items: center;
+  justify-content: space-between;
+}
+
+
+.college-logo {
+  width: 116px;
+  height: 116px;
+  background-color: seashell;
+  border: 2px #1B4332 solid;
+  border-radius: 16px;
+  padding: 8px;
+  margin-left: 8px;
+}
+
+
+@media(max-width: 768px) {
+  .followed-sports {
+    grid-column: 1/13;
+    grid-row: 4/9;
+    background: #0f5a2b;
+    border-radius: 16px;
+  }
+
+  .following-news-section {
+    grid-column: 1/13;
+    grid-row: 9/14;
+    /* background: palevioletred; */
+  }
+
+  .follow-players {
+    grid-column: 1/13;
+    grid-row: 14/16;
+    background: blue;
+  }
+
+  .follow-sports {
+    grid-column: 1/13;
+    grid-row: 16/18;
+    /* background: purple; */
+  }
+
+
+
 }
 
 /* END FOLLOWING PAGE */
@@ -132,15 +277,17 @@ h1 {
 .chart {
   grid-column: 1/13;
   grid-row: 2/10;
-  background: #15803d;
+  /* background: #15803d; */
   border-radius: 30px;
   padding: 15px;
+  border: 2px black solid;
+  box-shadow: 5px 5px 5px grey;
 }
 
 .trending {
   grid-column: 1/10;
-  grid-row: 10/16;
-  background: palegreen;
+  grid-row: 10/13;
+  background: #0f5a2b;
   border-radius: 30px;
   padding: 15px;
 }
@@ -155,17 +302,17 @@ h1 {
   display: flex;
   flex-direction: column;
   align-items: center;
-  background-color: #ee8cda;
+  background-color: #0f5a2b;
   border-radius: 20px;
   margin: 5px;
   color: white;
 }
 
-.news-section2 {
+/* .news-section2 {
   grid-column: 10/13;
   grid-row: 10/16;
   background: azure;
-}
+} */
 
 .table-row-header {
   display: grid;
@@ -180,6 +327,34 @@ h1 {
   margin-bottom: 10px;
   border-bottom: ghostwhite 1px solid;
 }
+
+tr {
+  display: flex;
+  justify-content: space-between;
+  /* background-color: aquamarine; */
+  padding: 10px 0px;
+  border-bottom: 1px black solid;
+}
+
+@media(max-width: 768px) {
+  .chart {
+    grid-column: 1/13;
+    grid-row: 2/11;
+    border-radius: 30px;
+    padding: 15px;
+  }
+
+  .trending {
+    grid-column: 1/10;
+    grid-row: 11/14;
+    background: #0f5a2b;
+    /* background: #00FF85; */
+    border-radius: 30px;
+    padding: 15px;
+  }
+
+}
+
 
 /* END HOMEPAGE PAGE */
 /* PREDICT PAGE */
@@ -230,7 +405,7 @@ h1 {
 
 @media(min-width: 768px) {
   .predict-input {
-    max-width: 55vw;
+    max-width: 41vw;
   }
 }
 

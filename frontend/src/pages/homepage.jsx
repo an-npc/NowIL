@@ -1,9 +1,11 @@
 import { useState, useRef, useCallback, ReactComponent } from 'react'
-import Volleyball from '../assets/volleyball.svg'
-// import { ReactComponent as Volleyball } from '../assets/volleyball.svg'
-import Soccer from '../assets/soccer.svg'
 import Baseball from '../assets/baseball.svg'
+import Basketball from '../assets/basketball.svg'
+import Football from '../assets/football.svg'
+import Volleyball from '../assets/volleyball.svg'
+import Soccer from '../assets/soccer.svg'
 import Swimming from '../assets/swimming.svg'
+import Golf from '../assets/golf.svg'
 import '../App.css'
 import { Home, User, Slack, Dribbble, Heart, Edit, Search } from 'react-feather';
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';

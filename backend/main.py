@@ -1,6 +1,6 @@
 #initializes fastapi and registers main router
 
-from fastapi import FastAPI
+from fastapi import FastAPI, APIRouter
 from fastapi.middleware.cors import CORSMiddleware
 from routers import players_info,predict
 
@@ -13,9 +13,12 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+main_router = APIRouter(prefix="/api")
+main_router.include_router(players_info.router)
+main_router.include_router(predict.router)
 
-app.include_router(players_info.router)
-app.include_router(predict.router)
+app.include_router(main_router)
+
 
 @app.get("/")
 def root():

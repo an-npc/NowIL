@@ -13,42 +13,6 @@ import SportsPage from './pages/sportspage';
 import TeamsPage from './pages/teams';
 import TrendingPlayersPage from './pages/trendingplayer';
 
-let data = [
-  {
-    id: 1,
-    rank: 1,
-    athlete: 'John Doe',
-    college: 'University of Nowhere',
-    sport: 'Basketball',
-    position: 'Guard',
-    nilValue: '$1M',
-    nilChange: '+$500K',
-    following: true
-  },
-  {
-    id: 2,
-    rank: 2,
-    athlete: 'Jane Smith',
-    college: 'College of Somewhere',
-    sport: 'Football',
-    position: 'Quarterback',
-    nilValue: '$800K',
-    nilChange: '+$300K',
-    following: false
-  },
-  {
-    id: 3,
-    rank: 3,
-    athlete: 'Mike Johnson',
-    college: 'State University',
-    sport: 'Baseball',
-    position: 'Pitcher',
-    nilValue: '$600K',
-    nilChange: '+$200K',
-    following: true
-  }
-];
-
 // acts as Map in my dev-port-iii
 
 function App() {
@@ -61,12 +25,12 @@ function App() {
           <div className='column'>
             <div className='center'><img src={NowILLogo} alt='NowIL_Logo' className='logo' /></div>
             <Link to="/">
-              <div className='row'><Home /><p>home</p>
+              <div className='row'><Home /><p>Home</p>
               </div>
             </Link>
             <Link to="/players">
               <div className='row'>
-                <User /> <p>players</p>
+                <User /> <p>Players</p>
               </div>
             </Link>
             <div className='row'><Slack /> <p>teams</p></div>

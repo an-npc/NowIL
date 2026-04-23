@@ -10,50 +10,11 @@ import '../App.css'
 import { Home, User, Slack, Dribbble, Heart, Edit, Search, HelpCircle } from 'react-feather';
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 
-let data = [
-    {
-        id: 1,
-        rank: 1,
-        athlete: 'John Doe',
-        college: 'University of Nowhere',
-        sport: 'Basketball',
-        position: 'Guard',
-        nilValue: '$1M',
-        nilChange: '+$500K',
-        following: true
-    },
-    {
-        id: 2,
-        rank: 2,
-        athlete: 'Jane Smith',
-        college: 'College of Somewhere',
-        sport: 'Football',
-        position: 'Quarterback',
-        nilValue: '$800K',
-        nilChange: '+$300K',
-        following: false
-    },
-    {
-        id: 3,
-        rank: 3,
-        athlete: 'Mike Johnson',
-        college: 'State University',
-        sport: 'Baseball',
-        position: 'Pitcher',
-        nilValue: '$600K',
-        nilChange: '+$200K',
-        following: true
-    }
-];
+import { fetchOrPlaceholder} from '../api/api-funcs'
+import { predict_options } from '../assets/data/placeholder-data'
 
-let temp_schools = ['Louisiana State University', 'University of Alabama', 'University of Georgia', 'University of Florida', 'University of Texas', 'University of Michigan', 'Ohio State University', 'University of Notre Dame', 'University of Southern California', 'Penn State University'
-];
+const options = await fetchOrPlaceholder("/predict/options",null,predict_options)
 
-let temp_positions = ['Quarterback', 'Running Back', 'Wide Receiver', 'Linebacker', 'Safety', 'Defensive End', 'Offensive Line', 'Kicker'];
-
-let temp_years = ['2020', '2021', '2022', '2023', '2024'];
-
-let temp_conferences = ['SEC', 'ACC', 'Big Ten', 'Pac-12', 'Big 12', 'AAC', 'Mountain West', 'Sun Belt', 'MAC', 'Conference USA'];
 
 function Predict() {
     let [show, setShow] = useState(false);
@@ -144,8 +105,8 @@ function Predict() {
                             <label>Select a Conference:</label>
                             <select onChange={handleConferenceChange}>
                                 <option>select...</option>
-                                {temp_conferences.map((item) => (
-                                    <option value={item} >
+                                {options["conferences"].map((item) => (
+                                    <option key = {item} value={item} >
                                         {item}
                                     </option>
                                 ))}
@@ -155,8 +116,8 @@ function Predict() {
                             <label>Select a School:</label>
                             <select onChange={handleSchoolChange}>
                                 <option>select...</option>
-                                {temp_schools.map((item) => (
-                                    <option value={item} onChange={handleSchoolChange}>
+                                {options["schools"].map((item) => (
+                                    <option key = {item} value={item} onChange={handleSchoolChange}>
                                         {item}
                                     </option>
                                 ))}
@@ -166,8 +127,8 @@ function Predict() {
                             <label>Select a Position:</label>
                             <select onChange={handlePositionChange}>
                                 <option >select...</option>
-                                {temp_positions.map((item) => (
-                                    <option value={item} onChange={handlePositionChange}>
+                                {options["positions"].map((item) => (
+                                    <option key = {item} value={item} onChange={handlePositionChange}>
                                         {item}
                                     </option>
                                 ))}
@@ -177,8 +138,8 @@ function Predict() {
                             <label>Select a Year:</label>
                             <select onChange={handleYearChange}>
                                 <option>select...</option>
-                                {temp_years.map((item) => (
-                                    <option value={item}>
+                                {options["years"].map((item) => (
+                                    <option key = {item} value={item}>
                                         {item}
                                     </option>
                                 ))}

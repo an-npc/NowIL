@@ -1,0 +1,17 @@
+torch>=2.2.0
+xgboost>=2.0.0
+pandas>=2.1.0
+numpy>=1.26.0
+pydantic>=2.5.0
+pyyaml>=6.0.1
+scikit-learn>=1.4.0
+pytest>=8.0.0
+pytest-mock>=3.12.0
+# cfbd package is incompatible with pydantic v2; we use direct HTTP requests
+# cfbd>=5.2.0
+requests>=2.31.0
+beautifulsoup4>=4.12.0
+python-dotenv>=1.0.0
+tqdm>=4.66.0
+matplotlib>=3.8.0
+jupyter>=1.0.0

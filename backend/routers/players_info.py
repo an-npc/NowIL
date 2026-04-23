@@ -13,9 +13,7 @@ router = APIRouter(prefix="/players", tags=["player"])
 @router.get("/data", response_model=List[PlayerTableData])
 def get_players_data(
         team_id:int|None = None,
-        position:str|None = None,
-        college_year:str|None = None,
-        limit:int = 1,
+        limit:int = 10,
         offset:int = 0,
         session:Session = Depends(get_session)
     ):

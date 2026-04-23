@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import {
@@ -6,155 +6,327 @@ import {
   useMaterialReactTable,
 } from 'material-react-table';
 import { Box } from '@mui/material';
+import GNHeadshot from '../assets/GN_headshot.png';
+import JAHeadshot from '../assets/JA_headshot.png';
+import HBHeadshot from '../assets/HB_headshot.png';
+import JCHeadshot from '../assets/JC_headshot.png';
+import ADHeadshot from '../assets/AD_headshot.png';
+import JBHeadshot from '../assets/JB_headshot.png';
+import HDHeadshot from '../assets/HD_headshot.png';
+import XAHeadshot from '../assets/XA_headshot.png';
+import CCHeadshot from '../assets/CC_headshot.png';
+import JCobbHeadshot from '../assets/JCobb_headshott.png';
+
+// Heart Icon Component
+const Heart = ({ isLiked, size = 20 }) => (
+  <svg
+    width={size}
+    height={size}
+    viewBox="0 0 24 24"
+    fill={isLiked ? "#dc2626" : "none"}
+    stroke={isLiked ? "#dc2626" : "#999"}
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
+    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+  </svg>
+);
 
 export default function PlayerDetailPage() {
   const { playerId } = useParams();
   const navigate = useNavigate();
+  const [isLiked, setIsLiked] = useState(false);
 
   const allPlayers = [
     {
       rank: 1,
-      name: 'Arch Manning',
-      college: 'UT Austin',
+      name: 'Garrett Nussmeier',
+      college: 'LSU',
       sport: 'Football',
       pos: 'QB',
-      nilValue: '$5.4M',
-      nilChange: '-21%',
-      number: 16,
-      height: '6\'4"',
-      weight: '230 lbs',
-      hometown: 'New Orleans, LA',
-      highSchool: 'Isidore Newman School',
-      year: 'Junior',
-      photo: null,
-      gameHistory: [
-        { date: '10/18', vs: 'Vanderbilt', result: 'L', score: '31-24', att: 38, yds: 232, nilValue: '$5.0M', nilChange: '-0.03%' },
-        { date: '10/11', vs: 'Alabama', result: 'L', score: '48-32', att: 50, yds: 360, nilValue: '$5.2M', nilChange: '-0.02%' },
-        { date: '9/27', vs: 'UT Austin', result: 'W', score: '28-11', att: 31, yds: 380, nilValue: '$5.4M', nilChange: '+0.01%' },
-        { date: '9/20', vs: 'Ohio State', result: 'L', score: '46-23', att: 29, yds: 210, nilValue: '$5.3M', nilChange: '-0.05%' },
-      ],
-      nilHistory: [
-        { month: 'Jun', value: 4.8 },
-        { month: 'Jul', value: 4.9 },
-        { month: 'Aug', value: 5.1 },
-        { month: 'Sep', value: 5.3 },
-        { month: 'Oct', value: 5.4 },
-      ]
-    },
-    { 
-      rank: 2, 
-      name: 'AJ Dybantsa', 
-      college: 'BYU', 
-      sport: 'Basketball', 
-      pos: 'SF', 
-      nilValue: '$4.2M', 
-      nilChange: '-5%', 
-      number: 0, 
-      height: '6\'9"', 
-      weight: '215 lbs', 
-      hometown: 'Chimacum, WA',
-      highSchool: 'Port Townsend High School',
-      year: 'Sophomore',
-      photo: null,
-      gameHistory: [
-        { date: '10/18', vs: 'Gonzaga', result: 'W', score: '78-72', att: 28, yds: 24, nilValue: '$4.2M', nilChange: '-0.03%' },
-        { date: '10/11', vs: 'Duke', result: 'L', score: '68-65', att: 32, yds: 18, nilValue: '$4.3M', nilChange: '-0.02%' },
-        { date: '9/27', vs: 'Kansas', result: 'W', score: '82-79', att: 35, yds: 22, nilValue: '$4.4M', nilChange: '+0.01%' },
-        { date: '9/20', vs: 'UCLA', result: 'L', score: '75-68', att: 30, yds: 16, nilValue: '$4.1M', nilChange: '-0.05%' },
-      ],
-      nilHistory: [
-        { month: 'Jun', value: 3.8 },
-        { month: 'Jul', value: 3.9 },
-        { month: 'Aug', value: 4.0 },
-        { month: 'Sep', value: 4.1 },
-        { month: 'Oct', value: 4.2 },
-      ]
-    },
-    { 
-      rank: 3, 
-      name: 'Jeremiah Smith', 
-      college: 'Ohio State', 
-      sport: 'Football', 
-      pos: 'WR', 
-      nilValue: '$4.2M', 
-      nilChange: '0%', 
-      number: 4, 
-      height: '6\'3"', 
-      weight: '205 lbs', 
-      hometown: 'Amherst, OH',
-      highSchool: 'Amherst Steele High School',
-      year: 'Freshman',
-      photo: null,
-      gameHistory: [
-        { date: '10/18', vs: 'Penn State', result: 'W', score: '35-16', att: 12, yds: 156, nilValue: '$4.2M', nilChange: '-0.03%' },
-        { date: '10/11', vs: 'Michigan', result: 'L', score: '30-24', att: 8, yds: 98, nilValue: '$4.3M', nilChange: '-0.02%' },
-        { date: '9/27', vs: 'Iowa', result: 'W', score: '41-21', att: 10, yds: 142, nilValue: '$4.4M', nilChange: '+0.01%' },
-        { date: '9/20', vs: 'Wisconsin', result: 'W', score: '38-14', att: 11, yds: 167, nilValue: '$4.1M', nilChange: '-0.05%' },
-      ],
-      nilHistory: [
-        { month: 'Jun', value: 3.5 },
-        { month: 'Jul', value: 3.7 },
-        { month: 'Aug', value: 3.9 },
-        { month: 'Sep', value: 4.0 },
-        { month: 'Oct', value: 4.2 },
-      ]
-    },
-    { 
-      rank: 4, 
-      name: 'Garrett Nussmeier', 
-      college: 'LSU', 
-      sport: 'Football', 
-      pos: 'QB', 
-      nilValue: '$4.0M', 
-      nilChange: '+6.7%', 
-      number: 18, 
-      height: '6\'3"', 
-      weight: '215 lbs', 
+      nilValue: '$3.3M',
+      nilChange: '-4%',
+      number: 18,
+      height: '6\'3"',
+      weight: '215 lbs',
       hometown: 'Lake Charles, LA',
       highSchool: 'Edward S. Marcus High School',
       year: 'Senior',
-      photo: null,
+      photo: GNHeadshot,
       gameHistory: [
-        { date: '10/18', vs: 'Vanderbilt', result: 'L', score: '31-24', att: 38, yds: 232, nilValue: '$5.0M', nilChange: '-0.03%' },
-        { date: '10/11', vs: 'Alabama', result: 'L', score: '48-32', att: 50, yds: 360, nilValue: '$5.2M', nilChange: '-0.02%' },
-        { date: '9/27', vs: 'UT Austin', result: 'W', score: '28-11', att: 31, yds: 380, nilValue: '$5.4M', nilChange: '+0.01%' },
-        { date: '9/20', vs: 'Ohio State', result: 'L', score: '46-23', att: 29, yds: 210, nilValue: '$5.3M', nilChange: '-0.05%' },
+        { date: '10/18', vs: 'Vanderbilt', result: 'L', score: '31-24', att: 38, yds: 232, nilValue: '$3.3M', nilChange: '-0.03%' },
+        { date: '10/11', vs: 'Alabama', result: 'L', score: '48-32', att: 50, yds: 360, nilValue: '$3.4M', nilChange: '-0.02%' },
+        { date: '9/27', vs: 'Ole Miss', result: 'W', score: '28-11', att: 31, yds: 380, nilValue: '$3.5M', nilChange: '+0.01%' },
+        { date: '9/20', vs: 'Texas A&M', result: 'L', score: '46-23', att: 29, yds: 210, nilValue: '$3.2M', nilChange: '-0.05%' },
       ],
       nilHistory: [
-        { month: 'Jun', value: 3.2 },
-        { month: 'Jul', value: 3.4 },
-        { month: 'Aug', value: 3.6 },
-        { month: 'Sep', value: 3.8 },
-        { month: 'Oct', value: 4.0 },
+        { month: 'Jun', value: 3.5 },
+        { month: 'Jul', value: 3.5 },
+        { month: 'Aug', value: 3.4 },
+        { month: 'Sep', value: 3.3 },
+        { month: 'Oct', value: 3.3 },
+      ]
+    },
+    {
+      rank: 2,
+      name: 'Jackson Arnold',
+      college: 'Oklahoma',
+      sport: 'Football',
+      pos: 'QB',
+      nilValue: '$2.8M',
+      nilChange: '+8%',
+      number: 11,
+      height: '6\'3"',
+      weight: '219 lbs',
+      hometown: 'Denton, TX',
+      highSchool: 'Guyer High School',
+      year: 'Junior',
+      photo: JAHeadshot,
+      gameHistory: [
+        { date: '10/18', vs: 'Iowa State', result: 'W', score: '35-28', att: 32, yds: 285, nilValue: '$2.8M', nilChange: '-0.03%' },
+        { date: '10/11', vs: 'Texas', result: 'L', score: '34-30', att: 38, yds: 315, nilValue: '$2.9M', nilChange: '-0.02%' },
+        { date: '9/27', vs: 'Kansas', result: 'W', score: '42-21', att: 28, yds: 352, nilValue: '$3.0M', nilChange: '+0.01%' },
+        { date: '9/20', vs: 'Baylor', result: 'W', score: '38-27', att: 35, yds: 298, nilValue: '$2.7M', nilChange: '-0.05%' },
+      ],
+      nilHistory: [
+        { month: 'Jun', value: 2.3 },
+        { month: 'Jul', value: 2.4 },
+        { month: 'Aug', value: 2.6 },
+        { month: 'Sep', value: 2.7 },
+        { month: 'Oct', value: 2.8 },
+      ]
+    },
+    {
+      rank: 3,
+      name: 'Hank Brown',
+      college: 'Auburn',
+      sport: 'Football',
+      pos: 'QB',
+      nilValue: '$2.4M',
+      nilChange: '+12%',
+      number: 9,
+      height: '6\'2"',
+      weight: '215 lbs',
+      hometown: 'Nashville, TN',
+      highSchool: 'Pearl-Cohn Charter School',
+      year: 'Sophomore',
+      photo: HBHeadshot,
+      gameHistory: [
+        { date: '10/18', vs: 'Missouri', result: 'W', score: '28-17', att: 26, yds: 298, nilValue: '$2.4M', nilChange: '-0.03%' },
+        { date: '10/11', vs: 'Georgia', result: 'L', score: '41-14', att: 32, yds: 185, nilValue: '$2.5M', nilChange: '-0.02%' },
+        { date: '9/27', vs: 'New Mexico', result: 'W', score: '38-21', att: 24, yds: 325, nilValue: '$2.6M', nilChange: '+0.01%' },
+        { date: '9/20', vs: 'Kent State', result: 'W', score: '45-7', att: 20, yds: 280, nilValue: '$2.3M', nilChange: '-0.05%' },
+      ],
+      nilHistory: [
+        { month: 'Jun', value: 1.9 },
+        { month: 'Jul', value: 2.0 },
+        { month: 'Aug', value: 2.1 },
+        { month: 'Sep', value: 2.2 },
+        { month: 'Oct', value: 2.4 },
+      ]
+    },
+    {
+      rank: 4,
+      name: 'John Colvin',
+      college: 'Auburn',
+      sport: 'Football',
+      pos: 'QB',
+      nilValue: '$2.1M',
+      nilChange: '+5%',
+      number: 16,
+      height: '6\'0"',
+      weight: '194 lbs',
+      hometown: 'Birmingham, AL',
+      highSchool: 'Marjory Stoneman Douglas High School',
+      year: 'Sophomore',
+      photo: JCHeadshot,
+      gameHistory: [
+        { date: '10/18', vs: 'Missouri', result: 'W', score: '28-17', att: 22, yds: 268, nilValue: '$2.1M', nilChange: '-0.03%' },
+        { date: '10/11', vs: 'Georgia', result: 'L', score: '41-14', att: 28, yds: 175, nilValue: '$2.2M', nilChange: '-0.02%' },
+        { date: '9/27', vs: 'New Mexico', result: 'W', score: '38-21', att: 20, yds: 295, nilValue: '$2.3M', nilChange: '+0.01%' },
+        { date: '9/20', vs: 'Kent State', result: 'W', score: '45-7', att: 18, yds: 250, nilValue: '$2.0M', nilChange: '-0.05%' },
+      ],
+      nilHistory: [
+        { month: 'Jun', value: 1.8 },
+        { month: 'Jul', value: 1.9 },
+        { month: 'Aug', value: 2.0 },
+        { month: 'Sep', value: 2.05 },
+        { month: 'Oct', value: 2.1 },
       ]
     },
     {
       rank: 5,
-      name: 'Brendan Sorsby', 
-      college: 'Texas A&M', 
-      sport: 'Football', 
-      pos: 'QB', 
-      nilValue: '$3.1M', 
-      nilChange: '+29%', 
-      number: 1, 
-      height: '6\'2"', 
-      weight: '210 lbs', 
-      hometown: 'Cincinnati, OH',
-      highSchool: 'Moeller High School',
-      year: 'Junior',
-      photo: null,
+      name: 'Ashton Daniels',
+      college: 'Auburn',
+      sport: 'Football',
+      pos: 'QB',
+      nilValue: '$2.6M',
+      nilChange: '+9%',
+      number: 12,
+      height: '6\'2"',
+      weight: '219 lbs',
+      hometown: 'Buford, GA',
+      highSchool: 'Buford High School',
+      year: 'Senior',
+      photo: ADHeadshot,
       gameHistory: [
-        { date: '10/18', vs: 'Auburn', result: 'W', score: '33-20', att: 28, yds: 312, nilValue: '$3.1M', nilChange: '-0.03%' },
-        { date: '10/11', vs: 'Arkansas', result: 'L', score: '42-35', att: 42, yds: 298, nilValue: '$3.2M', nilChange: '-0.02%' },
-        { date: '9/27', vs: 'Mississippi', result: 'W', score: '38-17', att: 25, yds: 344, nilValue: '$3.3M', nilChange: '+0.01%' },
-        { date: '9/20', vs: 'Florida', result: 'L', score: '44-28', att: 38, yds: 256, nilValue: '$3.0M', nilChange: '-0.05%' },
+        { date: '10/18', vs: 'Missouri', result: 'W', score: '28-17', att: 28, yds: 312, nilValue: '$2.6M', nilChange: '-0.03%' },
+        { date: '10/11', vs: 'Georgia', result: 'L', score: '41-14', att: 35, yds: 242, nilValue: '$2.7M', nilChange: '-0.02%' },
+        { date: '9/27', vs: 'New Mexico', result: 'W', score: '38-21', att: 26, yds: 344, nilValue: '$2.8M', nilChange: '+0.01%' },
+        { date: '9/20', vs: 'Kent State', result: 'W', score: '45-7', att: 24, yds: 298, nilValue: '$2.5M', nilChange: '-0.05%' },
       ],
       nilHistory: [
-        { month: 'Jun', value: 1.8 },
-        { month: 'Jul', value: 2.0 },
+        { month: 'Jun', value: 2.2 },
+        { month: 'Jul', value: 2.3 },
         { month: 'Aug', value: 2.4 },
-        { month: 'Sep', value: 2.7 },
-        { month: 'Oct', value: 3.1 },
+        { month: 'Sep', value: 2.5 },
+        { month: 'Oct', value: 2.6 },
+      ]
+    },
+    {
+      rank: 6,
+      name: 'Jackson Barkley',
+      college: 'Auburn',
+      sport: 'Football',
+      pos: 'QB',
+      nilValue: '$1.9M',
+      nilChange: '+7%',
+      number: 19,
+      height: '6\'0"',
+      weight: '206 lbs',
+      hometown: 'Marietta, GA',
+      highSchool: 'Marietta High School',
+      year: 'Junior',
+      photo: JBHeadshot,
+      gameHistory: [
+        { date: '10/18', vs: 'Missouri', result: 'W', score: '28-17', att: 20, yds: 251, nilValue: '$1.9M', nilChange: '-0.03%' },
+        { date: '10/11', vs: 'Georgia', result: 'L', score: '41-14', att: 26, yds: 168, nilValue: '$2.0M', nilChange: '-0.02%' },
+        { date: '9/27', vs: 'New Mexico', result: 'W', score: '38-21', att: 18, yds: 278, nilValue: '$2.1M', nilChange: '+0.01%' },
+        { date: '9/20', vs: 'Kent State', result: 'W', score: '45-7', att: 16, yds: 232, nilValue: '$1.8M', nilChange: '-0.05%' },
+      ],
+      nilHistory: [
+        { month: 'Jun', value: 1.6 },
+        { month: 'Jul', value: 1.7 },
+        { month: 'Aug', value: 1.8 },
+        { month: 'Sep', value: 1.85 },
+        { month: 'Oct', value: 1.9 },
+      ]
+    },
+    {
+      rank: 7,
+      name: 'Hollis Davidson III',
+      college: 'Auburn',
+      sport: 'Football',
+      pos: 'TE',
+      nilValue: '$1.8M',
+      nilChange: '+6%',
+      number: 13,
+      height: '6\'5"',
+      weight: '238 lbs',
+      hometown: 'Peachtree City, GA',
+      highSchool: 'Starr\'s Mill High School',
+      year: 'Freshman',
+      photo: HDHeadshot,
+      gameHistory: [
+        { date: '10/18', vs: 'Missouri', result: 'W', score: '28-17', att: 6, yds: 78, nilValue: '$1.8M', nilChange: '-0.03%' },
+        { date: '10/11', vs: 'Georgia', result: 'L', score: '41-14', att: 4, yds: 32, nilValue: '$1.9M', nilChange: '-0.02%' },
+        { date: '9/27', vs: 'New Mexico', result: 'W', score: '38-21', att: 7, yds: 89, nilValue: '$2.0M', nilChange: '+0.01%' },
+        { date: '9/20', vs: 'Kent State', result: 'W', score: '45-7', att: 5, yds: 65, nilValue: '$1.7M', nilChange: '-0.05%' },
+      ],
+      nilHistory: [
+        { month: 'Jun', value: 1.5 },
+        { month: 'Jul', value: 1.6 },
+        { month: 'Aug', value: 1.7 },
+        { month: 'Sep', value: 1.75 },
+        { month: 'Oct', value: 1.8 },
+      ]
+    },
+    {
+      rank: 8,
+      name: 'Xavier Atkins',
+      college: 'LSU',
+      sport: 'Football',
+      pos: 'LB',
+      nilValue: '$1.5M',
+      nilChange: '+4%',
+      number: 17,
+      height: '6\'0"',
+      weight: '210 lbs',
+      hometown: 'Houston, TX',
+      highSchool: 'Fort Bend Bush High School',
+      year: 'Sophomore',
+      photo: XAHeadshot,
+      gameHistory: [
+        { date: '10/18', vs: 'Vanderbilt', result: 'L', score: '31-24', att: 12, yds: 0, nilValue: '$1.5M', nilChange: '-0.03%' },
+        { date: '10/11', vs: 'Alabama', result: 'L', score: '48-32', att: 14, yds: 0, nilValue: '$1.6M', nilChange: '-0.02%' },
+        { date: '9/27', vs: 'Ole Miss', result: 'W', score: '28-11', att: 11, yds: 0, nilValue: '$1.7M', nilChange: '+0.01%' },
+        { date: '9/20', vs: 'Texas A&M', result: 'L', score: '46-23', att: 10, yds: 0, nilValue: '$1.4M', nilChange: '-0.05%' },
+      ],
+      nilHistory: [
+        { month: 'Jun', value: 1.3 },
+        { month: 'Jul', value: 1.35 },
+        { month: 'Aug', value: 1.4 },
+        { month: 'Sep', value: 1.45 },
+        { month: 'Oct', value: 1.5 },
+      ]
+    },
+    {
+      rank: 9,
+      name: 'Cam Coleman',
+      college: 'Auburn',
+      sport: 'Football',
+      pos: 'WR',
+      nilValue: '$1.7M',
+      nilChange: '+8%',
+      number: 8,
+      height: '6\'1"',
+      weight: '201 lbs',
+      hometown: 'Phenix City, AL',
+      highSchool: 'Central High School',
+      year: 'Sophomore',
+      photo: CCHeadshot,
+      gameHistory: [
+        { date: '10/18', vs: 'Missouri', result: 'W', score: '28-17', att: 8, yds: 142, nilValue: '$1.7M', nilChange: '-0.03%' },
+        { date: '10/11', vs: 'Georgia', result: 'L', score: '41-14', att: 6, yds: 89, nilValue: '$1.8M', nilChange: '-0.02%' },
+        { date: '9/27', vs: 'New Mexico', result: 'W', score: '38-21', att: 9, yds: 156, nilValue: '$1.9M', nilChange: '+0.01%' },
+        { date: '9/20', vs: 'Kent State', result: 'W', score: '45-7', att: 7, yds: 128, nilValue: '$1.6M', nilChange: '-0.05%' },
+      ],
+      nilHistory: [
+        { month: 'Jun', value: 1.4 },
+        { month: 'Jul', value: 1.45 },
+        { month: 'Aug', value: 1.5 },
+        { month: 'Sep', value: 1.6 },
+        { month: 'Oct', value: 1.7 },
+      ]
+    },
+    {
+      rank: 10,
+      name: 'Jeremiah Cobb',
+      college: 'Auburn',
+      sport: 'Football',
+      pos: 'RB',
+      nilValue: '$1.4M',
+      nilChange: '+3%',
+      number: 23,
+      height: '5\'11"',
+      weight: '200 lbs',
+      hometown: 'Montgomery, AL',
+      highSchool: 'Booker T. Washington High School',
+      year: 'Junior',
+      photo: JCobbHeadshot,
+      gameHistory: [
+        { date: '10/18', vs: 'Missouri', result: 'W', score: '28-17', att: 18, yds: 87, nilValue: '$1.4M', nilChange: '-0.03%' },
+        { date: '10/11', vs: 'Georgia', result: 'L', score: '41-14', att: 14, yds: 52, nilValue: '$1.5M', nilChange: '-0.02%' },
+        { date: '9/27', vs: 'New Mexico', result: 'W', score: '38-21', att: 22, yds: 112, nilValue: '$1.6M', nilChange: '+0.01%' },
+        { date: '9/20', vs: 'Kent State', result: 'W', score: '45-7', att: 16, yds: 98, nilValue: '$1.3M', nilChange: '-0.05%' },
+      ],
+      nilHistory: [
+        { month: 'Jun', value: 1.2 },
+        { month: 'Jul', value: 1.25 },
+        { month: 'Aug', value: 1.3 },
+        { month: 'Sep', value: 1.35 },
+        { month: 'Oct', value: 1.4 },
       ]
     }
   ];
@@ -339,7 +511,9 @@ export default function PlayerDetailPage() {
               </div>
 
               {/* Like Button */}
-              <button style={styles.likeButton}>🤍</button>
+              <button style={styles.likeButton} onClick={() => setIsLiked(!isLiked)}>
+                <Heart isLiked={isLiked} size={24} />
+              </button>
             </div>
           </div>
 

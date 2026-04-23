@@ -1,5 +1,6 @@
 import requests
 import json
+import os
 from typing import Callable
 from models.database_tables import PositionType
 import random
@@ -80,7 +81,7 @@ def fetch_rosters_data() -> dict:
         parameters = {"lang": "en", "region": "us", "limit":200} #?lang=en&region=us
         athlete_urls = requests.get(url,parameters).json()["items"]
     
-        print(f"fetching team {team["team_id"]}'s roster...")
+        print(f"fetching team {team['team_id']}'s roster...")
         athletes = {}
         for athlete_url in athlete_urls:
             
@@ -125,10 +126,10 @@ def create_player_records() -> dict:
                 player_table[player["id"]] = player_data
                 player_id+=1  
             except KeyError as e:
-                print(f"Team table id: {team_id}   Player: {player["fullName"]}")
+                print(f"Team table id: {team_id}   Player: {player['fullName']}")
                 print(e)
             except ValueError as e:
-                print(f"Team table id: {team_id}   Player: {player["fullName"]}")
+                print(f"Team table id: {team_id}   Player: {player['fullName']}")
                 print(e)
 
     return player_table  
@@ -177,7 +178,7 @@ def create_game_records() -> dict:
             games[game["espn_id"]] = game
             game_id+=1
         except KeyError as e:
-                print(f"Game: {event["name"]}   Date: {event["date"]}")
+                print(f"Game: {event['name']}   Date: {event['date']}")
                 print(e)
     return games
 
@@ -252,6 +253,7 @@ I/O METHODS
 # creates a json file from a dict of table records
 def write_table(table_records:dict, file_name:str) -> None:
     filepath=f"data/tables/{file_name}.json"
+    os.makedirs(os.path.dirname(filepath), exist_ok=True)
     with open(filepath,"w") as file:
         json.dump(table_records,file,indent=4)
         

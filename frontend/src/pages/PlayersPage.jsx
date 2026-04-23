@@ -5,6 +5,16 @@ import {
   useMaterialReactTable,
 } from 'material-react-table';
 import { Box } from '@mui/material';
+import GNHeadshot from '../assets/GN_headshot.png';
+import JAHeadshot from '../assets/JA_headshot.png';
+import HBHeadshot from '../assets/HB_headshot.png';
+import JCHeadshot from '../assets/JC_headshot.png';
+import ADHeadshot from '../assets/AD_headshot.png';
+import JBHeadshot from '../assets/JB_headshot.png';
+import HDHeadshot from '../assets/HD_headshot.png';
+import XAHeadshot from '../assets/XA_headshot.png';
+import CCHeadshot from '../assets/CC_headshot.png';
+import JCobbHeadshot from '../assets/JCobb_headshott.png';
 
 // Heart Icon Component
 const Heart = ({ isLiked, size = 20 }) => (
@@ -247,16 +257,16 @@ export default function PlayersPage() {
   const sports = ['Football', 'Basketball', 'Baseball', 'Soccer', 'Golf', 'Volleyball', 'Tennis', 'Gymnastics'];
 
   const trendingPlayers = [
-    { rank: 1, name: 'Garrett Nussmeier', college: 'LSU', position: 'QB', number: 18, nilValue: 3.3, nilChange: -4, photo: null },
-    { rank: 2, name: 'Ryan Williams', college: 'UA', position: 'WR', number: 2, nilValue: 2.0, nilChange: -20, photo: null },
-    { rank: 3, name: 'Arch Manning', college: 'UT', position: 'QB', number: 16, nilValue: 2.8, nilChange: 15, photo: null },
-    { rank: 4, name: 'Travis Hunter', college: 'CU', position: 'CB', number: 12, nilValue: 2.5, nilChange: 8, photo: null },
-    { rank: 5, name: 'Brent Favre', college: 'Ole Miss', position: 'QB', number: 5, nilValue: 1.9, nilChange: -5, photo: null },
-    { rank: 6, name: 'Ty Gibbs', college: 'Alabama', position: 'RB', number: 7, nilValue: 2.2, nilChange: 12, photo: null },
-    { rank: 7, name: 'Will Anderson', college: 'Alabama', position: 'DE', number: 31, nilValue: 2.6, nilChange: -3, photo: null },
-    { rank: 8, name: 'Quentin Johnston', college: 'TCU', position: 'WR', number: 1, nilValue: 1.8, nilChange: 6, photo: null },
-    { rank: 9, name: 'Luke Altman', college: 'Texas', position: 'TE', number: 11, nilValue: 1.5, nilChange: -2, photo: null },
-    { rank: 10, name: 'Jalen Hurts', college: 'Oklahoma', position: 'QB', number: 2, nilValue: 3.1, nilChange: 18, photo: null },
+    { rank: 1, name: 'Garrett Nussmeier', college: 'LSU', position: 'QB', number: 18, nilValue: 3.3, nilChange: -4, photo: GNHeadshot },
+    { rank: 2, name: 'Jackson Arnold', college: 'Oklahoma', position: 'QB', number: 11, nilValue: 2.8, nilChange: 8, photo: JAHeadshot },
+    { rank: 3, name: 'Hank Brown', college: 'Auburn', position: 'QB', number: 9, nilValue: 2.4, nilChange: 12, photo: HBHeadshot },
+    { rank: 4, name: 'John Colvin', college: 'Auburn', position: 'QB', number: 16, nilValue: 2.1, nilChange: 5, photo: JCHeadshot },
+    { rank: 5, name: 'Ashton Daniels', college: 'Auburn', position: 'QB', number: 12, nilValue: 2.6, nilChange: 9, photo: ADHeadshot },
+    { rank: 6, name: 'Jackson Barkley', college: 'Auburn', position: 'QB', number: 19, nilValue: 1.9, nilChange: 7, photo: JBHeadshot },
+    { rank: 7, name: 'Hollis Davidson III', college: 'Auburn', position: 'TE', number: 13, nilValue: 1.8, nilChange: 6, photo: HDHeadshot },
+    { rank: 8, name: 'Xavier Atkins', college: 'LSU', position: 'LB', number: 17, nilValue: 1.5, nilChange: 4, photo: XAHeadshot },
+    { rank: 9, name: 'Cam Coleman', college: 'Auburn', position: 'WR', number: 8, nilValue: 1.7, nilChange: 8, photo: CCHeadshot },
+    { rank: 10, name: 'Jeremiah Cobb', college: 'Auburn', position: 'RB', number: 23, nilValue: 1.4, nilChange: 3, photo: JCobbHeadshot },
   ];
 
   const tableData = [
@@ -305,8 +315,8 @@ export default function PlayersPage() {
               key={sport}
               onClick={() => setSelectedSport(sport)}
               className={`px-6 py-2 rounded-full font-medium transition-all ${selectedSport === sport
-                  ? 'bg-gray-800 text-white'
-                  : 'bg-white text-gray-600 border-2 border-gray-300 hover:border-gray-400'
+                ? 'bg-gray-800 text-white'
+                : 'bg-white text-gray-600 border-2 border-gray-300 hover:border-gray-400'
                 }`}
             >
               {sport}

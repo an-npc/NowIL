@@ -48,13 +48,13 @@ const TeamCard = ({ name, location, logoUrl, nilValue, nilChange, sports, header
     <div className="border-2 border-gray-300 rounded-2xl overflow-hidden bg-white flex-shrink-0 h-full flex flex-col">
       {/* Card Header with university color */}
       <div className="h-16" style={{ backgroundColor: headerColor }}></div>
-      
+
       {/* Logo Section */}
       <div className="flex items-center justify-center py-6 px-4 bg-gray-50">
         {!logoError && logoUrl ? (
-          <img 
-            src={logoUrl} 
-            alt="University Logo" 
+          <img
+            src={logoUrl}
+            alt="University Logo"
             className="w-20 h-20 object-contain"
             onError={() => {
               console.error(`Failed to load logo: ${logoUrl}`);
@@ -180,7 +180,7 @@ export default function TeamsPage() {
     },
   ];
 
-  const CARD_WIDTH = 350;
+  const CARD_WIDTH = 300;
   const CARD_GAP = 24;
   const CARDS_VISIBLE = 3;
 
@@ -228,11 +228,10 @@ export default function TeamsPage() {
             <button
               key={sport}
               onClick={() => setSelectedSport(sport)}
-              className={`px-6 py-2 rounded-full font-medium transition-all ${
-                selectedSport === sport
+              className={`px-6 py-2 rounded-full font-medium transition-all ${selectedSport === sport
                   ? 'bg-gray-800 text-white'
                   : 'bg-white text-gray-600 border-2 border-gray-300 hover:border-gray-400'
-              }`}
+                }`}
             >
               {sport}
             </button>

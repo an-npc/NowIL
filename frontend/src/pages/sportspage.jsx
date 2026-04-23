@@ -1,5 +1,13 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import Baseball from '../assets/baseball.svg';
+import Basketball from '../assets/basketball.svg';
+import Football from '../assets/football.svg';
+import Golf from '../assets/golf.svg';
+import Soccer from '../assets/soccer.svg';
+import Swimming from '../assets/swimming.svg';
+import Tennis from '../assets/tennis.svg';
+import Volleyball from '../assets/volleyball.svg';
 
 // Sport Card Component
 const SportCard = ({ icon, name, players, teams, onClick }) => {
@@ -9,13 +17,13 @@ const SportCard = ({ icon, name, players, teams, onClick }) => {
     <div
       className="rounded-xl p-6 text-white transition-all cursor-pointer"
       style={{
-        backgroundColor: isHovered ? '#3a8b56' : '#4fa86d',
+        backgroundColor: isHovered ? '#1b4332' : '#2d8659',
       }}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       onClick={onClick}
     >
-      <div className="text-5xl mb-4 text-center">{icon}</div>
+      <div className="flex justify-center mb-4"><img src={icon} alt={name} style={{ width: '50px', height: '50px', filter: 'brightness(0) invert(1)' }} /></div>
       <h3 className="font-bold text-sm text-center mb-3">{name}</h3>
       <div className="flex justify-center gap-3 text-xs" style={{ color: 'rgba(255, 255, 255, 0.9)' }}>
         <span>{players} players</span>
@@ -34,13 +42,13 @@ const GrowthCard = ({ icon, name, growth, onClick }) => {
     <div
       className="rounded-xl p-6 text-white transition-all cursor-pointer"
       style={{
-        backgroundColor: isHovered ? '#3a8b56' : '#4fa86d',
+        backgroundColor: isHovered ? '#1b4332' : '#2d8659',
       }}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       onClick={onClick}
     >
-      <div className="text-4xl mb-3 text-center">{icon}</div>
+      <div className="flex justify-center mb-3"><img src={icon} alt={name} style={{ width: '50px', height: '50px', filter: 'brightness(0) invert(1)' }} /></div>
       <h3 className="font-bold text-sm text-center mb-4">{name}</h3>
       <div className="flex justify-center items-center gap-2 text-lg font-bold pt-3" style={{ borderTop: '1px solid rgba(255, 255, 255, 0.3)' }}>
         <span>↑</span>
@@ -56,22 +64,22 @@ export default function SportsPage() {
   const navigate = useNavigate();
 
   const allSports = [
-    { name: 'GYMNASTICS', players: 40, teams: 8, icon: '🤸' },
-    { name: 'BASEBALL', players: 80, teams: 12, icon: '⚾' },
-    { name: 'VOLLEYBALL', players: 20, teams: 3, icon: '🏐' },
-    { name: 'FOOTBALL', players: 197, teams: 16, icon: '🏈' },
-    { name: 'BASKETBALL', players: 164, teams: 12, icon: '🏀' },
-    { name: 'TENNIS', players: 15, teams: 3, icon: '🎾' },
-    { name: 'SOCCER', players: 27, teams: 8, icon: '⚽' },
-    { name: 'GOLF', players: 12, teams: 6, icon: '⛳' },
+    { name: 'GYMNASTICS', players: 40, teams: 8, icon: Swimming },
+    { name: 'BASEBALL', players: 80, teams: 12, icon: Baseball },
+    { name: 'VOLLEYBALL', players: 20, teams: 3, icon: Volleyball },
+    { name: 'FOOTBALL', players: 197, teams: 16, icon: Football },
+    { name: 'BASKETBALL', players: 164, teams: 12, icon: Basketball },
+    { name: 'TENNIS', players: 15, teams: 3, icon: Tennis },
+    { name: 'SOCCER', players: 27, teams: 8, icon: Soccer },
+    { name: 'GOLF', players: 12, teams: 6, icon: Golf },
   ];
 
   const fastestGrowing = [
-    { name: 'FOOTBALL', growth: 50, icon: '🏈' },
-    { name: 'BASEBALL', growth: 42, icon: '⚾' },
-    { name: 'BASKETBALL', growth: 35, icon: '🏀' },
-    { name: 'GYMNASTICS', growth: 26, icon: '🤸' },
-    { name: 'GOLF', growth: 26, icon: '⛳' },
+    { name: 'FOOTBALL', growth: 50, icon: Football },
+    { name: 'BASEBALL', growth: 42, icon: Baseball },
+    { name: 'BASKETBALL', growth: 35, icon: Basketball },
+    { name: 'GYMNASTICS', growth: 26, icon: Swimming },
+    { name: 'GOLF', growth: 26, icon: Golf },
   ];
 
   const handleSportClick = (sportName) => {
@@ -101,7 +109,7 @@ export default function SportsPage() {
         {/* All Sports Section */}
         <div className="mb-12">
           <h2 className="text-xl font-bold text-gray-900 mb-4">All Sports</h2>
-          <div className="rounded-3xl p-8" style={{ backgroundColor: '#2d8659' }}>
+          <div className="rounded-3xl p-8" style={{ backgroundColor: '#0f5a2b' }}>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
               {allSports.map((sport, index) => (
                 <SportCard
@@ -120,7 +128,7 @@ export default function SportsPage() {
         {/* Fastest Growing Sports Section */}
         <div>
           <h2 className="text-xl font-bold text-gray-900 mb-4">Fastest Growing Sports</h2>
-          <div className="rounded-3xl p-8" style={{ backgroundColor: '#2d8659' }}>
+          <div className="rounded-3xl p-8" style={{ backgroundColor: '#0f5a2b' }}>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
               {fastestGrowing.map((sport, index) => (
                 <GrowthCard

@@ -1,8 +1,11 @@
 import { useState } from 'react'
+import Baseball from '../assets/baseball.svg'
+import Basketball from '../assets/basketball.svg'
+import Football from '../assets/football.svg'
 import Volleyball from '../assets/volleyball.svg'
 import Soccer from '../assets/soccer.svg'
-import Baseball from '../assets/baseball.svg'
 import Swimming from '../assets/swimming.svg'
+import Golf from '../assets/golf.svg'
 import '../App.css'
 import { Home, User, Slack, Dribbble, Heart, Edit, Search, HelpCircle } from 'react-feather';
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';

@@ -7,6 +7,11 @@ import Homepage from './pages/homepage';
 import Index from './pages/Index';
 import Guest from './pages/myguest';
 import Predict from './pages/predict';
+import Following from './pages/following';
+import PlayersPage from './pages/players';
+import SportsPage from './pages/sportspage';
+import TeamsPage from './pages/teams';
+import TrendingPlayersPage from './pages/trendingplayer';
 
 let data = [
   {
@@ -59,16 +64,22 @@ function App() {
               <div className='row'><Home /><p>home</p>
               </div>
             </Link>
-            <Link to="/guest">
+            <Link to="/players">
               <div className='row'>
                 <User /> <p>players</p>
               </div>
             </Link>
             <div className='row'><Slack /> <p>teams</p></div>
             <div className='row'><Dribbble /> <p>sports</p></div>
-            <div className='row'><Heart /> <p>following</p></div>
+            <Link to='/following'>
+              <div className='row'>
+                <Heart /><p>following</p>
+              </div>
+            </Link>
             <Link to="/predict">
-              <div className='row'><Edit /> <p>predict</p></div>
+              <div className='row'>
+                <Edit /> <p>predict</p>
+              </div>
             </Link>
           </div>
         </section>
@@ -76,6 +87,8 @@ function App() {
           <Route path="/" element={<Homepage />} />
           <Route path="/guest" element={<Guest />} />
           <Route path="/predict" element={<Predict />} />
+          <Route path="/following" element={<Following />} />
+          <Route path="/players" element={<TrendingPlayersPage  />} />
         </Routes>
       </main>
     </Router>

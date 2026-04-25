@@ -25,7 +25,7 @@ const STEPS = [
   },
 ];
 
-const FONT = "'M PLUS Rounded 1c', -apple-system, Roboto, Helvetica, sans-serif";
+const FONT = "Inter, -apple-system, Roboto, Helvetica, sans-serif";
 
 export default function Index() {
   const [step, setStep] = useState(0);
@@ -54,7 +54,7 @@ export default function Index() {
               className="flex-1 rounded-full transition-colors duration-300"
               style={{
                 height: "clamp(6px, 0.7vw, 10px)",
-                backgroundColor: i <= step ? "#15803D" : "#64748B",
+                backgroundColor: i <= step ? "#1db954" : "#64748B",
               }}
             />
           ))}
@@ -138,7 +138,7 @@ export default function Index() {
               letterSpacing: "0.03em",
               lineHeight: "130%",
               fontWeight: 400,
-              backgroundColor: "#15803D",
+              backgroundColor: "#1db954",
               width: "clamp(88px, 14.7vw, 212px)",
               height: "clamp(40px, 6vw, 86px)",
               opacity: canGoNext ? 1 : 0.45,

@@ -244,3 +244,4 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+.claude/settings.json

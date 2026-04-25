@@ -1,14 +1,9 @@
-import { useState, useRef, useCallback, ReactComponent } from 'react'
-import Baseball from '../assets/baseball.svg'
-import Basketball from '../assets/basketball.svg'
-import Football from '../assets/football.svg'
-import Volleyball from '../assets/volleyball.svg'
-import Soccer from '../assets/soccer.svg'
-import Swimming from '../assets/swimming.svg'
-import Golf from '../assets/golf.svg'
-import '../App.css'
-import { Home, User, Slack, Dribbble, Heart, Edit, Search } from 'react-feather';
-import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
+import Volleyball from '../assets/volleyball.svg';
+import Soccer from '../assets/soccer.svg';
+import Baseball from '../assets/baseball.svg';
+import Swimming from '../assets/swimming.svg';
+import '../App.css';
+import { Heart, Search } from 'react-feather';
 
 import { fetchOrPlaceholder } from '../api/api-funcs';
 import { top_10_data } from '../assets/data/placeholder-data';

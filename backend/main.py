@@ -2,8 +2,6 @@
 
 from fastapi import FastAPI, APIRouter
 from fastapi.middleware.cors import CORSMiddleware
-from routers import test,players,teams
-from routers import players_info, predict, team_info
 from routers import players_info,predict
 
 
@@ -20,11 +18,7 @@ main_router.include_router(players_info.router)
 main_router.include_router(predict.router)
 
 app.include_router(main_router)
-app.include_router(test.router)
-app.include_router(players.router)
-app.include_router(players_info.router)
-app.include_router(predict.router)
-app.include_router(team_info.router)
+
 
 @app.get("/")
 def root():

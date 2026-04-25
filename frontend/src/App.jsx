@@ -16,7 +16,6 @@ import AllPlayersPage from './pages/AllPlayersTracked';
 import PlayerCardPage from './pages/PlayerCardPage';
 import SpecificSport from './pages/SpecificSport';
 import Predict from './pages/predict';
-import Following from './pages/following';
 import Index from './pages/Index';
 
 const menuItems = [

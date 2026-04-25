@@ -2,30 +2,24 @@
 
 # Members
 
-Joshua Walther([walthe219](https://github.com/walthe219)) 		- Project Manager, Backend Lead\
-Melanie J. Steiner([an-npc](https://github.com/an-npc)) 		- Git Master, Frontend Lead\
-Alexis Harvey([alexisharveyyy](https://github.com/alexisharveyyy)) 	- Machine Learning & Data Lead, Backend\
-Vanik Makaryan([vmakaa](https://github.com/vmakaa)) 			- Design Lead, Frontend\
-Kaden Casey([KadenC707](https://github.com/KadenC707)) 			- Backend
+Joshua Walther(walthe219) 		- Project Manager, Backend Lead\
+Melanie J. Steiner(an-npc) 		- Git Master, Frontend Lead\
+Alexis Harvey(alexisharveyyy) 	- Machine Learning & Data Lead, Backend\
+Vanik Makaryan(vmakaa) 			- Design Lead, Frontend\
+Kaden Casey (KadenC707) 		- Backend
 
-# What is NowIL?
+# About Our Software
 
-NowIL is a colligate sports website that provides real-time Name Image Likeness(NIL) projections updates based on live player performances and metrics. An NIl evaluation is a college player's estimate brand value based on their popularity, performance, and influence. NowIL uses machine learning trained on real player NIL values in order to estimate a players NIL after each game they play. 
+NowIL
 
-
-# Features
-- Live NIL evaluation
-- Player NIL History
-- Search, Filter, and Discover Players
-
-# Tech Stack
+## Tech Stack
 
 **Frontend**:
 - **React.js** - Frontend Framework in JavaScript/HTML
+- **Tailwind.css**- CSS Framework
 - **Vite** - Build manager
 - **Rechart** - React chart library
 - **React Routing** - React routing library to make multipage app
-- **Material Tables** - React premade table component
 
 **Backend**:
 - **FastAPI** - Backend Framework in Python
@@ -34,10 +28,8 @@ NowIL is a colligate sports website that provides real-time Name Image Likeness(
 - **Alembic** - Database migrations, like git for database structure, prevents data loss
 - **PyTorch** - machine learning library
 
-**Other**:
-- **Docker** - project setup
-- 
-# Other Project Links
+
+# Important Links
 
 Product Specification Document: [PDF](NowIL_PSD.pdf)
 
@@ -100,7 +92,7 @@ docker compose exec frontend COMMAND		// execute a terminal command on frontend 
 or
 
 ```sh
-docker compose exec frontend sh		// open fronted terminal to execute commands directly
+docker compose exec frontend bash		// open fronted terminal to execute commands directly
 ```
 
 Commands:

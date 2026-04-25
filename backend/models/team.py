@@ -1,4 +1,3 @@
-<<<<<<< Updated upstream
 from __future__ import annotations 
 from typing import Optional
 from sqlmodel import SQLModel, Field, Relationship 
@@ -9,7 +8,6 @@ class Team(SQLModel, table=True):
     team_id: int = Field(primary_key=True)
     name: str
     conference: Optional[str] = None
-=======
 from __future__ import annotations
 from typing import Optional
 from sqlmodel import SQLModel
@@ -43,4 +41,3 @@ class TeamInfoStats(SQLModel):
 
 class TeamPerformance(SQLModel):
     pass
->>>>>>> Stashed changes

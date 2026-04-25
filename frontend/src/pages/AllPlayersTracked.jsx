@@ -1,10 +1,11 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   MaterialReactTable,
   useMaterialReactTable,
 } from 'material-react-table';
 import { Box } from '@mui/material';
+import { fetchAPIJson } from '../api/api-funcs';
 
 export default function AllPlayersPage() {
   const navigate = useNavigate();
@@ -12,44 +13,58 @@ export default function AllPlayersPage() {
     pageIndex: 0,
     pageSize: 10,
   });
+  const [allPlayers, setAllPlayers] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState('');
 
-  const allPlayers = [
-    { rank: 1, name: 'Arch Manning', college: 'UT Austin', sport: 'Football', pos: 'QB', nilValue: '$5.4M', nilChange: '-21%' },
-    { rank: 2, name: 'AJ Dybantsa', college: 'BYU', sport: 'Basketball', pos: 'SF', nilValue: '$4.2M', nilChange: '-5%' },
-    { rank: 3, name: 'Jeremiah Smith', college: 'Ohio State', sport: 'Football', pos: 'WR', nilValue: '$4.2M', nilChange: '0%' },
-    { rank: 4, name: 'Garrett Nussmeier', college: 'LSU', sport: 'Football', pos: 'QB', nilValue: '$4.0M', nilChange: '+6.7%' },
-    { rank: 5, name: 'Brendan Sorsby', college: 'Texas A&M', sport: 'Football', pos: 'QB', nilValue: '$3.1M', nilChange: '+29%' },
-    { rank: 6, name: 'Ryan Williams', college: 'UA', sport: 'Football', pos: 'WR', nilValue: '$2.0M', nilChange: '-20%' },
-    { rank: 7, name: 'Travis Hunter', college: 'CU', sport: 'Football', pos: 'CB', nilValue: '$2.5M', nilChange: '+8%' },
-    { rank: 8, name: 'Will Anderson', college: 'Alabama', sport: 'Football', pos: 'DE', nilValue: '$2.6M', nilChange: '-3%' },
-    { rank: 9, name: 'Jalen Hurts', college: 'Oklahoma', sport: 'Football', pos: 'QB', nilValue: '$3.1M', nilChange: '+18%' },
-    { rank: 10, name: 'Quentin Johnston', college: 'TCU', sport: 'Football', pos: 'WR', nilValue: '$1.8M', nilChange: '+6%' },
-    { rank: 11, name: 'Shedeur Sanders', college: 'Colorado', sport: 'Football', pos: 'QB', nilValue: '$3.5M', nilChange: '+12%' },
-    { rank: 12, name: 'Jaylen Daniels', college: 'Arizona State', sport: 'Football', pos: 'QB', nilValue: '$2.8M', nilChange: '-8%' },
-    { rank: 13, name: 'Tyler Warren', college: 'Penn State', sport: 'Football', pos: 'TE', nilValue: '$2.3M', nilChange: '+5%' },
-    { rank: 14, name: 'Malachi Nelson', college: 'Oklahoma', sport: 'Football', pos: 'QB', nilValue: '$2.1M', nilChange: '+11%' },
-    { rank: 15, name: 'Jaxon Smith-Njigba', college: 'Oregon', sport: 'Football', pos: 'WR', nilValue: '$3.8M', nilChange: '-15%' },
-    { rank: 16, name: 'Kyle McCord', college: 'Ohio State', sport: 'Football', pos: 'QB', nilValue: '$2.4M', nilChange: '+2%' },
-    { rank: 17, name: 'Donovan Edwards', college: 'Michigan', sport: 'Football', pos: 'RB', nilValue: '$1.9M', nilChange: '-4%' },
-    { rank: 18, name: 'Marvin Harrison Jr', college: 'Ohio State', sport: 'Football', pos: 'WR', nilValue: '$4.1M', nilChange: '+14%' },
-    { rank: 19, name: 'Brayson Ritchey', college: 'Houston', sport: 'Football', pos: 'QB', nilValue: '$1.7M', nilChange: '+3%' },
-    { rank: 20, name: 'Caleb Williams', college: 'Oklahoma', sport: 'Football', pos: 'QB', nilValue: '$5.1M', nilChange: '+22%' },
-    { rank: 21, name: 'Jordan Travis', college: 'Florida State', sport: 'Football', pos: 'RB', nilValue: '$2.2M', nilChange: '-6%' },
-    { rank: 22, name: 'Will Levis', college: 'Tennessee', sport: 'Football', pos: 'QB', nilValue: '$3.3M', nilChange: '+9%' },
-    { rank: 23, name: 'Anthony Richardson', college: 'Florida', sport: 'Football', pos: 'QB', nilValue: '$3.7M', nilChange: '+19%' },
-    { rank: 24, name: 'Bryce Young', college: 'Alabama', sport: 'Football', pos: 'QB', nilValue: '$4.5M', nilChange: '-11%' },
-    { rank: 25, name: 'C.J. Stroud', college: 'Ohio State', sport: 'Football', pos: 'QB', nilValue: '$4.8M', nilChange: '+25%' },
-    { rank: 26, name: 'Treylon Burks', college: 'Arkansas', sport: 'Football', pos: 'WR', nilValue: '$2.6M', nilChange: '+7%' },
-    { rank: 27, name: 'Alec Pierce', college: 'Cincinnati', sport: 'Football', pos: 'WR', nilValue: '$1.8M', nilChange: '-1%' },
-    { rank: 28, name: 'Daxton Hill', college: 'Michigan', sport: 'Football', pos: 'S', nilValue: '$2.9M', nilChange: '+13%' },
-    { rank: 29, name: 'Devon Witherspoon', college: 'Texas', sport: 'Football', pos: 'CB', nilValue: '$2.7M', nilChange: '+4%' },
-    { rank: 30, name: 'Jordan Addison', college: 'Pitt', sport: 'Football', pos: 'WR', nilValue: '$3.2M', nilChange: '+17%' },
-    { rank: 31, name: 'Luke Altman', college: 'Texas', sport: 'Football', pos: 'TE', nilValue: '$1.5M', nilChange: '-2%' },
-    { rank: 32, name: 'Ty Gibbs', college: 'Alabama', sport: 'Football', pos: 'RB', nilValue: '$2.2M', nilChange: '+12%' },
-    { rank: 33, name: 'Brent Favre', college: 'Ole Miss', sport: 'Football', pos: 'QB', nilValue: '$1.9M', nilChange: '-5%' },
-    { rank: 34, name: 'Mike Johnson', college: 'State University', sport: 'Baseball', pos: 'Pitcher', nilValue: '$600K', nilChange: '+200K' },
-    { rank: 35, name: 'Jane Smith', college: 'College of Somewhere', sport: 'Football', pos: 'Quarterback', nilValue: '$800K', nilChange: '+300K' },
-  ];
+  useEffect(() => {
+    let isMounted = true;
+
+    async function loadPlayers() {
+      try {
+        setIsLoading(true);
+        setError('');
+
+        const params = new URLSearchParams({ limit: '1000', offset: '0' });
+        const data = await fetchAPIJson('/players/data', params);
+        const usdFormatter = new Intl.NumberFormat('en-US', {
+          style: 'currency',
+          currency: 'USD',
+          maximumFractionDigits: 0,
+        });
+
+        const mapped = data.map((player, index) => ({
+          rank: index + 1,
+          playerId: player.player_id,
+          name: `${player.first_name} ${player.last_name}`,
+          college: player.school,
+          sport: player.sport,
+          pos: player.position,
+          nilValue: usdFormatter.format(player.nil),
+          nilChange: `${player.nil_delta >= 0 ? '+' : ''}${(player.nil_delta * 100).toFixed(2)}%`,
+        }));
+
+        if (isMounted) {
+          setAllPlayers(mapped);
+        }
+      } catch (err) {
+        if (isMounted) {
+          setError('Failed to load players from the API.');
+          setAllPlayers([]);
+        }
+      } finally {
+        if (isMounted) {
+          setIsLoading(false);
+        }
+      }
+    }
+
+    loadPlayers();
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   const columns = useMemo(
     () => [
@@ -100,7 +115,7 @@ export default function AllPlayersPage() {
         header: 'ACTION',
         Cell: ({ row }) => (
           <button
-            onClick={() => navigate(`/players/${row.original.rank}`)}
+            onClick={() => navigate(`/players/${row.original.playerId}`)}
             style={{ color: '#2563eb', fontWeight: 'bold', background: 'none', border: 'none', cursor: 'pointer', textDecoration: 'none' }}
             onMouseEnter={(e) => e.target.style.textDecoration = 'underline'}
             onMouseLeave={(e) => e.target.style.textDecoration = 'none'}
@@ -116,13 +131,22 @@ export default function AllPlayersPage() {
   const table = useMaterialReactTable({
     columns,
     data: allPlayers,
+    state: {
+      pagination,
+      isLoading,
+      showAlertBanner: Boolean(error),
+      showProgressBars: isLoading,
+    },
+    muiToolbarAlertBannerProps: error
+      ? {
+        color: 'error',
+        children: error,
+      }
+      : undefined,
     enableColumnActions: false,
     enableColumnFilters: false,
     enablePagination: true,
     enableSorting: false,
-    state: {
-      pagination,
-    },
     onPaginationChange: setPagination,
     muiTablePaperProps: {
       sx: {

@@ -17,10 +17,6 @@ import PlayerCardPage from './pages/PlayerCardPage';
 import SpecificSport from './pages/SpecificSport';
 import Predict from './pages/predict';
 import Following from './pages/following';
-import PlayersPage from './pages/players';
-import SportsPage from './pages/sportspage';
-import TeamsPage from './pages/teams';
-import TrendingPlayersPage from './pages/trendingplayer';
 import Index from './pages/Index';
 
 const menuItems = [

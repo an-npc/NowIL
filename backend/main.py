@@ -15,6 +15,12 @@ app.add_middleware(
     allow_headers=["*"],
 )
 main_router = APIRouter(prefix="/api")
+main_router.include_router(players_info.router)
+main_router.include_router(predict.router)
+main_router.include_router(team_info.router)
+main_router.include_router(search.router)
+
+app.include_router(main_router)
 app.include_router(test.router)
 app.include_router(players.router)
 app.include_router(players_info.router)

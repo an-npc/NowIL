@@ -387,7 +387,7 @@ export default function PlayersPage() {
     };
   }, []);
 
-  // Generate table data from trending players
+  // Generate table data from trending players yay
   const tableData = trendingPlayers.slice(0, 5).map((player, index) => ({
     rank: index + 1,
     playerId: player.playerId,

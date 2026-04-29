@@ -1,15 +1,12 @@
 from typing import List,Sequence,Optional
-from fastapi import APIRouter, Depends, HTTPException
-from sqlmodel import Session, select, col, func, desc
-from database import get_session
 
-from models.database_tables import Player, Performance, Team, Game
-from models.player import PlayerTableData
-from routers.shared import get_current_nil_subquery
+from fastapi import APIRouter, Depends, HTTPException
 from sqlmodel import Session, select, col,func, desc 
 from database import get_session
+
 from models.database_tables import Player, Performance,Team, Game
 from models.player import PlayerTableData
+
 
 router = APIRouter(prefix="/players", tags=["player"])
 
@@ -19,13 +16,10 @@ def get_players_data(
         position:str|None = None,
         college_year:str|None = None,
         limit:int = 1,
-        limit:int = 10,
         offset:int = 0,
         session:Session = Depends(get_session)
     ):
     
-    # Use shared subquery to get current NIL values for each player
-    current_nils = get_current_nil_subquery()
     # 1. Subquery to rank performances per player by date
     # We use row_number() to pick the single newest record
     subq = (

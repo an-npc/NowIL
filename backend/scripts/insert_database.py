@@ -1,7 +1,7 @@
 from .espn import read_table
 from sqlmodel import Session
 from database import engine
-from models.database_tables import Team, Player, Game, Performance
+from models.database_tables import Team, Player, Game, Performance,QBPerformance,WRPerformance,LBPerformance,TEPerformance,SPerformance
 from sqlalchemy.exc import IntegrityError
 
 
@@ -30,6 +30,12 @@ if __name__ == "__main__":
         ("players", Player),
         ("games", Game),
         ("performances",Performance),
+        ("qb_performances",QBPerformance),
+        ("wr_performances",WRPerformance),
+        ("lb_performances",LBPerformance),
+        ("te_performances",TEPerformance),
+        ("s_performances",SPerformance),
+        
     ]
     for table_name,Table in tables:
         try:

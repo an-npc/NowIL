@@ -121,6 +121,7 @@ def create_player_records() -> dict:
                     "position":player["position"]["abbreviation"],
                     "number":player["jersey"],  
                     "team_id": team_id,
+                    "headshot_url":player["headshot"]["href"],
                     "base_nil":-1,
                 } 
                 player_table[player["id"]] = player_data

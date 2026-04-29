@@ -37,6 +37,7 @@ class Player(SQLModel,table=True):
     weight:float|None
     hometown:str|None
     homestate:str|None
+    headshot_url:str
     
     position:PositionType
     number:int|None

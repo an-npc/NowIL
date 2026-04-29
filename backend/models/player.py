@@ -1,5 +1,5 @@
 from __future__ import annotations
-from typing import Optional
+from typing import Optional, Any, List
 from sqlmodel import SQLModel
 from models.database_tables import CollegeYear,PositionType
 
@@ -14,22 +14,56 @@ class PlayerTableData(SQLModel):
     college_year:CollegeYear
     nil:int
     nil_delta:float
+    headshot_url:str
+
+
+class PlayerBaseData(SQLModel):
+    player_id:int
+    first_name:str
+    last_name:str
+    school:str
+    sport:str
+    position:PositionType
+    college_year:CollegeYear
+    base_nil:int
+    headshot_url:str
+
     
-    #FirstName,LastName,SchoolName,Sport,Pos,NIL,DeltaNIL 
-    
-    
-class PlayerInfo(SQLModel):
-    pass
-    
-    
+  
 class PlayerInfoBio(SQLModel):
-    pass
+    school:str
+    year:str
+    position:PositionType
+    number:int
+    hometown:str
+    homestate:str
+    height:float
+    weight:float
     
     
 class PlayerInfoStats(SQLModel):
-    pass
+    labels:list
+    values:list
     
     
-class PlayerPerformance():
-    pass
+class PlayerInfoBrand(SQLModel):
+    highest_nil:int
+    base_nil:int
+    
+    
+class PlayerInfo(SQLModel):
+    bio:PlayerInfoBio
+    stats:PlayerInfoStats
+    brand:PlayerInfoBrand
+    
+    
+class PlayerPerformance(SQLModel):
+    date:str
+    opponent:str
+    outcome:str
+    team_score:int
+    opponent_score:int
+    stats:PlayerInfoStats
+    nil:int
+    nil_delta:float
     

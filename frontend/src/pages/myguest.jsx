@@ -10,7 +10,7 @@ import {fetchOrPlaceholder } from '../api/api-funcs'
 import {top_10_data} from '../assets/data/placeholder-data'
 
 const params = new URLSearchParams({limit:10})
-let data = await fetchOrPlaceholder("/players/data",params,top_10_data)
+let data = await fetchOrPlaceholder("/players",params,top_10_data)
 
 function Guest() {
     const USD = new Intl.NumberFormat('en-US', {style: 'currency', currency: 'USD',});

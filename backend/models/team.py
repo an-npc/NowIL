@@ -2,7 +2,7 @@ from __future__ import annotations
 from typing import Optional
 from sqlmodel import SQLModel, Field, Relationship 
 from typing import List
-from models.database_tables import CollegeYear, PositionType
+
 
 # class Team(SQLModel, table=True):
 #     team_id: int = Field(primary_key=True)

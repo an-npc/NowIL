@@ -1,15 +1,11 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   MaterialReactTable,
   useMaterialReactTable,
 } from 'material-react-table';
 import { Box } from '@mui/material';
-import alabamaLogo from '../assets/ua-logo.png';
-import vanderbiltLogo from '../assets/v-logo.png';
-import lsuLogo from '../assets/lsu-logo.png';
-import olemissLogo from '../assets/olemiss.png';
-import floridaLogo from '../assets/uf-logo.png';
+import { fetchAPIJson } from '../api/api-funcs';
 
 export default function AllTeamsPage() {
   const navigate = useNavigate();
@@ -17,29 +13,58 @@ export default function AllTeamsPage() {
     pageIndex: 0,
     pageSize: 10,
   });
+  const [allUniversities, setAllUniversities] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState('');
 
-  const allUniversities = [
-    { id: 1, slug: 'alabama', name: 'University of Alabama', logo: alabamaLogo, playersTracked: 45, teamsTracked: 15 },
-    { id: 2, slug: 'vanderbilt', name: 'Vanderbilt University', logo: vanderbiltLogo, playersTracked: 28, teamsTracked: 12 },
-    { id: 3, slug: 'lsu', name: 'Louisiana State University', logo: lsuLogo, playersTracked: 52, teamsTracked: 14 },
-    { id: 4, slug: 'ole-miss', name: 'University of Mississippi', logo: olemissLogo, playersTracked: 35, teamsTracked: 13 },
-    { id: 5, slug: 'florida', name: 'University of Florida', logo: floridaLogo, playersTracked: 61, teamsTracked: 16 },
-    { id: 6, slug: 'georgia', name: 'University of Georgia', logo: alabamaLogo, playersTracked: 48, teamsTracked: 14 },
-    { id: 7, slug: 'texas-am', name: 'Texas A&M University', logo: vanderbiltLogo, playersTracked: 39, teamsTracked: 12 },
-    { id: 8, slug: 'texas', name: 'University of Texas', logo: lsuLogo, playersTracked: 55, teamsTracked: 15 },
-    { id: 9, slug: 'oklahoma', name: 'Oklahoma University', logo: olemissLogo, playersTracked: 42, teamsTracked: 13 },
-    { id: 10, slug: 'tennessee', name: 'University of Tennessee', logo: floridaLogo, playersTracked: 38, teamsTracked: 11 },
-    { id: 11, slug: 'kentucky', name: 'University of Kentucky', logo: alabamaLogo, playersTracked: 31, teamsTracked: 10 },
-    { id: 12, slug: 'auburn', name: 'University of Auburn', logo: vanderbiltLogo, playersTracked: 44, teamsTracked: 13 },
-    { id: 13, slug: 'south-carolina', name: 'University of South Carolina', logo: lsuLogo, playersTracked: 36, teamsTracked: 11 },
-    { id: 14, slug: 'arkansas', name: 'University of Arkansas', logo: olemissLogo, playersTracked: 33, teamsTracked: 12 },
-    { id: 15, slug: 'missouri', name: 'University of Missouri', logo: floridaLogo, playersTracked: 29, teamsTracked: 10 },
-    { id: 16, slug: 'ohio-state', name: 'University of Ohio', logo: alabamaLogo, playersTracked: 51, teamsTracked: 15 },
-    { id: 17, slug: 'michigan-state', name: 'Michigan State University', logo: vanderbiltLogo, playersTracked: 47, teamsTracked: 14 },
-    { id: 18, slug: 'wisconsin', name: 'University of Wisconsin', logo: lsuLogo, playersTracked: 40, teamsTracked: 12 },
-    { id: 19, slug: 'minnesota', name: 'University of Minnesota', logo: olemissLogo, playersTracked: 32, teamsTracked: 11 },
-    { id: 20, slug: 'iowa', name: 'University of Iowa', logo: floridaLogo, playersTracked: 27, teamsTracked: 9 },
-  ];
+  useEffect(() => {
+    let isMounted = true;
+
+    async function loadTeams() {
+      try {
+        setIsLoading(true);
+        setError('');
+
+        const params = new URLSearchParams({ limit: '1000', offset: '0' });
+        const data = await fetchAPIJson('/teams/data', params);
+        const usdFormatter = new Intl.NumberFormat('en-US', {
+          style: 'currency',
+          currency: 'USD',
+          maximumFractionDigits: 0,
+        });
+
+        const mapped = data.map((team, index) => ({
+          id: index + 1,
+          teamId: team.team_id,
+          school: team.school,
+          sport: team.sport,
+          logo: team.logo_url,
+          totalPlayers: team.total_players,
+          totalNilValue: usdFormatter.format(team.total_nil_value),
+          avgNilValue: usdFormatter.format(team.avg_nil_value),
+        }));
+
+        if (isMounted) {
+          setAllUniversities(mapped);
+        }
+      } catch (err) {
+        if (isMounted) {
+          setError('Failed to load teams from the API.');
+          setAllUniversities([]);
+        }
+      } finally {
+        if (isMounted) {
+          setIsLoading(false);
+        }
+      }
+    }
+
+    loadTeams();
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   const columns = useMemo(
     () => [
@@ -53,44 +78,58 @@ export default function AllTeamsPage() {
         accessorKey: 'logo',
         header: 'LOGO',
         size: 80,
-        Cell: ({ cell }) => (
-          <img src={cell.getValue()} alt="logo" style={{ width: '48px', height: '48px', objectFit: 'contain' }} />
-        ),
-      },
-      {
-        accessorKey: 'name',
-        header: 'UNIVERSITY NAME',
-      },
-      {
-        accessorKey: 'playersTracked',
-        header: 'PLAYERS TRACKED',
-        Cell: ({ cell }) => (
-          <span style={{ color: '#2563eb', fontWeight: 'bold' }}>
-            {cell.getValue()}
-          </span>
-        ),
-      },
-      {
-        accessorKey: 'teamsTracked',
-        header: 'TEAMS TRACKED',
-        Cell: ({ cell }) => (
-          <span style={{ color: '#2563eb', fontWeight: 'bold' }}>
-            {cell.getValue()}
-          </span>
-        ),
-      },
-      {
-        accessorKey: 'slug',
-        header: 'VIEW TEAMS',
         Cell: ({ row }) => (
-          <a
-            href={`/teams/all/${row.original.slug}`}
-            style={{ color: '#2563eb', fontWeight: 'bold', textDecoration: 'none', cursor: 'pointer' }}
+          <button
+            onClick={() => navigate(`/team/${row.original.teamId}`)}
+            style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}
+          >
+            <img src={row.original.logo} alt="logo" style={{ width: '48px', height: '48px', objectFit: 'contain' }} />
+          </button>
+        ),
+      },
+      {
+        accessorKey: 'school',
+        header: 'SCHOOL',
+        Cell: ({ row }) => (
+          <button
+            onClick={() => navigate(`/team/${row.original.teamId}`)}
+            style={{ color: '#2563eb', fontWeight: 'bold', background: 'none', border: 'none', cursor: 'pointer', textDecoration: 'none' }}
             onMouseEnter={(e) => e.target.style.textDecoration = 'underline'}
             onMouseLeave={(e) => e.target.style.textDecoration = 'none'}
           >
-            View Teams →
-          </a>
+            {row.original.school}
+          </button>
+        ),
+      },
+      {
+        accessorKey: 'sport',
+        header: 'SPORT',
+      },
+      {
+        accessorKey: 'totalPlayers',
+        header: 'TOTAL PLAYERS',
+        Cell: ({ cell }) => (
+          <span style={{ color: '#2563eb', fontWeight: 'bold' }}>
+            {cell.getValue()}
+          </span>
+        ),
+      },
+      {
+        accessorKey: 'totalNilValue',
+        header: 'TOTAL NIL VALUE',
+        Cell: ({ cell }) => (
+          <span style={{ color: '#16a34a', fontWeight: 'bold' }}>
+            {cell.getValue()}
+          </span>
+        ),
+      },
+      {
+        accessorKey: 'avgNilValue',
+        header: 'AVG NIL VALUE',
+        Cell: ({ cell }) => (
+          <span style={{ color: '#16a34a', fontWeight: 'bold' }}>
+            {cell.getValue()}
+          </span>
         ),
       },
     ],
@@ -100,13 +139,22 @@ export default function AllTeamsPage() {
   const table = useMaterialReactTable({
     columns,
     data: allUniversities,
+    state: {
+      pagination,
+      isLoading,
+      showAlertBanner: Boolean(error),
+      showProgressBars: isLoading,
+    },
+    muiToolbarAlertBannerProps: error
+      ? {
+        color: 'error',
+        children: error,
+      }
+      : undefined,
     enableColumnActions: false,
     enableColumnFilters: false,
     enablePagination: true,
     enableSorting: false,
-    state: {
-      pagination,
-    },
     onPaginationChange: setPagination,
     muiTablePaperProps: {
       sx: {

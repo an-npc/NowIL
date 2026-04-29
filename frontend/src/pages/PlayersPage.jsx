@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   MaterialReactTable,
@@ -15,6 +15,7 @@ import HDHeadshot from '../assets/HD_headshot.png';
 import XAHeadshot from '../assets/XA_headshot.png';
 import CCHeadshot from '../assets/CC_headshot.png';
 import JCobbHeadshot from '../assets/JCobb_headshott.png';
+import { fetchAPIJson } from '../api/api-funcs';
 
 // Heart Icon Component
 const Heart = ({ isLiked, size = 20 }) => (
@@ -50,13 +51,18 @@ const SearchIcon = ({ size = 20 }) => (
 );
 
 // Player Card Component
-const PlayerCard = ({ name, college, position, number, nilValue, nilChange, photo, rank }) => {
+const PlayerCard = ({ name, college, position, number, nilValue, nilChange, photo, playerId }) => {
   const [isLiked, setIsLiked] = useState(false);
   const navigate = useNavigate();
 
   function formatNIL(v) {
-    if (v >= 1) return `$${v.toFixed(1)}M`;
-    return `$${Math.round(v * 1000)}k`;
+    const formatter = new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD',
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0,
+    });
+    return formatter.format(v);
   }
 
   const changeColor = nilChange >= 0 ? '#16a34a' : '#dc2626';
@@ -65,7 +71,7 @@ const PlayerCard = ({ name, college, position, number, nilValue, nilChange, phot
     <div style={styles.playerCard}>
       <div style={styles.playerCardHeader}>
         <button
-          onClick={() => navigate(`/players/${rank}`)}
+          onClick={() => navigate(`/players/${playerId}`)}
           style={{
             background: 'none',
             border: 'none',
@@ -141,7 +147,7 @@ const PlayersTableComponent = ({ tableData, navigate }) => {
         header: 'ATHLETE',
         Cell: ({ row }) => (
           <button
-            onClick={() => navigate(`/players/${row.original.rank}`)}
+            onClick={() => navigate(`/players/${row.original.playerId}`)}
             className="font-bold text-blue-600 hover:text-blue-800 hover:underline cursor-pointer"
           >
             {row.original.name}
@@ -163,11 +169,20 @@ const PlayersTableComponent = ({ tableData, navigate }) => {
       {
         accessorKey: 'nilValue',
         header: 'NIL VALUE',
-        Cell: ({ cell }) => (
-          <span style={{ color: '#16a34a', fontWeight: 'bold' }}>
-            {cell.getValue()}
-          </span>
-        ),
+        Cell: ({ cell }) => {
+          const value = cell.getValue();
+          const formatter = new Intl.NumberFormat('en-US', {
+            style: 'currency',
+            currency: 'USD',
+            minimumFractionDigits: 0,
+            maximumFractionDigits: 0,
+          });
+          return (
+            <span style={{ color: '#16a34a', fontWeight: 'bold' }}>
+              {formatter.format(value)}
+            </span>
+          );
+        },
       },
       {
         accessorKey: 'nilChange',
@@ -184,9 +199,18 @@ const PlayersTableComponent = ({ tableData, navigate }) => {
         ),
       },
       {
-        accessorKey: 'follow',
-        header: 'FOLLOW',
-        Cell: () => <Heart isLiked={false} size={24} />,
+        accessorKey: 'action',
+        header: 'ACTION',
+        Cell: ({ row }) => (
+          <button
+            onClick={() => navigate(`/players/${row.original.playerId}`)}
+            style={{ color: '#2563eb', fontWeight: 'bold', background: 'none', border: 'none', cursor: 'pointer', textDecoration: 'none' }}
+            onMouseEnter={(e) => e.target.style.textDecoration = 'underline'}
+            onMouseLeave={(e) => e.target.style.textDecoration = 'none'}
+          >
+            View Stats →
+          </button>
+        ),
       },
     ],
     [navigate],
@@ -248,6 +272,9 @@ const PlayersTableComponent = ({ tableData, navigate }) => {
 export default function PlayersPage() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [selectedSport, setSelectedSport] = useState('Football');
+  const [trendingPlayers, setTrendingPlayers] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState('');
   const navigate = useNavigate();
 
   const CARD_WIDTH = 300;
@@ -256,26 +283,121 @@ export default function PlayersPage() {
 
   const sports = ['Football', 'Basketball', 'Baseball', 'Soccer', 'Golf', 'Volleyball', 'Tennis', 'Gymnastics'];
 
-  const trendingPlayers = [
-    { rank: 1, name: 'Garrett Nussmeier', college: 'LSU', position: 'QB', number: 18, nilValue: 3.3, nilChange: -4, photo: GNHeadshot },
-    { rank: 2, name: 'Jackson Arnold', college: 'Oklahoma', position: 'QB', number: 11, nilValue: 2.8, nilChange: 8, photo: JAHeadshot },
-    { rank: 3, name: 'Hank Brown', college: 'Auburn', position: 'QB', number: 9, nilValue: 2.4, nilChange: 12, photo: HBHeadshot },
-    { rank: 4, name: 'John Colvin', college: 'Auburn', position: 'QB', number: 16, nilValue: 2.1, nilChange: 5, photo: JCHeadshot },
-    { rank: 5, name: 'Ashton Daniels', college: 'Auburn', position: 'QB', number: 12, nilValue: 2.6, nilChange: 9, photo: ADHeadshot },
-    { rank: 6, name: 'Jackson Barkley', college: 'Auburn', position: 'QB', number: 19, nilValue: 1.9, nilChange: 7, photo: JBHeadshot },
-    { rank: 7, name: 'Hollis Davidson III', college: 'Auburn', position: 'TE', number: 13, nilValue: 1.8, nilChange: 6, photo: HDHeadshot },
-    { rank: 8, name: 'Xavier Atkins', college: 'LSU', position: 'LB', number: 17, nilValue: 1.5, nilChange: 4, photo: XAHeadshot },
-    { rank: 9, name: 'Cam Coleman', college: 'Auburn', position: 'WR', number: 8, nilValue: 1.7, nilChange: 8, photo: CCHeadshot },
-    { rank: 10, name: 'Jeremiah Cobb', college: 'Auburn', position: 'RB', number: 23, nilValue: 1.4, nilChange: 3, photo: JCobbHeadshot },
+   const hardcodedPlayers = [
+    { rank: 1, name: 'Garrett Nussmeier', college: 'LSU',    position: 'QB', number: 18, photo: GNHeadshot,   nilValue: 2850000, nilChange: 5  },
+    { rank: 2, name: 'Jackson Arnold',    college: 'Oklahoma', position: 'QB', number: 11, photo: JAHeadshot,   nilValue: 2400000, nilChange: 8  },
+    { rank: 3, name: 'Hank Brown',        college: 'Auburn',  position: 'QB', number: 9,  photo: HBHeadshot,   nilValue: 52000,   nilChange: -2 },
+    { rank: 4, name: 'John Colvin',       college: 'Auburn',  position: 'QB', number: 16, photo: JCHeadshot,   nilValue: 38500,   nilChange: 3  },
+    { rank: 5, name: 'Ashton Daniels',    college: 'Auburn',  position: 'QB', number: 12, photo: ADHeadshot,   nilValue: 2100000, nilChange: 12 },
+    { rank: 6, name: 'Jackson Barkley',   college: 'Auburn',  position: 'QB', number: 19, photo: JBHeadshot,   nilValue: 29000,   nilChange: -5 },
+    { rank: 7, name: 'Hollis Davidson III', college: 'Auburn', position: 'TE', number: 13, photo: HDHeadshot,  nilValue: 44750,   nilChange: 2  },
+    { rank: 8, name: 'Xavier Atkins',     college: 'LSU',     position: 'LB', number: 17, photo: XAHeadshot,   nilValue: 780000,  nilChange: 6  },
+    { rank: 9, name: 'Cam Coleman',       college: 'Auburn',  position: 'WR', number: 8,  photo: CCHeadshot,   nilValue: 890000,  nilChange: 10 },
+    { rank: 10, name: 'Jeremiah Cobb',    college: 'Auburn',  position: 'RB', number: 23, photo: JCobbHeadshot, nilValue: 720000, nilChange: -3 },
   ];
 
-  const tableData = [
-    { rank: 1, name: 'Arch Manning', college: 'UT Austin', sport: 'Football', pos: 'QB', nilValue: '$5.4M', nilChange: '-21%' },
-    { rank: 2, name: 'AJ Dybantsa', college: 'BYU', sport: 'Basketball', pos: 'SF', nilValue: '$4.2M', nilChange: '-5%' },
-    { rank: 3, name: 'Jeremiah Smith', college: 'Ohio State', sport: 'Football', pos: 'WR', nilValue: '$4.2M', nilChange: '0%' },
-    { rank: 4, name: 'Garrett Nussmeier', college: 'LSU', sport: 'Football', pos: 'QB', nilValue: '$4.0M', nilChange: '+6.7%' },
-    { rank: 5, name: 'Brendan Sorsby', college: 'Texas A&M', sport: 'Football', pos: 'QB', nilValue: '$3.1M', nilChange: '+29%' },
-  ];
+  useEffect(() => {
+    let isMounted = true;
+
+    async function loadPlayers() {
+      try {
+        setIsLoading(true);
+        setError('');
+
+        const params = new URLSearchParams({ limit: '1000', offset: '0' });
+        const apiData = await fetchAPIJson('/players/data', params);
+
+        if (isMounted) {
+          // Track which API players have been matched to avoid duplicates
+          const matchedApiPlayerIds = new Set();
+          
+          // Merge hardcoded players with API data for NIL values and player_id
+          const mergedPlayers = hardcodedPlayers.map((player) => {
+            let apiPlayer = null;
+            
+            // Strategy 1: Exact full name match (case-insensitive) - MOST RELIABLE
+            if (!apiPlayer) {
+              apiPlayer = apiData.find((p) => {
+                if (matchedApiPlayerIds.has(p.player_id)) return false;
+                const fullName = `${p.first_name} ${p.last_name}`;
+                return fullName.toLowerCase() === player.name.toLowerCase();
+              });
+              if (apiPlayer) matchedApiPlayerIds.add(apiPlayer.player_id);
+            }
+            
+            // Strategy 2: Match by first name + last initial (case-insensitive)
+            if (!apiPlayer) {
+              const parts = player.name.split(' ');
+              const firstName = parts[0].toLowerCase();
+              const lastNameParts = player.name.split(' ').slice(1).join(' ');
+              const lastInitial = lastNameParts.charAt(0).toLowerCase();
+              
+              apiPlayer = apiData.find((p) => {
+                if (matchedApiPlayerIds.has(p.player_id)) return false;
+                return p.first_name.toLowerCase() === firstName && 
+                       p.last_name.toLowerCase().charAt(0) === lastInitial;
+              });
+              if (apiPlayer) matchedApiPlayerIds.add(apiPlayer.player_id);
+            }
+            
+            // Strategy 3: Match by first name only (if unique or first match)
+            if (!apiPlayer) {
+              const firstName = player.name.split(' ')[0].toLowerCase();
+              apiPlayer = apiData.find((p) => {
+                if (matchedApiPlayerIds.has(p.player_id)) return false;
+                return p.first_name.toLowerCase() === firstName;
+              });
+              if (apiPlayer) matchedApiPlayerIds.add(apiPlayer.player_id);
+            }
+            
+            // If API match found, override hardcoded nil values; otherwise use hardcoded
+            const playerId = apiPlayer?.player_id || player.rank;
+            const nilValue = apiPlayer?.nil ?? player.nilValue ?? 0;
+            const nilChange = apiPlayer?.nil_delta ? Math.round(apiPlayer.nil_delta * 100) : (player.nilChange ?? 0);
+            
+            return {
+              ...player,
+              playerId,
+              nilValue,
+              nilChange,
+            };
+          });
+          setTrendingPlayers(mergedPlayers);
+        }
+      } catch (err) {
+        if (isMounted) {
+          setError('Failed to load player data from API');
+          // Still show hardcoded players even if API fails
+          const fallbackPlayers = hardcodedPlayers.map((p) => (
+            { ...p, playerId: p.rank, nilValue: 0, nilChange: 0 }
+          ));
+          setTrendingPlayers(fallbackPlayers);
+        }
+      } finally {
+        if (isMounted) {
+          setIsLoading(false);
+        }
+      }
+    }
+
+    loadPlayers();
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  // Generate table data from trending players
+  const tableData = trendingPlayers.slice(0, 5).map((player, index) => ({
+    rank: index + 1,
+    playerId: player.playerId,
+    name: player.name,
+    college: player.college,
+    sport: 'Football',
+    pos: player.position,
+    nilValue: typeof player.nilValue === 'number' ? player.nilValue : 0,
+    nilChange: `${player.nilChange >= 0 ? '+' : ''}${player.nilChange}%`,
+  }));
 
   const scroll = (direction) => {
     if (direction === 'left') {
@@ -337,79 +459,89 @@ export default function PlayersPage() {
           </div>
 
           {/* Cards Container */}
-          <div className="flex items-center justify-between gap-6 mb-8">
-            {/* Left Arrow */}
-            <button
-              onClick={() => scroll('left')}
-              disabled={currentIndex === 0}
-              className="text-5xl hover:text-gray-700 transition disabled:opacity-50 disabled:cursor-not-allowed flex-shrink-0"
-            >
-              ←
-            </button>
+          {isLoading ? (
+            <div className="text-center py-8">Loading trending players...</div>
+          ) : error ? (
+            <div className="text-center py-8 text-red-600">{error}</div>
+          ) : trendingPlayers.length === 0 ? (
+            <div className="text-center py-8">No trending players found</div>
+          ) : (
+            <>
+              <div className="flex items-center justify-between gap-6 mb-8">
+                {/* Left Arrow */}
+                <button
+                  onClick={() => scroll('left')}
+                  disabled={currentIndex === 0}
+                  className="text-5xl hover:text-gray-700 transition disabled:opacity-50 disabled:cursor-not-allowed flex-shrink-0"
+                >
+                  ←
+                </button>
 
-            {/* Carousel Viewport */}
-            <div
-              style={{
-                width: `${viewportWidth}px`,
-                overflow: 'hidden',
-                flexShrink: 0,
-              }}
-            >
-              {/* Sliding Track — all cards rendered, shifted via translateX */}
-              <div
-                style={{
-                  display: 'flex',
-                  gap: `${CARD_GAP}px`,
-                  transform: `translateX(-${trackOffset}px)`,
-                  transition: 'transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
-                  willChange: 'transform',
-                }}
-              >
-                {trendingPlayers.map((player, index) => (
-                  <PlayerCard
-                    key={index}
-                    rank={player.rank}
-                    name={player.name}
-                    college={player.college}
-                    position={player.position}
-                    number={player.number}
-                    nilValue={player.nilValue}
-                    nilChange={player.nilChange}
-                    photo={player.photo}
+                {/* Carousel Viewport */}
+                <div
+                  style={{
+                    width: `${viewportWidth}px`,
+                    overflow: 'hidden',
+                    flexShrink: 0,
+                  }}
+                >
+                  {/* Sliding Track — all cards rendered, shifted via translateX */}
+                  <div
+                    style={{
+                      display: 'flex',
+                      gap: `${CARD_GAP}px`,
+                      transform: `translateX(-${trackOffset}px)`,
+                      transition: 'transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
+                      willChange: 'transform',
+                    }}
+                  >
+                    {trendingPlayers.map((player, index) => (
+                      <PlayerCard
+                        key={index}
+                        playerId={player.playerId}
+                        name={player.name}
+                        college={player.college}
+                        position={player.position}
+                        number={player.number}
+                        nilValue={player.nilValue}
+                        nilChange={player.nilChange}
+                        photo={player.photo}
+                      />
+                    ))}
+                  </div>
+                </div>
+
+                {/* Right Arrow */}
+                <button
+                  onClick={() => scroll('right')}
+                  disabled={currentIndex >= trendingPlayers.length - CARDS_VISIBLE}
+                  className="text-5xl hover:text-gray-700 transition disabled:opacity-50 disabled:cursor-not-allowed flex-shrink-0"
+                >
+                  →
+                </button>
+              </div>
+
+              {/* Dot Indicators */}
+              <div style={{ display: 'flex', gap: '8px', justifyContent: 'center', marginTop: '-16px', marginBottom: '8px' }}>
+                {Array.from({ length: Math.max(0, trendingPlayers.length - CARDS_VISIBLE + 1) }).map((_, i) => (
+                  <button
+                    key={i}
+                    onClick={() => setCurrentIndex(i)}
+                    style={{
+                      width: '8px',
+                      height: '8px',
+                      borderRadius: '50%',
+                      border: 'none',
+                      cursor: 'pointer',
+                      padding: 0,
+                      background: i === currentIndex ? '#4a1e8a' : '#d1d5db',
+                      transition: 'background 0.2s',
+                    }}
                   />
                 ))}
               </div>
-            </div>
-
-            {/* Right Arrow */}
-            <button
-              onClick={() => scroll('right')}
-              disabled={currentIndex >= trendingPlayers.length - CARDS_VISIBLE}
-              className="text-5xl hover:text-gray-700 transition disabled:opacity-50 disabled:cursor-not-allowed flex-shrink-0"
-            >
-              →
-            </button>
-          </div>
-
-          {/* Dot Indicators */}
-          <div style={{ display: 'flex', gap: '8px', justifyContent: 'center', marginTop: '-16px', marginBottom: '8px' }}>
-            {Array.from({ length: trendingPlayers.length - CARDS_VISIBLE + 1 }).map((_, i) => (
-              <button
-                key={i}
-                onClick={() => setCurrentIndex(i)}
-                style={{
-                  width: '8px',
-                  height: '8px',
-                  borderRadius: '50%',
-                  border: 'none',
-                  cursor: 'pointer',
-                  padding: 0,
-                  background: i === currentIndex ? '#4a1e8a' : '#d1d5db',
-                  transition: 'background 0.2s',
-                }}
-              />
-            ))}
-          </div>
+            </>
+          )}
         </div>
 
         {/* Top Players Table */}

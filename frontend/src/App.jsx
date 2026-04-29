@@ -11,9 +11,9 @@ import TeamsPage from './pages/TeamsPage';
 import PlayersPage from './pages/PlayersPage';
 import TrendingPlayersPage from './pages/trendingplayerspage';
 import AllTeamsPage from './pages/AllTeamsPage';
-import UniTeamsTracked from './pages/UniTeamsTracked';
 import AllPlayersPage from './pages/AllPlayersTracked';
 import PlayerCardPage from './pages/PlayerCardPage';
+import TeamCardPage from './pages/TeamCardPage';
 import SpecificSport from './pages/SpecificSport';
 import Predict from './pages/predict';
 import Index from './pages/Index';
@@ -65,9 +65,9 @@ function App() {
             <Route path='/sports' element={<SportsPage />} />
             <Route path='/sports/:sportSlug' element={<SpecificSport />} />
             <Route path='/teams' element={<TeamsPage />} />
-            <Route path='/teams/:teamSlug' element={<UniTeamsTracked />} />
+            <Route path='/teams/:teamSlug' element={<TeamsPage />} />
             <Route path='/teams/all' element={<AllTeamsPage />} />
-            <Route path='/teams/all/:slug' element={<UniTeamsTracked />} />
+            <Route path='/team/:teamId' element={<TeamCardPage />} />
             <Route path='/players' element={<PlayersPage />} />
             <Route path='/players/trending' element={<TrendingPlayersPage />} />
             <Route path='/players/tracked' element={<AllPlayersPage />} />

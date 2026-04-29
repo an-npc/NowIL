@@ -1,6 +1,5 @@
 import { useState } from 'react'
 import Baseball from '../assets/baseball.svg'
-import Basketball from '../assets/basketball.svg'
 import Football from '../assets/football.svg'
 import Volleyball from '../assets/volleyball.svg'
 import Soccer from '../assets/soccer.svg'
@@ -16,9 +15,18 @@ let college_logo_urls = [
     'https://upload.wikimedia.org/wikipedia/commons/4/4b/Duke_University_wordmark_full_gothic.svg',
     'https://upload.wikimedia.org/wikipedia/commons/6/65/Texas_A%26M_University_2021_logo.svg',
     'https://upload.wikimedia.org/wikipedia/commons/4/4b/Cornell_University_logo.svg',
-     'https://upload.wikimedia.org/wikipedia/commons/5/50/Ohio_State_University_text_logo_unified.svg',
+    'https://upload.wikimedia.org/wikipedia/commons/5/50/Ohio_State_University_text_logo_unified.svg',
     'https://upload.wikimedia.org/wikipedia/commons/1/13/Miami_University_logo.svg'
 
+
+];
+
+let player_img_urls = [
+    "https://upload.wikimedia.org/wikipedia/commons/1/1b/025_CG.jpg",
+    "https://upload.wikimedia.org/wikipedia/commons/9/95/105a-319.jpg",
+    "https://upload.wikimedia.org/wikipedia/commons/a/a0/Andrii_Yakovenko_with_a_radio-controlled_boat_2020.jpg",
+    "https://upload.wikimedia.org/wikipedia/commons/7/78/Arsen_Karen_Harutyunyan%28ARM%29.jpg",
+    "https://upload.wikimedia.org/wikipedia/commons/0/0d/Brandon_J._Glover_%28Cam_Newton_7V7_Tournament_w-_MTAG%29.jpg"
 
 ];
 
@@ -67,7 +75,7 @@ function Following() {
             </section>
             <section className='followed-sports'>
                 <div className='followed-sports-header'>
-                    <p>Followed Sports</p>
+                    <h2>Followed Sports</h2>
                     <p className='text-bubble'>6 sports</p>
                 </div>
                 <div className='sport-categories'>
@@ -80,10 +88,10 @@ function Following() {
                     </div>
                     <div className='followed-sports-category'>
                         <img
-                            src={Basketball}
+                            src={Golf}
                             alt='basketball-img'
                             className='change-icon' />
-                        <div>football</div>
+                        <div>golf</div>
                     </div>
                     <div className='followed-sports-category'>
                         <img
@@ -123,7 +131,13 @@ function Following() {
                     frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
             </section>
             <section className='follow-players'>
-
+                {player_img_urls.map((item) => (
+                    <img
+                        className='player-logo'
+                        src={item}
+                        alt='player-logo'
+                    />
+                ))}
             </section>
             <section className='follow-sports'>
                 {college_logo_urls.map((item) => (
@@ -133,7 +147,6 @@ function Following() {
                         alt='college-logo'
                     />
                 ))}
-
 
             </section>
         </main >

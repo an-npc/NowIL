@@ -1,6 +1,6 @@
 import { useState, useRef, useCallback, ReactComponent } from 'react'
 import Baseball from '../assets/baseball.svg'
-import Basketball from '../assets/basketball.svg'
+// import Basketball from '../assets/basketball.svg'
 import Football from '../assets/football.svg'
 import Volleyball from '../assets/volleyball.svg'
 import Soccer from '../assets/soccer.svg'
@@ -22,11 +22,10 @@ function Homepage() {
     const USD = new Intl.NumberFormat('en-US', {style: 'currency', currency: 'USD',});
     return (
         <main className='grid-container-main' >
-            <header className='page-title center-vertical'><h1>Home</h1></header>
+            <header className='page-title center-vertical'><h1>home</h1></header>
             <form className='search-bar center-vertical'>
                 <div className='row row-spacing'>
-                    <input className='search-input' type='search' value='search for your team' />
-                    <button type='submit'><Search size={30} /></button>
+                    <input className='' type='search' value='🔍︎ search for your team' />
                 </div>
             </form>
             <section className='chart'>

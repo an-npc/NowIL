@@ -17,8 +17,6 @@ import TrendingPlayersPage from './pages/trendingplayer';
 
 function App() {
   return (
-
-
     <Router>
       <main className='app-row'>
         <section className='menu-bar'>

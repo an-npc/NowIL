@@ -1,5 +1,6 @@
 import requests
 import json
+import os
 from typing import Callable
 from models.database_tables import PositionType
 import random
@@ -254,6 +255,7 @@ I/O METHODS
 # creates a json file from a dict of table records
 def write_table(table_records:dict, file_name:str) -> None:
     filepath=f"data/tables/{file_name}.json"
+    os.makedirs(os.path.dirname(filepath), exist_ok=True)
     with open(filepath,"w") as file:
         json.dump(table_records,file,indent=4)
         

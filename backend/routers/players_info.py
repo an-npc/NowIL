@@ -1,7 +1,7 @@
 from typing import List,Sequence,Optional
 
 from fastapi import APIRouter, Depends, HTTPException
-from sqlmodel import Session, select, col,func, desc 
+from sqlmodel import Session, select, col,func, desc, union_all 
 from database import get_session
 
 from models.database_tables import PositionType,Player, Performance,Team, Game, QBPerformance, WRPerformance, LBPerformance, TEPerformance, SPerformance
@@ -157,89 +157,34 @@ def get_player_info(player_id,session:Session = Depends(get_session)):
     if not player: 
         raise HTTPException(404,"Player not found")
     
-    bio = PlayerInfoBio.model_validate(player)
+    bio = session.exec(
+        select(
+            Team.school,
+            Player.college_year,
+            Player.position,
+            Player.number,
+            Player.hometown,
+            Player.homestate,
+            Player.height,
+            Player.weight
+        ) # type:ignore
+        .join(Team)
+        .where(Player.player_id==player_id)
+    ).first()
     
     brand = PlayerInfoBrand.model_validate(
         session.exec(
             select(
                 Player.base_nil,
-                Performance.nil
+                col(Performance.nil).label("highest_nil")
             )
             .join(Performance)
             .order_by(col(Performance.nil).desc())
         ).first()
     )
     
-    match(player.position):
-        case "QB":
-            labels = ["Total Passing Yards","Total Rushing Yards", "Completion%","Total Touchdowns","Total Interceptions"]
-            values = session.exec(
-                select(
-                    func.sum(QBPerformance.pass_yards).label("total_pass_yards"),
-                    func.sum(QBPerformance.rush_yards).label("total_rush_yards"),
-                    func.avg(QBPerformance.completion_pct).label("avg_completion_pct"),
-                    (func.sum(QBPerformance.pass_tds) + func.sum(QBPerformance.rush_tds)).label("total_tds"),
-                    func.sum(QBPerformance.ints).label("total_ints")
-                ) # type:ignore
-                .where(Player.player_id == player_id)
-            ).first().mapping.values()
-            
-        case "WR":
-            labels = ["Total Recieving Yards","Total Recieving Touchdowns","Total Receptions","Average Yards/Reception"]
-            values = session.exec(
-                select(
-                    func.sum(WRPerformance.receiving_yards).label("total_recieving_yards"),
-                    func.sum(WRPerformance.receiving_tds).label("total_recieveing_touchdowns"),
-                    func.sum(WRPerformance.receptions).label("total_receptions"),
-                    func.avg(WRPerformance.yards_per_rec).label("avg_yards_per_rec"),
-                ) # type:ignore
-                .where(Player.player_id == player_id)
-            ).first().mapping.values()
-            
-        case "LB":
-            labels =[]
-            values = []
-            # labels = []
-            # values = session.exec(
-            #     select(
-            #         func.sum(LBPerformance.).label(""),
-            #         func.sum(LBPerformance.).label(""),
-            #         func.sum(LBPerformance.).label(""),
-            #         func.avg(LBPerformance.).label(""),
-            #     ) # type:ignore
-            #     .where(Player.player_id == player_id)
-            # ).first().mapping.values()
-            
-        case "TE":
-            labels =[]
-            values = []
-        #     labels = []
-        #     values = session.exec(
-        #         select(
-        #             func.sum(TEPerformance.).label(""),
-        #             func.sum(TEPerformance.).label(""),
-        #             func.sum(TEPerformance.).label(""),
-        #             func.avg(TEPerformance.).label(""),
-        #         ) # type:ignore
-        #         .where(Player.player_id == player_id)
-        #     ).first().mapping.values()
-        case "S":
-            labels =[]
-            values = []
-        #     labels = []
-        #     values = session.exec(
-        #         select(
-        #             func.sum(SPerformance.).label(""),
-        #             func.sum(SPerformance.).label(""),
-        #             func.sum(SPerformance.).label(""),
-        #             func.avg(SPerformance.).label(""),
-        #         ) # type:ignore
-        #         .where(Player.player_id == player_id)
-        #     ).first().mapping.values()
-        case _:
-            raise HTTPException(500,"Player has unsupported position " + player.position)
-        
-    stats = PlayerInfoStats(labels=labels,values=values)
+    
+    stats = PlayerInfoStats(labels=[],values=[])
    
     
     return PlayerInfo(bio=bio,stats=stats,brand=brand)
@@ -252,16 +197,43 @@ def get_player_performances(player_id:int,session:Session = Depends(get_session)
     if not player:
         raise HTTPException(404, "Player not found")
     
-    PosTable = get_pos_table(player.position)
-    
-    performances = session.exec(
-        select(Game,Performance,PosTable)
-        .join(Player)
-        .join(Performance)
-        .join(PosTable)
-        .where(Performance.player_id==Player.player_id)
-        .order_by(col(Game.date).desc())
-        )
+    home_games = (
+        select(
+            col(Game.date).label("date"), # Label clearly for sorting
+            col(Team.school).label("opponent"),
+            col(Game.outcome),
+            col(Game.home_score).label("team_score"),
+            col(Game.away_score).label("opponent_score"),
+            col(Performance.nil),
+            col(Performance.nil_delta)
+        ) # type:ignore
+        .join(Performance, Game.game_id == Performance.game_id) 
+        .join(Player, Performance.player_id == Player.player_id)
+        .join(Team, Team.team_id == Game.away_id) 
+        .where(Player.player_id == player_id, Game.home_id == Player.team_id)
+    )
+
+    away_games = (
+        select(
+            col(Game.date).label("date"),
+            col(Team.school).label("opponent"),
+            col(Game.outcome),
+            col(Game.away_score).label("team_score"),
+            col(Game.home_score).label("opponent_score"),
+            col(Performance.nil),
+            col(Performance.nil_delta)
+        ) # type:ignore
+        .join(Performance, Game.game_id == Performance.game_id) 
+        .join(Player, Performance.player_id == Player.player_id)
+        .join(Team, Team.team_id == Game.home_id) 
+        .where(Player.player_id == player_id, Game.away_id == Player.team_id)
+    )
+
+    # Combine and apply ordering to the final statement
+    stmt = union_all(home_games, away_games).order_by(col(Game.date).desc())
+
+    # Execute
+    performances = session.exec(stmt).all()
     
     return performances
 

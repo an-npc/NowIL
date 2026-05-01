@@ -2,6 +2,7 @@ from __future__ import annotations
 from typing import Optional, Any, List
 from sqlmodel import SQLModel
 from models.database_tables import CollegeYear,PositionType
+from datetime import date
 
   
 class PlayerTableData(SQLModel):
@@ -32,7 +33,7 @@ class PlayerBaseData(SQLModel):
   
 class PlayerInfoBio(SQLModel):
     school:str
-    year:str
+    college_year:str
     position:PositionType
     number:int
     hometown:str
@@ -47,8 +48,8 @@ class PlayerInfoStats(SQLModel):
     
     
 class PlayerInfoBrand(SQLModel):
-    highest_nil:int
     base_nil:int
+    highest_nil:int
     
     
 class PlayerInfo(SQLModel):
@@ -58,12 +59,11 @@ class PlayerInfo(SQLModel):
     
     
 class PlayerPerformance(SQLModel):
-    date:str
+    date:date
     opponent:str
     outcome:str
     team_score:int
     opponent_score:int
-    stats:PlayerInfoStats
     nil:int
     nil_delta:float
     

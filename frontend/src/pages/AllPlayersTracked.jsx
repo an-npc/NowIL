@@ -42,7 +42,7 @@ export default function AllPlayersPage() {
         setError('');
 
         const params = new URLSearchParams({ limit: '1000', offset: '0' });
-        const data = await fetchAPIJson('/players/data', params);
+        const data = await fetchAPIJson('/players', params);
         const usdFormatter = new Intl.NumberFormat('en-US', {
           style: 'currency',
           currency: 'USD',

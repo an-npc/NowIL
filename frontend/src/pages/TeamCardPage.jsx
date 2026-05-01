@@ -46,7 +46,7 @@ export default function TeamCardPage() {
 
                 // Fetch all players and filter by team sport/school
                 const params = new URLSearchParams({ limit: '1000', offset: '0' });
-                const allPlayers = await fetchAPIJson(`/players/data`, params);
+                const allPlayers = await fetchAPIJson(`/players`, params);
 
                 console.log('All players data:', allPlayers);
 

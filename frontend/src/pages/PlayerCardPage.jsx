@@ -93,7 +93,7 @@ export default function PlayerDetailPage() {
         }
 
         const params = new URLSearchParams({ limit: '1000', offset: '0' });
-        const allPlayers = await fetchAPIJson('/players/data', params);
+        const allPlayers = await fetchAPIJson('/players', params);
         const player = allPlayers.find(p => p.player_id === idAsInt);
 
         if (!player) throw new Error('Player not found');

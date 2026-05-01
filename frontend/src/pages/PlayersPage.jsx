@@ -305,7 +305,7 @@ export default function PlayersPage() {
         setError('');
 
         const params = new URLSearchParams({ limit: '1000', offset: '0' });
-        const apiData = await fetchAPIJson('/players/data', params);
+        const apiData = await fetchAPIJson('/players', params);
 
         if (isMounted) {
           // Track which API players have been matched to avoid duplicates

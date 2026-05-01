@@ -28,12 +28,12 @@ def fetch_teams_data() -> dict:
     parameters = {"group": 8,"season": 2025, "limit": 100} # SEC is group 8
     
     response = requests.get(url,parameters)
-    team_urls = response.json()["items"]
+    team_urls = response.json()['items']
     
     teams = {}
     for team_url in team_urls:
-        team_data = requests.get(team_url["$ref"]).json()
-        teams[team_data["id"]] = team_data
+        team_data = requests.get(team_url['$ref']).json()
+        teams[team_data['id']] = team_data
         
     return teams 
 
@@ -47,17 +47,17 @@ def create_team_records() -> dict:
     team_records = {}
     for team_data in teams:
         team = {
-            "espn_id": team_data["id"],
+            "espn_id": team_data['id'],
             "team_id": school_id,
             "sport":"Football",
-            "school": team_data["location"],
-            "city": team_data["venue"]["address"]["city"],
-            "state": team_data["venue"]["address"]["state"],
-            "color_hex_value": team_data["color"],
-            "logo_url": team_data["logos"][0]["href"]
+            "school": team_data['location'],
+            "city": team_data['venue']['address']['city'],
+            "state": team_data['venue']['address']['state'],
+            "color_hex_value": team_data['color'],
+            "logo_url": team_data['logos'][0]['href']
             }   
         
-        team_records[team_data["id"]] = team
+        team_records[team_data['id']] = team
         school_id += 1
     return team_records
 
@@ -73,22 +73,22 @@ def fetch_rosters_data() -> dict:
     rosters = {}
     for team in teams:
         
-        espn_id = team["espn_id"]
+        espn_id = team['espn_id']
         url = (
             f"http://sports.core.api.espn.com/v2/sports/football/leagues/college-football/"
             f"seasons/{2025}/teams/{espn_id}/athletes"
         )
         parameters = {"lang": "en", "region": "us", "limit":200} #?lang=en&region=us
-        athlete_urls = requests.get(url,parameters).json()["items"]
+        athlete_urls = requests.get(url,parameters).json()['items']
     
         print(f"fetching team {team['team_id']}'s roster...")
         athletes = {}
         for athlete_url in athlete_urls:
             
-            athlete = requests.get(athlete_url["$ref"]).json()
-            athletes[athlete["id"]] = athlete
+            athlete = requests.get(athlete_url['$ref']).json()
+            athletes[athlete['id']] = athlete
             
-        rosters[team["team_id"]] = athletes
+        rosters[team['team_id']] = athletes
         
     return rosters
 
@@ -110,7 +110,7 @@ def create_player_records() -> dict:
                 PositionType(pos)
                     
                 player_data = {
-                    "espn_id": player["id"],
+                    "espn_id": player['id'],
                     "player_id":  player_id,
                     "first_name": player["firstName"],
                     "last_name": player["lastName"],
@@ -125,7 +125,7 @@ def create_player_records() -> dict:
                     "headshot_url":player["headshot"]["href"],
                     "base_nil":-1,
                 } 
-                player_table[player["id"]] = player_data
+                player_table[player['id']] = player_data
                 player_id+=1  
             except KeyError as e:
                 print(f"Team table id: {team_id}   Player: {player['fullName']}")
@@ -143,11 +143,11 @@ Game Methods
 def fetch_game_data(startdate:int,enddate:int) -> dict:
     url = "https://site.api.espn.com/apis/site/v2/sports/football/college-football/scoreboard"
     parameters = f"?groups=8&limit=100&dates={startdate}-{enddate}"
-    events = requests.get(url+parameters).json()["events"]
+    events = requests.get(url+parameters).json()['events']
     
     games = {}
     for event in events:
-        games[event["id"]] = event
+        games[event['id']] = event
     return games
 
 def create_game_records() -> dict:
@@ -167,17 +167,17 @@ def create_game_records() -> dict:
             team1_espn_id = event["competitions"][0]["competitors"][1]["team"]["id"]
                 
             game = {
-                "espn_id"   :   event["competitions"][0]["id"],
+                "espn_id"   :   event['competitions'][0]['id'],
                 "game_id"   :   game_id,
-                "away_id"   :   teams[team0_espn_id]["team_id"],
-                "home_id"   :   teams[team1_espn_id]["team_id"],
-                "date"      :   event["date"],
-                "location"  :   event["competitions"][0]["venue"]["fullName"],
-                "away_score":   event["competitions"][0]["competitors"][0]["score"],
-                "home_score":   event["competitions"][0]["competitors"][1]["score"],
+                "away_id"   :   teams[team0_espn_id]['team_id'],
+                "home_id"   :   teams[team1_espn_id]['team_id'],
+                "date"      :   event['date'],
+                "location"  :   event['competitions'][0]['venue']['fullName'],
+                "away_score":   event['competitions'][0]['competitors'][0]['score'],
+                "home_score":   event['competitions'][0]['competitors'][1]['score'],
                 "outcome"   :   winner
             }
-            games[game["espn_id"]] = game
+            games[game['espn_id']] = game
             game_id+=1
         except KeyError as e:
                 print(f"Game: {event['name']}   Date: {event['date']}")
@@ -191,16 +191,16 @@ Performance Methods
 def fetch_performances_data(game_id) -> dict:
     url = "https://site.api.espn.com/apis/site/v2/sports/football/college-football/summary"
     parameters = f"?groups=8&limit=1&event={game_id}"
-    game = requests.get(url+parameters).json()["boxscore"]
+    game = requests.get(url+parameters).json()['boxscore']
     
     performances = {}
-    teams = game["players"]
+    teams = game['players']
     for team in teams:
-        statistics = team["statistics"]
+        statistics = team['statistics']
         for stat_group in statistics:
-            athletes = stat_group["athletes"]
+            athletes = stat_group['athletes']
             for athlete in athletes:
-                performances[athlete["athlete"]["id"]]=athlete   
+                performances[athlete['athlete']['id']]=athlete   
     return performances
 
 def create_performance_records() -> dict:
@@ -213,10 +213,10 @@ def create_performance_records() -> dict:
         for espn_player_id in performances:
             try:
                 performances_data = {
-                    "game_id": games[espn_game_id]["game_id"],
-                    "player_id": players[espn_player_id]["player_id"],
-                    "nil": -1,  #generate_random_nil(),
-                    "nil_delta": -1 #generate_random_delta(),
+                    "game_id": games[espn_game_id]['game_id'],
+                    "player_id": players[espn_player_id]['player_id'],
+                    "nil": generate_random_nil(),
+                    "nil_delta": generate_random_delta(),
                 }
                 key = f"{espn_game_id}-{espn_player_id}"
                 performances_records[key] = performances_data
@@ -236,8 +236,8 @@ def fetch_position_types():
     positions = {}
     for pos_url in pos_urls:
         try:
-            pos = requests.get(pos_url["$ref"]).json()
-            positions[pos["abbreviation"]] = pos
+            pos = requests.get(pos_url['$ref']).json()
+            positions[pos['abbreviation']] = pos
         except KeyError as e:
             print(e)
     return positions

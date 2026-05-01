@@ -85,13 +85,10 @@ function Predict() {
 
     return (
         <main className='grid-container-main' >
-            <header className='page-title center-vertical'><h1>Predict</h1></header>
+            <header className='page-title center-vertical'><h1>predict</h1></header>
             <form className='search-bar center-vertical'>
                 <div className='row row-spacing'>
-                    <input className='search-input' type='search' value='search for your team' />
-
-                    <button type='submit'><Search size={30} /></button>
-
+                    <input className='' type='search' value='🔍︎ search for your team' />
                 </div>
             </form>
 

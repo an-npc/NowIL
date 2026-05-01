@@ -15,7 +15,7 @@ class TeamTableData(SQLModel):
     logo_url: str | None
     total_players: int
     total_nil_value: int
-    avg_nil_value: float
+    avg_nil_value: float|None
 
 
 class TeamInfo(SQLModel):
